@@ -11,13 +11,16 @@ datasource db {
 }
 
 model User {
-  id                  Int     @id @default(autoincrement())
-  email               String  @unique
+  id                  Int      @id @default(autoincrement())
+  email               String   @unique
   password            String
-  cpf_cnpj            String  @unique
-  tokenActiveAccount  String  @unique
-  activeAccount       Boolean @default(false)
-  tokenForgotPassword String? @unique
+  cpf_cnpj            String   @unique
+  tokenActiveAccount  String   @unique
+  activeAccount       Boolean  @default(false)
+  tokenForgotPassword String?  @unique
+  created_at          DateTime @default(now())
+  updeated_at         DateTime @default(now())
 
   @@map("users")
 }
+
