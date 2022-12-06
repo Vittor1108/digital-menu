@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 //MY IMPORTS
 import { HelpMessager } from 'src/helper/messageHelper';
 import Bcrypt from 'src/utils/bcrypt';
+import { transport } from '../../utils/mailer';
 //OUT LIBS
 import * as cpf_cnpj from 'cpf_cnpj';
 
@@ -17,13 +18,6 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
   public create = async (data: CreateUserDto): Promise<User> => {
     const { password, cpf_cnpj } = data;
-
-    if (password.length < 6) {
-      throw new HttpException(
-        HelpMessager.weakPassword,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
 
     if (!this.validateCpfOrCnpj(cpf_cnpj)) {
       throw new HttpException(
@@ -34,7 +28,21 @@ export class UserService {
 
     const token = crypto.randomBytes(20).toString('hex');
     const hashPassword = await Bcrypt.hashPassword(password);
-    console.log(hashPassword);
+
+    const mailOptions = {
+      from: 'vittordaniel1108@gmail.com',
+      to: data.email,
+      subject: 'Sending email',
+      template: 'auth/activeAccount',
+      context: {
+        token,
+      },
+    };
+    transport.sendMail(mailOptions, (err) => {
+      if (err) {
+        throw new HttpException('Deu erro aqui em', HttpStatus.BAD_REQUEST);
+      }
+    });
     const user = await this.prismaService.user.create({
       data: {
         email: data.email,
