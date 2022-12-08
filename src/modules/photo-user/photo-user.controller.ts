@@ -1,7 +1,11 @@
 import {
   Controller,
+  Delete,
+  Param,
   Post,
+  Request,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -9,7 +13,10 @@ import { diskStorage } from 'multer';
 import { editFileName, imageFilter } from 'src/utils/file-upload.utils';
 import { PhotoUserService } from './photo-user.service';
 import { resolve } from 'path';
+import { AuthGuard } from '@nestjs/passport';
+
 @Controller('photo-user')
+@UseGuards(AuthGuard('jwt'))
 export class PhotoUserController {
   constructor(private readonly photoUserService: PhotoUserService) {}
 
@@ -23,7 +30,12 @@ export class PhotoUserController {
       fileFilter: imageFilter,
     }),
   )
-  async uploadedFile(@UploadedFile() file) {
-    return this.photoUserService.upload(file);
+  async uploadedFile(@UploadedFile() file, @Request() req: any) {
+    return this.photoUserService.upload(file, req);
+  }
+
+  @Delete(':id')
+  async deletFile(@Param('id') id: number) {
+    return this.photoUserService.deleteFile(id);
   }
 }

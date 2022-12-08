@@ -6,4 +6,5 @@ export const HelpMessager = {
   errorResetPasswrod: 'Error resetting password',
   passoword_or_email_invalid: 'Password or email invalid',
   accout_not_activated: 'account not activated',
+  photo_not_found: 'Photo with this id not found',
 };

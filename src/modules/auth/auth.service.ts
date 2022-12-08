@@ -18,6 +18,11 @@ export class AuthService {
         email,
       },
     });
+
+    if (!user) {
+      return null;
+    }
+
     if (!bcrypt.comparePassword(password, user.password)) {
       return null;
     }
