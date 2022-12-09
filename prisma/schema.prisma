@@ -15,22 +15,37 @@ model User {
   email               String      @unique
   password            String
   cpf_cnpj            String      @unique
-  photos              PhotoUser[]
   tokenActiveAccount  String      @unique
   tokenForgotPassword String?     @unique
   activeAccount       Boolean     @default(false)
   created_at          DateTime    @default(now())
   updeated_at         DateTime    @default(now())
+  photos              PhotoUser[]
+  Category            Category[]
 
   @@map("users")
 }
 
 model PhotoUser {
-  id           Int    @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   filename     String
   originalname String
   url          String
-  user         User  @relation(fields: [user_id], references: [id])
-  user_id       Int
+  user_id      Int
+  created_at   DateTime @default(now())
+  updeated_at  DateTime @default(now())
+  user         User     @relation(fields: [user_id], references: [id])
+
   @@map("photo_users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  created_at  DateTime @default(now())
+  updeated_at DateTime @default(now())
+
+  @@map("categories")
 }

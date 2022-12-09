@@ -19,6 +19,16 @@ export class UserService {
   public create = async (data: CreateUserDto): Promise<User> => {
     const { password, cpf_cnpj } = data;
 
+    const userEmailExists = await this.prismaService.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (userEmailExists) {
+      throw new HttpException(HelpMessager.email_exits, HttpStatus.BAD_REQUEST);
+    }
+
     if (!this.validateCpfOrCnpj(cpf_cnpj)) {
       throw new HttpException(
         HelpMessager.invalidCpfOrCnpj,
