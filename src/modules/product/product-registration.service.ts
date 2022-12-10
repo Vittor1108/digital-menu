@@ -27,6 +27,32 @@ export class ProductRegistrationService {
       );
     }
 
+    const categories_id = createProductRegistrationDto.categories_id.map(
+      (id) => {
+        return {
+          category_id: id,
+        };
+      },
+    );
+
+    const categoriesExitis = await this.prismaService.category.findMany({
+      where: {
+        id: {
+          in: createProductRegistrationDto.categories_id,
+        },
+      },
+    });
+
+    if (
+      categoriesExitis.length <
+      createProductRegistrationDto.categories_id.length
+    ) {
+      throw new HttpException(
+        HelpMessager.category_not_exits,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const product = await this.prismaService.product.create({
       data: {
         name: createProductRegistrationDto.name.toLocaleLowerCase(),
@@ -34,19 +60,11 @@ export class ProductRegistrationService {
         user_id: req.user.id,
         Product_Category: {
           createMany: {
-            data: [
-              {
-                category_id: 1,
-              },
-              {
-                category_id: 2,
-              },
-            ],
+            data: categories_id,
           },
         },
       },
     });
-
     return product;
   };
 

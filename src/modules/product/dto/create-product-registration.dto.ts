@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateProductRegistrationDto {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class CreateProductRegistrationDto {
   @IsNotEmpty()
   @IsNumber()
   price: number;
+
+  @IsArray()
+  @IsNotEmpty()
+  categories_id: Array<number>;
 }
