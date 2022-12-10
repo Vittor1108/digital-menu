@@ -10,4 +10,9 @@ export const HelpMessager = {
   email_exits: 'Uset with this email already exitis',
   category_exits: 'Name this category already exitis',
   category_doNot_user: 'This category does not belong to the User Id sent',
+  category_not_exits: 'This id category does not exitis',
+  product_exits: 'Name this product already exitis',
+  product: 'This product does not belong to the User Id sent',
+  product_not_exits: 'This id product does not exitis',
+  product_doNot_user: 'This product does not belong to the User Id sent',
 };

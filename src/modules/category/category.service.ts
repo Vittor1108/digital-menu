@@ -29,7 +29,7 @@ export class CategoryService {
 
     const category = await this.prismaService.category.create({
       data: {
-        name: data.name,
+        name: data.name.toLowerCase(),
         user_id: req.user.id,
       },
     });
@@ -37,7 +37,11 @@ export class CategoryService {
     return category;
   };
 
-  public updated = async (data: UpdateCategoryDto, id: number, req: any) => {
+  public updated = async (
+    data: UpdateCategoryDto,
+    id: number,
+    req: any,
+  ): Promise<Category> => {
     const categoryExistis = await this.prismaService.category.findFirst({
       where: {
         id,
@@ -46,7 +50,7 @@ export class CategoryService {
 
     if (!categoryExistis) {
       throw new HttpException(
-        HelpMessager.category_exits,
+        HelpMessager.category_not_exits,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -76,5 +80,45 @@ export class CategoryService {
     });
 
     return newCategory;
+  };
+
+  public findAll = async (req: any): Promise<Category[]> => {
+    const allCategories = await this.prismaService.category.findMany({
+      where: {
+        user_id: req.user.id,
+      },
+    });
+
+    return allCategories;
+  };
+
+  public delete = async (id: number, req: any): Promise<boolean> => {
+    const category = await this.prismaService.category.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!category) {
+      throw new HttpException(
+        HelpMessager.category_not_exits,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (Number(category.user_id) !== Number(req.user.id)) {
+      throw new HttpException(
+        HelpMessager.category_doNot_user,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    await this.prismaService.category.delete({
+      where: {
+        id,
+      },
+    });
+
+    return true;
   };
 }

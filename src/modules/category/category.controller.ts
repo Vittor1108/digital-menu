@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
-  Post,
-  UseGuards,
-  Request,
-  Patch,
+  Delete,
+  Get,
   Param,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CategoryService } from './category.service';
@@ -31,7 +33,17 @@ export class CategoryController {
     @Body() updtaedCategoryDto: UpdateCategoryDto,
     @Param('id') id: number,
     @Request() req: any,
-  ) {
+  ): Promise<Category> {
     return this.categoryService.updated(updtaedCategoryDto, id, req);
+  }
+
+  @Get()
+  findAll(@Request() req: any): Promise<Category[]> {
+    return this.categoryService.findAll(req);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number, @Request() req: any): Promise<boolean> {
+    return this.categoryService.delete(id, req);
   }
 }
