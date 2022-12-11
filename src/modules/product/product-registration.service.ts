@@ -93,6 +93,31 @@ export class ProductRegistrationService {
       );
     }
 
+    const categories_id = updateProductRegistrationDto.categories_id.map(
+      (id) => {
+        return {
+          category_id: id,
+        };
+      },
+    );
+    const categoriesExitis = await this.prismaService.category.findMany({
+      where: {
+        id: {
+          in: updateProductRegistrationDto.categories_id,
+        },
+      },
+    });
+
+    if (
+      categoriesExitis.length <
+      updateProductRegistrationDto.categories_id.length
+    ) {
+      throw new HttpException(
+        HelpMessager.category_not_exits,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const newProduct = await this.prismaService.product.update({
       where: {
         id,
@@ -100,6 +125,15 @@ export class ProductRegistrationService {
       data: {
         name: updateProductRegistrationDto.name.toLocaleLowerCase(),
         price: updateProductRegistrationDto.price,
+        Product_Category: {
+          updateMany: {
+            data: categories_id,
+            where: {
+              product_id: i
+              d,
+            },
+          },
+        },
       },
     });
 
