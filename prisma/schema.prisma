@@ -60,9 +60,9 @@ model Product {
 }
 
 model Product_Category {
-  product     Product  @relation(fields: [product_id], references: [id])
+  product     Product  @relation(fields: [product_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   product_id  Int
-  category    Category @relation(fields: [category_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   category_id Int
 
   @@id([category_id, product_id])
