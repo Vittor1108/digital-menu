@@ -126,6 +126,7 @@ export class ProductRegistrationService {
 
     const newProduct = await this.prismaService.product.create({
       data: {
+        id: productExistis.id,
         name: updateProductRegistrationDto.name.toLocaleLowerCase(),
         price: updateProductRegistrationDto.price,
         user_id: req.user.id,
