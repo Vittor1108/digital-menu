@@ -19,7 +19,7 @@ model User {
   tokenForgotPassword String?     @unique
   activeAccount       Boolean     @default(false)
   created_at          DateTime    @default(now())
-  updeated_at         DateTime    @default(now())
+  updeated_at         DateTime    @default(now()) @updatedAt
   photos              PhotoUser[]
 
   @@map("users")
@@ -32,7 +32,7 @@ model PhotoUser {
   url          String
   user_id      Int
   created_at   DateTime @default(now())
-  updeated_at  DateTime @default(now())
+  updeated_at  DateTime @default(now()) @updatedAt
   user         User     @relation(fields: [user_id], references: [id])
 
   @@map("photo_users")

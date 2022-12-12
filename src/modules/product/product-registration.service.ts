@@ -93,6 +93,12 @@ export class ProductRegistrationService {
       );
     }
 
+    await this.prismaService.product.delete({
+      where: {
+        id: id,
+      },
+    });
+
     const categories_id = updateProductRegistrationDto.categories_id.map(
       (id) => {
         return {
@@ -118,25 +124,18 @@ export class ProductRegistrationService {
       );
     }
 
-    const newProduct = await this.prismaService.product.update({
-      where: {
-        id,
-      },
+    const newProduct = await this.prismaService.product.create({
       data: {
         name: updateProductRegistrationDto.name.toLocaleLowerCase(),
         price: updateProductRegistrationDto.price,
+        user_id: req.user.id,
         Product_Category: {
-          updateMany: {
+          createMany: {
             data: categories_id,
-            where: {
-              product_id: i
-              d,
-            },
           },
         },
       },
     });
-
     return newProduct;
   };
 

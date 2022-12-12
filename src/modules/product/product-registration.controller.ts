@@ -33,7 +33,7 @@ export class ProductRegistrationController {
     );
   }
 
-  @Put(':id')
+  @Post(':id')
   updated(
     @Body() updateProductRegistrationDto: UpdateProductRegistrationDto,
     @Param('id') id: number,
