@@ -27,10 +27,10 @@ model User {
 
 model PhotoUser {
   id           Int      @id @default(autoincrement())
+  user_id      Int
   filename     String
   originalname String
   url          String
-  user_id      Int
   created_at   DateTime @default(now())
   updeated_at  DateTime @default(now()) @updatedAt
   user         User     @relation(fields: [user_id], references: [id])
@@ -40,13 +40,27 @@ model PhotoUser {
 
 model Category {
   id               Int                @id @default(autoincrement())
-  name             String
   user_id          Int
+  name             String
   created_at       DateTime           @default(now())
   updeated_at      DateTime           @default(now())
   Category_Product Product_Category[]
+  PhotoCategory    PhotoCategory[]
 
   @@map("categories")
+}
+
+model PhotoCategory {
+  id           Int      @id @default(autoincrement())
+  category_id  Int
+  filename     String
+  originalname String
+  url          String
+  category     Category @relation(fields: [category_id], references: [id])
+  created_at   DateTime @default(now())
+  updeated_at  DateTime @default(now()) @updatedAt
+
+  @@map("photo_categories")
 }
 
 model Product {
@@ -55,6 +69,7 @@ model Product {
   price            Float
   user_id          Int
   Product_Category Product_Category[]
+  ProductPhoto     ProductPhoto[]
 
   @@map("products")
 }
@@ -62,9 +77,24 @@ model Product {
 model Product_Category {
   product     Product  @relation(fields: [product_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   product_id  Int
-  category    Category @relation(fields: [category_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   category_id Int
+  category    Category @relation(fields: [category_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  created_at  DateTime @default(now())
+  updeated_at DateTime @default(now()) @updatedAt
 
   @@id([category_id, product_id])
   @@map("products_categories")
+}
+
+model ProductPhoto {
+  id           Int      @id @default(autoincrement())
+  product_id   Int
+  product      Product  @relation(fields: [product_id], references: [id])
+  filename     String
+  originalname String
+  url          String
+  created_at   DateTime @default(now())
+  updeated_at  DateTime @default(now()) @updatedAt
+
+  @@map("photo_products")
 }

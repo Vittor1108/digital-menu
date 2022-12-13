@@ -163,6 +163,23 @@ export class ProductRegistrationService {
     return allProducts;
   };
 
+  public findOne = async (id: number): Promise<ProductRegistration> => {
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!product) {
+      throw new HttpException(
+        HelpMessager.product_not_exits,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return product;
+  };
+
   public delete = async (id: number, req: any): Promise<boolean> => {
     const product = await this.prismaService.product.findUnique({
       where: {

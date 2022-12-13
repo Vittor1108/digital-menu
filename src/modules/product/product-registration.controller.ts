@@ -1,13 +1,13 @@
 import {
   Body,
   Controller,
-  Post,
-  UseGuards,
-  Request,
-  Put,
-  Param,
-  Get,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
@@ -33,7 +33,7 @@ export class ProductRegistrationController {
     );
   }
 
-  @Post(':id')
+  @Put(':id')
   updated(
     @Body() updateProductRegistrationDto: UpdateProductRegistrationDto,
     @Param('id') id: number,
@@ -49,6 +49,11 @@ export class ProductRegistrationController {
   @Get()
   findAll(@Request() req: any): Promise<ProductRegistration[]> {
     return this.productRegistrationService.findAll(req);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<ProductRegistration> {
+    return this.productRegistrationService.findOne(id);
   }
 
   @Delete(':id')

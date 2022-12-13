@@ -6,6 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PhotoUserModule } from './modules/photo-user/photo-user.module';
 import { ProductRegistrationModule } from './modules/product/product-registration.module';
 import { CategoryModule } from './modules/category/category.module';
+import { PhotoCategoryModule } from './modules/photo-category/photo-category.module';
+import { PhotoProductModule } from './modules/photo-product/photo-product.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { CategoryModule } from './modules/category/category.module';
     PhotoUserModule,
     ProductRegistrationModule,
     CategoryModule,
+    PhotoCategoryModule,
+    PhotoProductModule,
   ],
   controllers: [],
   providers: [],

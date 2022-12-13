@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/PrismaService';
 import { resolve } from 'path';
-import { PhotoUser } from './entities/photo-user.entity';
+import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
+import { removeFile } from 'src/utils/file-upload.utils';
+import { PhotoUser } from './entities/photo-user.entity';
 
 @Injectable()
 export class PhotoUserService {
@@ -45,6 +46,7 @@ export class PhotoUserService {
         id,
       },
     });
+    removeFile(photo.filename);
     return true;
   };
 }
