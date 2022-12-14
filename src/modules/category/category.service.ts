@@ -87,6 +87,16 @@ export class CategoryService {
       where: {
         user_id: req.user.id,
       },
+      select: {
+        id: true,
+        name: true,
+        PhotoCategory: {
+          select: {
+            filename: true,
+            url: true,
+          },
+        },
+      },
     });
 
     return allCategories;

@@ -10,6 +10,7 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { diskStorage } from 'multer';
 import { resolve } from 'path';
 import { editFileName, imageFilter } from 'src/utils/file-upload.utils';
+import { PhotoProduct } from './entities/photo-product.entity';
 import { PhotoProductService } from './photo-product.service';
 
 @Controller('photo-product')
@@ -29,12 +30,12 @@ export class PhotoProductController {
   async uploadedFile(
     @UploadedFile() file,
     @Param('id') id: number,
-  ): Promise<any> {
+  ): Promise<PhotoProduct> {
     return this.photoProductService.upload(file, id);
   }
 
   @Delete(':id')
   async deletFile(@Param('id') id: number): Promise<boolean> {
-    return null;
+    return this.photoProductService.delete(id);
   }
 }

@@ -140,7 +140,7 @@ export class ProductRegistrationService {
     return newProduct;
   };
 
-  public findAll = async (req: any): Promise<any[]> => {
+  public findAll = async (req: any): Promise<ProductRegistration[]> => {
     const allProducts = await this.prismaService.product.findMany({
       where: {
         user_id: req.user.id,
@@ -149,12 +149,21 @@ export class ProductRegistrationService {
         id: true,
         name: true,
         price: true,
-        user_id: true,
         Product_Category: {
           select: {
             category_id: true,
-            category: true,
+            category: {
+              select: {
+                name: true,
+              },
+            },
             product_id: false,
+          },
+        },
+        ProductPhoto: {
+          select: {
+            url: true,
+            filename: true,
           },
         },
       },
@@ -167,6 +176,27 @@ export class ProductRegistrationService {
     const product = await this.prismaService.product.findUnique({
       where: {
         id,
+      },
+      select: {
+        name: true,
+        price: true,
+        ProductPhoto: {
+          select: {
+            url: true,
+            filename: true,
+          },
+        },
+        Product_Category: {
+          select: {
+            category_id: true,
+            category: {
+              select: {
+                name: true,
+              },
+            },
+            product_id: false,
+          },
+        },
       },
     });
 
