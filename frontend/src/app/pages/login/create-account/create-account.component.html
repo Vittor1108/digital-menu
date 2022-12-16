@@ -1,0 +1,111 @@
+<form [formGroup]="form">
+  <h1>Criar Conta</h1>
+  <p>Por favor preencha os dados para continuar</p>
+  <div class="names">
+    <div>
+      <label for="firstName">Primeiro Nome</label>
+      <input
+        type="text"
+        placeholder="Vittor"
+        id="firstName"
+        formControlName="firstName"
+      />
+      <p
+        *ngIf="form.get('firstName')?.errors && form.get('firstName')?.touched"
+        class="errorMessage"
+      >
+        Nome é obrigatório
+      </p>
+    </div>
+    <div>
+      <label for="lastName">Ultimo Nome</label>
+      <input
+        type="text"
+        placeholder="Daniel"
+        id="lastName"
+        formControlName="lastName"
+      />
+      <p
+        *ngIf="form.get('lastName')?.errors && form.get('lastName')?.touched"
+        class="errorMessage"
+      >
+        Ultimo nome é obrigatório
+      </p>
+    </div>
+  </div>
+  <div>
+    <label for="cpfCnpj">CPF ou CNPJ</label>
+    <input
+      type="text"
+      placeholder="CPF ou CNPJ"
+      id="cpfCnpj"
+      formControlName="cpfCnpj"
+      mask="000.000.000-99 || 00.000.000/0000-00"
+    />
+    <p
+      *ngIf="form.get('cpfCnpj')?.errors && form.get('cpfCnpj')?.touched"
+      class="errorMessage"
+    >
+      CPF ou CNPJ obrigatório
+    </p>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input
+      type="email"
+      placeholder="email@dominio.com"
+      id="email"
+      formControlName="email"
+    />
+    <p
+      *ngIf="form.get('email')?.errors && form.get('email')?.touched"
+      class="errorMessage"
+    >
+      Email obrigatório
+    </p>
+  </div>
+  <div>
+    <label for="password">Senha</label>
+    <input
+      type="password"
+      placeholder="*****"
+      id="password"
+      formControlName="email"
+    />
+    <p
+      *ngIf="form.get('password')?.errors && form.get('password')?.dirty"
+      class="errorMessage"
+    >
+      Senha obrigatório
+    </p>
+    <p
+      *ngIf="form.get('password')?.errors?.['short'] && form.get('password')?.touched"
+      class="errorMessage"
+    >
+      Senha precisa no minímo 6 caracteres
+    </p>
+  </div>
+  <div>
+    <label for="confirmPassword">Confirmar Senha</label>
+    <input
+      type="password"
+      placeholder="*****"
+      id="confirmPassword"
+      formControlName="confirmPassword"
+    />
+    <p
+      *ngIf="
+        form.get('confirmPassword')?.errors &&
+        form.get('confirmPassword')?.touched
+      "
+      class="errorMessage"
+    >
+      Confirmar senha obrigatório
+    </p>
+  </div>
+  <div class="divInputCheck">
+    <input type="checkbox" class="checbox" />Aceito os termos e condições
+  </div>
+  <button>Criar Conta</button>
+  <span>Já possuiu uma conta? <a routerLink="">Login</a></span>
+</form>
