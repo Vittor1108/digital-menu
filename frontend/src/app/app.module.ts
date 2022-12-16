@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,6 +31,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     BrowserAnimationsModule,
     NgxMaskModule.forRoot(),
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

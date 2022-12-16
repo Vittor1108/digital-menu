@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../service/auth/auth.service';
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
@@ -8,7 +9,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class CreateAccountComponent implements OnInit {
   public maskCpfOrCnpj: string = '000.000.000-99';
   public form: FormGroup;
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -21,4 +25,12 @@ export class CreateAccountComponent implements OnInit {
       check: [false],
     });
   }
+
+  public onSubmit = () => {
+    this.authService.createUser(this.form.value);
+  };
+
+  public changeCheck = (): void => {
+    this.form.value.check = !this.form.value.check;
+  };
 }

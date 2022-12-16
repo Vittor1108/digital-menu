@@ -103,6 +103,10 @@ form {
     color: white;
     font-size: 14px;
     cursor: pointer;
+    &:disabled{
+      opacity: 0.5;
+      cursor: no-drop;
+    }
   }
 
   > span {
