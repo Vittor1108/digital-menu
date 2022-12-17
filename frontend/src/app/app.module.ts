@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +12,10 @@ import { DialogForgotPasswordComponent } from './components/dialog-forgot-passwo
 import { CreateAccountComponent } from './pages/login/create-account/create-account.component';
 import { SignComponent } from './pages/login/sign/sign.component';
 import { HomeComponent } from './pages/home/home.component';
-
+import { HTTPListener, HTTPStatus } from './service/loader/loader.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { DialogCreatAccountComponent } from './components/dialog-creat-account/dialog-creat-account.component';
+const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
@@ -23,6 +26,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     CreateAccountComponent,
     SignComponent,
     HomeComponent,
+    DialogCreatAccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,8 +36,16 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     NgxMaskModule.forRoot(),
     ReactiveFormsModule,
     HttpClientModule,
+    NgxSpinnerModule,
   ],
-  providers: [],
+  providers: [
+    ...RXJS_Services,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HTTPListener,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
