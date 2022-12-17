@@ -37,7 +37,7 @@ export class SignComponent implements OnInit {
   public onSubmit = (): void => {
     this.authService.login(this.form.value).subscribe({
       next: (res) => {
-        // this.saveLogin(res.token);
+        this.saveLogin(res.token);
         this.router.navigate(['home']);
         this.errorMessage = '';
       },
