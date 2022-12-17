@@ -7,21 +7,34 @@ import { AuthService } from 'src/app/service/auth/auth.service';
   styleUrls: ['./confirm-account.component.scss'],
 })
 export class ConfirmAccountComponent implements OnInit {
+  private userToken: string;
+  public errorValidation: boolean;
   constructor(
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.validationToken();
   }
 
-  public redirect = () => {
+  public redirect = (): void => {
     this.router.navigate(['']);
   };
 
-  private validationToken = () => {
-    this.activeRoute.params.subscribe((params) => console.log(params['id']));
+  private validationToken = (): void => {
+    this.activeRoute.params.subscribe(
+      (params) => (this.userToken = params['id'])
+    );
+
+    this.authService.validationToken(this.userToken).subscribe({
+      next: (res) =>{
+        this.errorValidation = false;
+      },
+      error: (err) => {
+        this.errorValidation = true;
+      }
+    });
   };
 }

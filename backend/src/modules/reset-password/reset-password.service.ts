@@ -87,4 +87,21 @@ export class ResetPasswordService {
 
     return true;
   };
+
+  public verifyToken = async (token: string) => {
+    const tokenExists = await this.prismaService.user.findUnique({
+      where: {
+        tokenForgotPassword: token,
+      },
+    });
+
+    if (!tokenExists) {
+      throw new HttpException(
+        HelpMessager.userNotFoundToken,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    return true;
+  };
 }

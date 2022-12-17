@@ -1,16 +1,39 @@
-<form action="">
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
   <h1>Acesse sua conta</h1>
   <p>Por favor entre com seu email e senha para continuar</p>
   <div>
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="email@gmail.com" />
+    <input
+      type="email"
+      id="email"
+      placeholder="email@gmail.com"
+      formControlName="email"
+    />
+    <p
+      *ngIf="form.get('email')?.errors && form.get('email')?.touched"
+      class="errorMessage"
+    >
+      Email é obrigatório
+    </p>
   </div>
   <div>
     <label for="password">Password</label>
-    <input type="password" placeholder="*****" id="password" />
+    <input
+      type="password"
+      placeholder="*****"
+      id="password"
+      formControlName="password"
+    />
+    <p
+      *ngIf="form.get('password')?.errors && form.get('password')?.touched"
+      class="errorMessage"
+    >
+      Senha é obrigatório
+    </p>
   </div>
   <div><input type="checkbox" class="checbox" />Lembre de mim</div>
   <a (click)="openDialog()">Esqueceu sua senha?</a>
-  <button>Entrar</button>
+  <button type="submit">Entrar</button>
+  <p class="errorMessage" *ngIf="errorMessage">{{ errorMessage }}</p>
   <p>Não possui conta? <a routerLink="create-account">Criar Conta</a></p>
 </form>

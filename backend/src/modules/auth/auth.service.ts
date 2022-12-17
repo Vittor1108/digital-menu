@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/database/PrismaService';
 import bcrypt from 'src/utils/bcrypt';
 import { User } from '../user/entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +21,7 @@ export class AuthService {
       return null;
     }
 
-    if (!bcrypt.comparePassword(password, user.password)) {
+    if (!(await bcrypt.comparePassword(password, user.password))) {
       return null;
     }
     return user;

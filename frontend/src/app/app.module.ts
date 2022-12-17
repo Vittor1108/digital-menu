@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +16,8 @@ import { HTTPListener, HTTPStatus } from './service/loader/loader.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DialogCreatAccountComponent } from './components/dialog-creat-account/dialog-creat-account.component';
 import { ConfirmAccountComponent } from './pages/login/confirm-account/confirm-account.component';
+import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
+import { DialogConfirmResetPasswordComponent } from './components/dialog-confirm-reset-password/dialog-confirm-reset-password.component';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -29,6 +31,8 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     HomeComponent,
     DialogCreatAccountComponent,
     ConfirmAccountComponent,
+    ResetPasswordComponent,
+    DialogConfirmResetPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +43,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     ReactiveFormsModule,
     HttpClientModule,
     NgxSpinnerModule,
+    FormsModule,
   ],
   providers: [
     ...RXJS_Services,

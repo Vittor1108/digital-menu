@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../service/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+//COMPONENTS
 import { DialogCreatAccountComponent } from 'src/app/components/dialog-creat-account/dialog-creat-account.component';
+//SERVICES
+import { AuthService } from '../../../service/auth/auth.service';
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
@@ -16,7 +19,8 @@ export class CreateAccountComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authService: AuthService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -35,8 +39,11 @@ export class CreateAccountComponent implements OnInit {
     this.authService.createUser(this.form.value).subscribe({
       next: (res) => {
         this.dialog.open(DialogCreatAccountComponent, {
-          width: '300px',
+          maxWidth: '500px',
+          width: '90%'
         });
+
+        this.router.navigate(['']);
       },
       error: (err) => {
         this.hasError = true;

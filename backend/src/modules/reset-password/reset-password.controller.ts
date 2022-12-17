@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Param } from '@nestjs/common';
+import { Body, Controller, Patch, Param, Get } from '@nestjs/common';
 import { ResetPasswordService } from './reset-password.service';
 import { ForgotPasswrodDto } from './dto/forgot-password.dto';
 import { ResetPassworDto } from './dto/reset-password.dto';
@@ -15,5 +15,10 @@ export class ResetPasswordController {
   @Patch(':token')
   resetPassword(@Param('token') token: string, @Body() data: ResetPassworDto) {
     return this.resetPasswordService.resetPassword(token, data);
+  }
+
+  @Get(':token')
+  verifyToken(@Param('token') token: string) {
+    return this.resetPasswordService.verifyToken(token);
   }
 }

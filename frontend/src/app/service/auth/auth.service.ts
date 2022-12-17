@@ -15,7 +15,9 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private apiUrlCreateUser = `${urlApi}/user`;
-  private apiUrlActiveAccount: string = `${urlApi}/active-account`
+  private apiUrlActiveAccount: string = `${urlApi}/active-account`;
+  private apiUrlResetPassword: string = `${urlApi}/reset-password`;
+  private apiUrlLogin: string = `${urlApi}/auth`;
   constructor(private readonly http: HttpClient) {}
 
   public createUser = (data: ICreateUser): Observable<IReturnCreateUser> => {
@@ -26,7 +28,42 @@ export class AuthService {
     });
   };
 
-  public validationToken = (token: string) => {
-    return this.http.patch
-  }
+  public validationToken = (
+    token: string,
+    action: number = 1
+  ): Observable<boolean> => {
+    if (action === 1) {
+      return this.http.patch<boolean>(
+        `${this.apiUrlActiveAccount}/${token}`,
+        {}
+      );
+    } else {
+      return this.http.get<boolean>(`${this.apiUrlResetPassword}/${token}`);
+    }
+  };
+
+  public forgotPassowrd = (email: string): Observable<boolean> => {
+    return this.http.patch<boolean>(`${this.apiUrlResetPassword}`, {
+      email,
+    });
+  };
+
+  public resetPassword = (
+    password: string,
+    token: string
+  ): Observable<boolean> => {
+    return this.http.patch<boolean>(`${this.apiUrlResetPassword}/${token}`, {
+      password,
+    });
+  };
+
+  public login = (data: {
+    email: string;
+    password: string;
+  }): Observable<{ token: string }> => {
+    return this.http.post<{ token: string }>(`${this.apiUrlLogin}`, {
+      email: data.email,
+      password: data.password,
+    });
+  };
 }

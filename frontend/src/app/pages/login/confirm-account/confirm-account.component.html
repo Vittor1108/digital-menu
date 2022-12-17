@@ -1,6 +1,12 @@
-<section>
+<section *ngIf="!errorValidation">
   <img src="../../../../assets/images/confirm.png" alt="Conta confirmada" />
   <h1>Conta ativa!</h1>
   <p>Parabéns você acaba de acabou de ativar sua conta na digita-menu</p>
   <button (click)="redirect()">Logar</button>
+</section>
+<section *ngIf="errorValidation">
+  <img src="../../../../assets/images/error.png" alt="Token inválido" />
+  <h1>Token Inválido</h1>
+  <p>Não foi possível ativar sua conta. Por favor entre em contato ou tente novamente</p>
+  <button (click)="redirect()">OK</button>
 </section>
