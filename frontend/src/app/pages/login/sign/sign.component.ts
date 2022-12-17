@@ -15,9 +15,5 @@ export class SignComponent implements OnInit {
       width: '90%',
       maxWidth: '500px',
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Dialog fechou');
-    });
   };
 }

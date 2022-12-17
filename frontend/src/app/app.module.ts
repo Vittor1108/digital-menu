@@ -15,6 +15,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { HTTPListener, HTTPStatus } from './service/loader/loader.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DialogCreatAccountComponent } from './components/dialog-creat-account/dialog-creat-account.component';
+import { ConfirmAccountComponent } from './pages/login/confirm-account/confirm-account.component';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -27,6 +28,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     SignComponent,
     HomeComponent,
     DialogCreatAccountComponent,
+    ConfirmAccountComponent,
   ],
   imports: [
     BrowserModule,

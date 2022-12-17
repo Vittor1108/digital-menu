@@ -18,6 +18,12 @@ form {
     color: $secondary-black;
   }
 
+  >.errorMessage{
+    text-align: center;
+    margin-top: 10px;
+    color: red;
+  }
+
   > div {
     margin-bottom: 25px;
     label {

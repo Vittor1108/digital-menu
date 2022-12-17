@@ -25,8 +25,21 @@ export class UserService {
       },
     });
 
+    const userCpfOrCnpjExists = await this.prismaService.user.findUnique({
+      where: {
+        cpf_cnpj: data.cpf_cnpj,
+      },
+    });
+
     if (userEmailExists) {
       throw new HttpException(HelpMessager.email_exits, HttpStatus.BAD_REQUEST);
+    }
+
+    if (userCpfOrCnpjExists) {
+      throw new HttpException(
+        HelpMessager.CpfOrCnpjExitis,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     if (!this.validateCpfOrCnpj(cpf_cnpj)) {
@@ -50,7 +63,10 @@ export class UserService {
     };
     transport.sendMail(mailOptions, (err) => {
       if (err) {
-        throw new HttpException('Deu erro aqui em', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Erro ao enviar o email',
+          HttpStatus.BAD_REQUEST,
+        );
       }
     });
     const user = await this.prismaService.user.create({

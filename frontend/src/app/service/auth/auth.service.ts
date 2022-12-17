@@ -15,13 +15,18 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private apiUrlCreateUser = `${urlApi}/user`;
+  private apiUrlActiveAccount: string = `${urlApi}/active-account`
   constructor(private readonly http: HttpClient) {}
 
   public createUser = (data: ICreateUser): Observable<IReturnCreateUser> => {
-    return this.http.post(`${this.apiUrlCreateUser}`, {
+    return this.http.post<IReturnCreateUser>(`${this.apiUrlCreateUser}`, {
       email: data.email,
       password: data.password,
       cpf_cnpj: data.cpfCnpj,
     });
   };
+
+  public validationToken = (token: string) => {
+    return this.http.patch
+  }
 }

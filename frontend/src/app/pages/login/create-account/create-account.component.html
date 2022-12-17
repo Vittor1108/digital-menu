@@ -119,8 +119,12 @@
     </p>
   </div>
   <div class="divInputCheck">
-    <input type="checkbox" class="checbox" (change)="changeCheck()"/>Aceito os termos e condições
+    <input type="checkbox" class="checbox" (change)="changeCheck()" />Aceito os
+    termos e condições
   </div>
-  <button type="submit" [disabled]="!form.valid || !form.value.check">Criar Conta</button>
+  <button type="submit" [disabled]="!form.valid || !form.value.check">
+    Criar Conta
+  </button>
   <span>Já possuiu uma conta? <a routerLink="">Login</a></span>
+  <p class="errorMessage" *ngIf="hasError">{{ errorMessage }}</p>
 </form>
