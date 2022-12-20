@@ -157,6 +157,9 @@
   }
   .buttons {
     margin-top: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     button {
       background-color: #ff0018;
       outline-color: #ff0018;
@@ -167,6 +170,12 @@
       color: white;
       border-radius: 5px;
       cursor: pointer;
+
+      &:nth-child(2) {
+        background-color: #333;
+        border-color: #333;
+        outline-color: #333;
+      }
     }
   }
 }

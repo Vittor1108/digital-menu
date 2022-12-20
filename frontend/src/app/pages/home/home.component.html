@@ -4,7 +4,11 @@
       <div><img src="../../../assets/images/logo.png" alt="Logo" /></div>
       <ul>
         <li>
-          <a>
+          <a
+            routerLinkActive="activeRoute"
+            routerLink="/home"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
             <span>
               <i class="material-icons fs-16">dashboard</i>
               Dashboard
@@ -12,17 +16,26 @@
           </a>
         </li>
         <li class="treeMenu">
-          <a (click)="showAccordion(0)">
+          <a
+            (click)="showAccordion(0)"
+            [ngClass]="{'activeRouteAccordion' : verifyRoute('product')}"
+          >
             <span>
               <i class="fa fa-archive fs-16"></i>
               Produtos
             </span>
           </a>
           <ul class="accordion">
-            <li><a href="#">Catálago</a></li>
+            <li><a>Catálago</a></li>
             <li><a href="#">Lista</a></li>
             <li><a href="#">Grid</a></li>
-            <li><a href="#">Adicionar Produto</a></li>
+            <li>
+              <a
+                routerLink="add-product"
+                routerLinkActive="activeRouteAccordion"
+                >Adicionar Produto</a
+              >
+            </li>
             <li><a href="#">Detalhes do Produto</a></li>
           </ul>
         </li>

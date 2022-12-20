@@ -20,6 +20,7 @@ import { ResetPasswordComponent } from './pages/login/reset-password/reset-passw
 import { DialogConfirmResetPasswordComponent } from './components/dialog-confirm-reset-password/dialog-confirm-reset-password.component';
 import { ProductComponent } from './pages/product/product.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
+import { LoggedGuard } from './guards/logged/logged.guard';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -56,6 +57,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
       useClass: HTTPListener,
       multi: true,
     },
+    LoggedGuard,
   ],
   bootstrap: [AppComponent],
 })

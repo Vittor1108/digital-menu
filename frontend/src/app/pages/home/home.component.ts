@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   constructor() {}
-
   ngOnInit(): void {}
 
   public showAccordion = (numberAccordion: number): void => {
@@ -45,5 +44,11 @@ export class HomeComponent implements OnInit {
     const bgModal = document.querySelector<HTMLElement>('.bgModal');
     bgModal?.classList.remove('db');
     menu?.classList.remove('toggleMenuMobile');
+  };
+
+  public verifyRoute = (route: string): boolean => {
+    const location = window.location.href;
+    const verify = location.includes(route) ? true : false;
+    return verify;
   };
 }

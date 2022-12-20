@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoggedGuard } from './guards/logged/logged.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { ConfirmAccountComponent } from './pages/login/confirm-account/confirm-account.component';
 import { CreateAccountComponent } from './pages/login/create-account/create-account.component';
@@ -34,10 +35,12 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [LoggedGuard],
     children: [
       {
         path: 'add-product',
         component: AddProductComponent,
+        canActivate: [LoggedGuard],
       },
     ],
   },
