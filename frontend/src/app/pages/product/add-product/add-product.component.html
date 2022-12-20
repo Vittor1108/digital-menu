@@ -1,0 +1,47 @@
+<article>
+  <div class="path">
+    <ul>
+      <li><i class="fa-solid fa-house"></i>Home/</li>
+      <li>Produtos/</li>
+      <li>Adicionar</li>
+    </ul>
+  </div>
+  <div class="snack"></div>
+  <div class="infoProduct">
+    <div class="dataProduct">
+      <h1>Adicionar Produto</h1>
+      <div>
+        <label for="">Nome do Produto</label>
+        <input type="text" placeholder="Pizza">
+      </div>
+      <div class="doubleInput">
+        <div>
+          <label for="">Selecione a Categoria</label>
+          <select name="" id="">
+            <option value="">Pizzas</option>
+            <option value="">Pasteis</option>
+          </select>
+        </div>
+        <div>
+          <label for="">Preço</label>
+          <input type="text" prefix="R$" mask="separator.2" thousandSeparator="," placeholder="R$">
+        </div>
+      </div>
+      <div>
+        <label for="">Descrição</label>
+        <textarea name="" id="" cols="30" rows="10" (resize)="false" placeholder="Descrição do produto..."></textarea>
+      </div>
+      <div class="divInputFile">
+        <label for="">Imagens do Produto</label>
+        <div>
+          <input type="file" hidden>
+          <input type="text" placeholder="Selecione uma foto">
+          <button>Selecionar</button>
+        </div>
+      </div>
+    </div>
+    <div class="previewProduct">
+      <h2>Produto</h2>
+    </div>
+  </div>
+</article>

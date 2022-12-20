@@ -18,6 +18,8 @@ import { DialogCreatAccountComponent } from './components/dialog-creat-account/d
 import { ConfirmAccountComponent } from './pages/login/confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
 import { DialogConfirmResetPasswordComponent } from './components/dialog-confirm-reset-password/dialog-confirm-reset-password.component';
+import { ProductComponent } from './pages/product/product.component';
+import { AddProductComponent } from './pages/product/add-product/add-product.component';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -33,6 +35,8 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     ConfirmAccountComponent,
     ResetPasswordComponent,
     DialogConfirmResetPasswordComponent,
+    ProductComponent,
+    AddProductComponent,
   ],
   imports: [
     BrowserModule,

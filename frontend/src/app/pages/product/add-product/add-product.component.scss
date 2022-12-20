@@ -1,0 +1,93 @@
+@import "../.../../../../../assets/scss/variables.scss";
+@import "../.../../../../../assets/scss/generalStyles.scss";
+
+.snack {
+  margin-bottom: 1rem;
+}
+
+.infoProduct {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .dataProduct,
+  .previewProduct {
+    height: 80vh;
+    padding: 0 15px;
+    flex: 1;
+    background-color: white;
+    box-shadow: 0 1px 6px 1px rgb(69 65 78 / 10%);
+    margin-bottom: 30px;
+  }
+
+  .dataProduct {
+    margin-right: 20px;
+
+    h1 {
+      padding: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      text-transform: uppercase;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    > div {
+      margin-bottom: 16px;
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 3px;
+      }
+
+
+      textarea{
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+        padding: 10px 0 0 10px;
+        resize: none;
+      }
+    }
+    .doubleInput {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      > div {
+        flex: 1;
+        &:nth-child(1){
+          margin-right: 20px;
+        }
+        select {
+          width: 100%;
+          padding: 6px 12px;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 3px;
+        }
+      }
+    }
+
+    .divInputFile{
+      >div{
+        display: flex;
+        button{
+          cursor: pointer;
+          padding: 3px;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 0 .25rem .25rem 0;
+          color: #495057;
+          border-left: 0;
+        }
+      }
+    }
+  }
+
+  .previewProduct {
+  }
+}

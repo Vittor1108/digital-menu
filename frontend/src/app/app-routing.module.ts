@@ -6,6 +6,7 @@ import { CreateAccountComponent } from './pages/login/create-account/create-acco
 import { LoginComponent } from './pages/login/login.component';
 import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
 import { SignComponent } from './pages/login/sign/sign.component';
+import { AddProductComponent } from './pages/product/add-product/add-product.component';
 
 const routes: Routes = [
   {
@@ -32,8 +33,14 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
-  }
+    component: HomeComponent,
+    children: [
+      {
+        path: 'add-product',
+        component: AddProductComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({

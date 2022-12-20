@@ -1,7 +1,29 @@
-@import '../scss/variables.scss';
+@import "../scss/variables.scss";
 
-.errorMessage{
+.errorMessage {
   color: red;
   font-size: 12px;
   margin-top: 2px;
+}
+
+.path {
+  ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+
+    li {
+      font-size: 14px;
+      margin-right: 5px;
+      margin-bottom: 20px;
+      color: $primary-red;
+      &:last-child{
+        color: #6c757d;
+      }
+      i {
+        margin-right: 4px;
+        font-size: 10px;
+      }
+    }
+  }
 }
