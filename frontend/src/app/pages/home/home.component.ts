@@ -22,14 +22,28 @@ export class HomeComponent implements OnInit {
     });
   };
 
+  public toggleMenuMobile = (): void => {
+    const menu = document.querySelector<HTMLElement>('.primarySideBar');
+    const bgModal = document.querySelector<HTMLElement>('.bgModal');
+    menu?.classList.toggle('toggleMenuMobile');
+    bgModal?.classList.toggle('db');
+  };
+
   public toggleMenu = (): void => {
     const menu = document.querySelector<HTMLElement>('.primarySideBar');
+    const main = document.querySelector<HTMLElement>('main');
     const barsMenu = document.querySelectorAll<HTMLElement>('.menu > span');
     barsMenu.forEach((e) => {
       e.classList.toggle('menuFull');
     });
-    const main = document.querySelector<HTMLElement>('main');
     main?.classList.toggle('mainFullScreen');
     menu?.classList.toggle('toggleMenu');
+  };
+
+  public removeMenu = (): void => {
+    const menu = document.querySelector<HTMLElement>('.primarySideBar');
+    const bgModal = document.querySelector<HTMLElement>('.bgModal');
+    bgModal?.classList.remove('db');
+    menu?.classList.remove('toggleMenuMobile');
   };
 }
