@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-add-product',
@@ -8,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class AddProductComponent implements OnInit {
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   public changeImage = (image: number): void => {
     const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
@@ -29,4 +30,5 @@ export class AddProductComponent implements OnInit {
       e.classList.remove('imageSelected');
     });
   };
+
 }

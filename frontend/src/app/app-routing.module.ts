@@ -8,6 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
 import { SignComponent } from './pages/login/sign/sign.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
+import { CategoryComponent } from './pages/product/category/category.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,11 @@ const routes: Routes = [
       {
         path: 'add-product',
         component: AddProductComponent,
+        canActivate: [LoggedGuard],
+      },
+      {
+        path: 'category-product',
+        component: CategoryComponent,
         canActivate: [LoggedGuard],
       },
     ],

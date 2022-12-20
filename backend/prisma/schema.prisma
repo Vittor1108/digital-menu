@@ -42,8 +42,9 @@ model Category {
   id               Int                @id @default(autoincrement())
   user_id          Int
   name             String
+  description      String
   created_at       DateTime           @default(now())
-  updeated_at      DateTime           @default(now())
+  updeated_at      DateTime           @default(now()) @updatedAt
   Category_Product Product_Category[]
   PhotoCategory    PhotoCategory[]
 

@@ -21,6 +21,7 @@ import { DialogConfirmResetPasswordComponent } from './components/dialog-confirm
 import { ProductComponent } from './pages/product/product.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
 import { LoggedGuard } from './guards/logged/logged.guard';
+import { CategoryComponent } from './pages/product/category/category.component';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -38,6 +39,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     DialogConfirmResetPasswordComponent,
     ProductComponent,
     AddProductComponent,
+    CategoryComponent,
   ],
   imports: [
     BrowserModule,
