@@ -12,7 +12,7 @@
       <h1>Adicionar Produto</h1>
       <div>
         <label for="">Nome do Produto</label>
-        <input type="text" placeholder="Pizza">
+        <input type="text" placeholder="Pizza" />
       </div>
       <div class="doubleInput">
         <div>
@@ -24,24 +24,63 @@
         </div>
         <div>
           <label for="">Preço</label>
-          <input type="text" prefix="R$" mask="separator.2" thousandSeparator="," placeholder="R$">
+          <input
+            type="text"
+            prefix="R$"
+            mask="separator.2"
+            thousandSeparator=","
+            placeholder="R$"
+          />
         </div>
       </div>
       <div>
         <label for="">Descrição</label>
-        <textarea name="" id="" cols="30" rows="10" (resize)="false" placeholder="Descrição do produto..."></textarea>
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="10"
+          (resize)="(false)"
+          placeholder="Descrição do produto..."
+        ></textarea>
       </div>
       <div class="divInputFile">
         <label for="">Imagens do Produto</label>
         <div>
-          <input type="file" hidden>
-          <input type="text" placeholder="Selecione uma foto">
+          <input type="file" hidden />
+          <input type="text" placeholder="Selecione uma foto" />
           <button>Selecionar</button>
         </div>
       </div>
     </div>
     <div class="previewProduct">
       <h2>Produto</h2>
+      <div class="slider">
+        <ul>
+          <li>
+            <img src="../../../../assets/images/logo.png" alt="" />
+          </li>
+          <li>
+            <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+          </li>
+        </ul>
+        <div>
+          <ul>
+            <li>
+              <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+            </li>
+            <li>
+              <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+            </li>
+            <li>
+              <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="buttons">
+        <button>Salvar</button>
+      </div>
     </div>
   </div>
 </article>
