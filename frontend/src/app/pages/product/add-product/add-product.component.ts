@@ -9,4 +9,24 @@ export class AddProductComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  public changeImage = (image: number): void => {
+    const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
+    const images = document.querySelectorAll<HTMLElement>('.slider > ul img');
+    images.forEach((e, index) => {
+      if (index === image) {
+        images[image].classList.remove('removeImage');
+        return;
+      }
+      e.classList.add('removeImage');
+    });
+
+    thumbImages.forEach((e, index) => {
+      if (index === image) {
+        thumbImages[image].classList.add('imageSelected');
+        return;
+      }
+      e.classList.remove('imageSelected');
+    });
+  };
 }

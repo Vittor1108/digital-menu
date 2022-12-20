@@ -9,6 +9,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 1220px) {
+    display: block;
+  }
   .dataProduct,
   .previewProduct {
     height: 80vh;
@@ -21,7 +24,9 @@
 
   .dataProduct {
     margin-right: 20px;
-
+    @media screen and (max-width: 1220px) {
+      margin-right: 0;
+    }
     h1 {
       padding: 24px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -58,10 +63,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      @media screen and (max-width: 768px) {
+        display: block;
+      }
       > div {
         flex: 1;
         &:nth-child(1) {
           margin-right: 20px;
+          @media screen and (max-width: 768px) {
+            margin-right: 0;
+            margin-bottom: 0.5rem;
+          }
         }
         select {
           width: 100%;
@@ -99,6 +111,7 @@
     > .slider {
       height: 70%;
       position: relative;
+      overflow: hidden;
       > ul {
         list-style-type: none;
         > li {
@@ -106,9 +119,11 @@
           align-items: center;
           justify-content: center;
           position: absolute;
+          width: 100%;
+          height: 100%;
           > img {
-            max-width: 100%;
             object-fit: cover;
+            transition: all 0.6s;
           }
         }
       }
@@ -129,7 +144,7 @@
           li {
             width: 100px;
             border: 1px solid white;
-            margin-right: 4px;
+            margin-right: 6px;
             img {
               max-width: 100%;
               opacity: 0.5;
@@ -154,4 +169,13 @@
       cursor: pointer;
     }
   }
+}
+
+.removeImage {
+  transform: translateX(-100%);
+}
+
+.imageSelected {
+  opacity: 1 !important;
+  transform: scale(0.9);
 }
