@@ -3,7 +3,7 @@
     <div><img src="../../../assets/images/logo.png" alt="Logo" /></div>
     <ul>
       <li>
-        <a href="#">
+        <a>
           <span>
             <i class="material-icons fs-16">dashboard</i>
             Dashboard
@@ -11,14 +11,21 @@
         </a>
       </li>
       <li class="treeMenu">
-        <a href="#">
+        <a (click)="showAccordion(0)">
           <span>
             <i class="fa fa-archive fs-16"></i>
             Cardapios
           </span>
         </a>
+        <ul class="accordion">
+          <li><a href="#">Catálago</a></li>
+          <li><a href="#">Lista</a></li>
+          <li><a href="#">Grid</a></li>
+          <li><a href="#">Adicionar Produto</a></li>
+          <li><a href="#">Detalhes do Produto</a></li>
+        </ul>
       </li>
-      <li class="treeMenu">
+      <li>
         <a href="#">
           <span>
             <i class="fas fa-clipboard-list fs-16"></i>
@@ -35,20 +42,29 @@
         </a>
       </li>
       <li class="treeMenu">
-        <a href="#">
+        <a (click)="showAccordion(1)">
           <span>
             <i class="fas fa-file-invoice fs-16"></i>
             Faturas
           </span>
         </a>
+        <ul class="accordion">
+          <li><a href="#">Detalhes</a></li>
+          <li><a href="#">Lista</a></li>
+        </ul>
       </li>
-      <li class="treeMenu">
-        <a href="#">
+      <li class="treeMenu" (click)="showAccordion(2)">
+        <a>
           <span>
             <i class="fas fa-user-friends fs-16"></i>
             Clientes
           </span>
         </a>
+        <ul class="accordion">
+          <li><a href="#">Review</a></li>
+          <li><a href="#">Lista</a></li>
+          <li><a href="#">Social</a></li>
+        </ul>
       </li>
       <li>
         <a href="#">
@@ -72,16 +88,17 @@
 <main>
   <header>
     <nav>
-      <div class="menu">
+      <div class="menu" (click)="toggleMenu()">
         <span></span>
         <span></span>
         <span></span>
       </div>
+      <img src="../../../assets/images/logo.png" alt="Logo do Restaurante" />
       <div class="infoUser">
         <ul>
           <li>
-            <i class="flaticon-search text-disabled"></i>
             <input type="text" placeholder="Pesquise aqui..." />
+            <i class="fa-solid fa-magnifying-glass"></i>
           </li>
           <li>
             <a href="#">
@@ -104,6 +121,11 @@
           </li>
         </ul>
       </div>
+      <div class="menuAside">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </nav>
   </header>
   <section>
@@ -120,21 +142,21 @@
       </li>
       <li>
         <a href="#">
-          <i class="fa-thin fa-bell"></i>
+          <i class="fa-solid fa-bell"></i>
         </a>
       </li>
       <li>
         <a href="#">
-          <i class="fa-thin fa-pencil"></i>
+          <i class="fa-solid fa-pencil"></i>
         </a>
       </li>
       <li>
         <a href="#">
-          <i class="fa-thin fa-share-nodes"></i>
+          <i class="fa-solid fa-share-nodes"></i>
         </a>
       </li>
       <li>
-        <a href="#"><i class="fa-thin fa-gear"></i></a>
+        <a href="#"><i class="fa-solid fa-gear"></i></a>
       </li>
     </ul>
   </nav>
