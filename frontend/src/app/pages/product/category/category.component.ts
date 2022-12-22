@@ -11,7 +11,7 @@ export class CategoryComponent extends AddProductComponent {
   @ViewChild('inputFile') private inputFile: ElementRef;
   public form: FormGroup;
   public nameFiles: string;
-  private files: Array<any>;
+  public filesThumb: Array<string> = [];
   constructor(private readonly formBuilder: FormBuilder) {
     super();
   }
@@ -34,7 +34,13 @@ export class CategoryComponent extends AddProductComponent {
     inputFile?.click();
   };
 
-  public getInfoImage = (): void => {
-    console.log(this.inputFile.nativeElement.files);
+  public getInfoImage = (event: any): void => {
+    const file = (event.target as HTMLInputElement).files![0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.filesThumb.push(reader.result as string);
+      console.log(this.filesThumb);
+    };
+    reader.readAsDataURL(file);
   };
 }

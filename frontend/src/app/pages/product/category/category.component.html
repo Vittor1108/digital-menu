@@ -43,9 +43,8 @@
               type="file"
               hidden
               accept="image/png, image/jpeg, image/jpg, image/gif"
-              (change)="getInfoImage()"
+              (change)="getInfoImage($event)"
               #inputFile
-              multiple
               formControlName="photo"
             />
             <input type="text" placeholder="Selecione uma foto" />
@@ -55,33 +54,26 @@
       </div>
       <div class="previewProduct">
         <h2>Categoria</h2>
-        <div class="slider">
+        <div class="slider" *ngIf="filesThumb.length > 0">
           <ul>
-            <li>
-              <img src="../../../../assets/images/logo.png" alt="" />
-            </li>
-            <li>
-              <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+            <li *ngFor="let img of filesThumb">
+              <img src="{{ img }}" alt="" />
             </li>
           </ul>
           <div class="thumb">
             <ul>
-              <li>
-                <img
-                  src="../../../../assets/images/logo.png"
-                  alt=""
-                  (click)="changeImage(0)"
-                />
+              <li *ngFor="let img of filesThumb; let i = index">
+                <img src="{{ img }}" alt="" (click)="changeImage(i)" />
               </li>
-              <li>
-                <img
-                  src="../../../../assets/images/defaultLoginBg.jpeg"
-                  alt=""
-                  (click)="changeImage(1)"
-                />
-              </li>
+              >
             </ul>
           </div>
+        </div>
+        <div class="noImage" *ngIf="filesThumb.length === 0">
+          <img
+            src="../../../../assets/images/noImageIcon.png"
+            alt="Adicine uma imagem"
+          />
         </div>
         <div class="buttons">
           <button>Salvar</button>

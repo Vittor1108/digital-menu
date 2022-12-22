@@ -154,7 +154,16 @@
         }
       }
     }
+
+    .noImage {
+      height: 70%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #333;
+    }
   }
+
   .buttons {
     margin-top: 80px;
     display: flex;
