@@ -52,7 +52,7 @@ export class CategoryService {
     if (!categoryExistis) {
       throw new HttpException(
         HelpMessager.category_not_exits,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
     }
 
