@@ -187,6 +187,10 @@
       color: white;
       border-radius: 5px;
       cursor: pointer;
+      &:disabled {
+        opacity: 0.5;
+        cursor: no-drop;
+      }
       @media screen and (max-width: 600px) {
         display: block;
         width: 100%;

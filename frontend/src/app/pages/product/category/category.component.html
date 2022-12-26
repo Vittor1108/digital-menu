@@ -23,6 +23,12 @@
             id="name"
             formControlName="name"
           />
+          <p
+            class="errorMessage"
+            *ngIf="form.get('name')?.errors && form.get('name')?.touched"
+          >
+            Nome é Obrigatório
+          </p>
         </div>
         <div>
           <label for="description">Descrição</label>
@@ -35,6 +41,15 @@
             (resize)="(false)"
             placeholder="Descrição da categoria..."
           ></textarea>
+          <p
+            class="errorMessage"
+            *ngIf="
+              form.get('description')?.errors &&
+              form.get('description')?.touched
+            "
+          >
+            Descrição é Obrigatório
+          </p>
         </div>
         <div class="divInputFile">
           <label for="">Imagens da Categoria</label>
@@ -54,6 +69,15 @@
             />
             <button type="button" (click)="addImage()">Selecionar</button>
           </div>
+          <p
+            class="errorMessage"
+            *ngIf="
+              form.get('photo')?.errors &&
+              form.get('photo')?.touched
+            "
+          >
+            Imagem é Obrigatório
+          </p>
         </div>
       </div>
       <div class="previewProduct">
