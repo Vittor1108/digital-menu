@@ -27,7 +27,7 @@ export class PhotoCategoryService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    console.log(file);
     const photo = await this.prismaService.photoCategory.create({
       data: {
         filename: file.filename,

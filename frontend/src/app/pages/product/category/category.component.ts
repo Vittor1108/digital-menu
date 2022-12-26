@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { CategoriesService } from 'src/app/service/categories/categories.service';
 
 @Component({
   selector: 'app-category',
@@ -14,7 +15,10 @@ export class CategoryComponent extends AddProductComponent {
   public placeHolderInputFile: string = 'Selecione uma Foto';
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly categoryService: CategoriesService
+  ) {
     super();
   }
 
@@ -27,8 +31,21 @@ export class CategoryComponent extends AddProductComponent {
   }
 
   public onSubmit = (): void => {
-    console.log(this.form.value);
+    this.categoryService.createCategory(this.form.value).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.createImageCategory(res.id);
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
   };
+
+  private createImageCategory = (idCategory: number) => {
+    this.categoryService.createImageCategory(this.files, idCategory);
+  }
 
   public addImage = (): void => {
     const inputFile =
@@ -44,7 +61,6 @@ export class CategoryComponent extends AddProductComponent {
       this.listNameFiles.push(file.name);
       this.placeHolderInputFile = this.listNameFiles.join(', ');
       this.files.push(file);
-      console.log(this.files);
     };
     reader.readAsDataURL(file);
   };

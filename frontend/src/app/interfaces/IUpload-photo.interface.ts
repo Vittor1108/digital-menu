@@ -1,4 +1,4 @@
-export interface IUploadPhoto{
+export interface IUploadPhoto {
   lastModified: number;
   lastModifiedDate: Date;
   name: string;
@@ -7,3 +7,4 @@ export interface IUploadPhoto{
   webkiRelativePath: string;
   length: number;
 }
+
