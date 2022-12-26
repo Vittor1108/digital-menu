@@ -20,6 +20,9 @@
     background-color: white;
     box-shadow: 0 1px 6px 1px rgb(69 65 78 / 10%);
     margin-bottom: 30px;
+    @media screen and (max-width: 600px) {
+      height: 90vh;
+    }
   }
 
   .dataProduct {
@@ -124,6 +127,7 @@
           > img {
             object-fit: cover;
             transition: all 0.6s;
+            max-width: 100%;
           }
         }
       }
@@ -165,10 +169,14 @@
   }
 
   .buttons {
-    margin-top: 80px;
+    margin-top: 40px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    @media screen and (max-width: 600px) {
+      display: block;
+      margin-top: 10px;
+    }
     button {
       background-color: #ff0018;
       outline-color: #ff0018;
@@ -179,18 +187,25 @@
       color: white;
       border-radius: 5px;
       cursor: pointer;
-
+      @media screen and (max-width: 600px) {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+      }
       &:nth-child(2) {
         background-color: #333;
         border-color: #333;
         outline-color: #333;
+        @media screen and (max-width: 600px) {
+          margin-top: 10px;
+        }
       }
     }
   }
 }
 
 .removeImage {
-  transform: translateX(-100%);
+  transform: translateX(-120%);
 }
 
 .imageSelected {

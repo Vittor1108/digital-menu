@@ -47,7 +47,11 @@
               #inputFile
               formControlName="photo"
             />
-            <input type="text" placeholder="Selecione uma foto" />
+            <input
+              type="text"
+              placeholder="{{ placeHolderInputFile }}"
+              disabled
+            />
             <button type="button" (click)="addImage()">Selecionar</button>
           </div>
         </div>
@@ -63,9 +67,13 @@
           <div class="thumb">
             <ul>
               <li *ngFor="let img of filesThumb; let i = index">
-                <img src="{{ img }}" alt="" (click)="changeImage(i)" />
+                <img
+                  src="{{ img }}"
+                  alt=""
+                  (click)="changeImage(i)"
+                  [ngClass]="{ imageSelected: i === filesThumb.length - 1 }"
+                />
               </li>
-              >
             </ul>
           </div>
         </div>
@@ -76,8 +84,8 @@
           />
         </div>
         <div class="buttons">
-          <button>Salvar</button>
-          <button>Deletar Imagens</button>
+          <button type="submit" [disabled]="!form.valid">Salvar</button>
+          <button type="button" (click)="removeFiles()">Deletar Imagens</button>
         </div>
       </div>
     </div>
