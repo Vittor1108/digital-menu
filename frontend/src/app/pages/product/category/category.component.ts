@@ -15,6 +15,7 @@ export class CategoryComponent extends AddProductComponent {
   public placeHolderInputFile: string = 'Selecione uma Foto';
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
+  private formData = new FormData();
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoriesService
@@ -44,8 +45,8 @@ export class CategoryComponent extends AddProductComponent {
   };
 
   private createImageCategory = (idCategory: number) => {
-    this.categoryService.createImageCategory(this.files, idCategory);
-  }
+    this.categoryService.createImageCategory(this.formData, idCategory);
+  };
 
   public addImage = (): void => {
     const inputFile =
@@ -61,6 +62,7 @@ export class CategoryComponent extends AddProductComponent {
       this.listNameFiles.push(file.name);
       this.placeHolderInputFile = this.listNameFiles.join(', ');
       this.files.push(file);
+      this.formData.append('photo', file);
     };
     reader.readAsDataURL(file);
   };

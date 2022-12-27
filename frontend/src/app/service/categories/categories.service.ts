@@ -34,31 +34,33 @@ export class CategoriesService {
     );
   };
 
-  public createImageCategory = (files: Array<File>, idCategory: number) => {
-    files.forEach((file: File) => {
-      this.httpService
-        .post(
-          `${this.apiCategoryPhoto}/${idCategory}`,
-          {
-            filename: file.name,
-            originalname: file.name,
-          },
-          {
-            headers: new HttpHeaders().set(
-              'Authorization',
-              'Bearer ' + this.token
-            ),
-          }
-        )
-        .subscribe({
-          next: (res) => {
-            console.log(res);
-          },
+  public createImageCategory = (files: FormData, idCategory: number) => {
+    for (let pars of files.entries()) {
+      if (pars[1] instanceof File) {
+        this.httpService
+          .post(
+            `${this.apiCategoryPhoto}/${idCategory}`,
+            {
+              filename: pars[1].name,
+              originalname: pars[1].name,
+            },
+            {
+              headers: new HttpHeaders().set(
+                'Authorization',
+                'Bearer ' + this.token
+              ),
+            }
+          )
+          .subscribe({
+            next: (res) => {
+              console.log(res);
+            },
 
-          error: (err) => {
-            console.log(err);
-          },
-        });
-    });
+            error: (err) => {
+              console.log(err);
+            },
+          });
+      }
+    }
   };
 }

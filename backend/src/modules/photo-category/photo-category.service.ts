@@ -27,7 +27,13 @@ export class PhotoCategoryService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
     console.log(file);
+
+    if (!file) {
+      throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
+    }
+
     const photo = await this.prismaService.photoCategory.create({
       data: {
         filename: file.filename,
