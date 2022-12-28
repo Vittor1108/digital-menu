@@ -1,0 +1,23 @@
+div {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background-color: #ff9393;
+  color: #be0707;
+  border: 1px solid #be0707;
+  border-radius: .25rem;
+  font-size: 14px;
+  transition: all .3s;
+  max-height: 0;
+  transform: rotateX(90deg);
+  display: none;
+  h1{
+    margin-right: 5px;
+  }
+}
+
+.showSnackBar{
+  transform: rotate(0);
+  min-height: 50px;
+  display: flex;
+}

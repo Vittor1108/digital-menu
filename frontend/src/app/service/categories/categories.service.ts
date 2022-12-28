@@ -5,10 +5,11 @@ import {
   ICategoriesCreate,
   ICategoriesForm,
 } from '../../interfaces/ICategories-interface';
+import { IReturnUploadPhoto } from 'src/app/interfaces/IUpload-photo.interface';
 
 //MY IMPORTS
 import { urlApi } from 'src/app/config/configAPI';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -34,33 +35,22 @@ export class CategoriesService {
     );
   };
 
-  public createImageCategory = (files: FormData, idCategory: number) => {
-    for (let pars of files.entries()) {
-      if (pars[1] instanceof File) {
-        this.httpService
-          .post(
-            `${this.apiCategoryPhoto}/${idCategory}`,
-            {
-              filename: pars[1].name,
-              originalname: pars[1].name,
-            },
-            {
-              headers: new HttpHeaders().set(
-                'Authorization',
-                'Bearer ' + this.token
-              ),
-            }
-          )
-          .subscribe({
-            next: (res) => {
-              console.log(res);
-            },
-
-            error: (err) => {
-              console.log(err);
-            },
-          });
-      }
+  public createImageCategory = (files: Array<File>, idCategory: number): any => {
+    const formData = new FormData();
+    const filesReturn = [];
+    for (let file of files) {
+      formData.delete('file');
+      formData.append('file', file);
+      return this.httpService.post<IReturnUploadPhoto>(
+        `${this.apiCategoryPhoto}/${idCategory}`,
+        formData,
+        {
+          headers: new HttpHeaders().set(
+            'Authorization',
+            'Bearer ' + this.token
+          ),
+        }
+      );
     }
   };
 }

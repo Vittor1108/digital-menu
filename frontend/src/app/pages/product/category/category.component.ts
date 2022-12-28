@@ -1,7 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-category',
@@ -10,12 +18,23 @@ import { CategoriesService } from 'src/app/service/categories/categories.service
 })
 export class CategoryComponent extends AddProductComponent {
   @ViewChild('inputFile') private inputFile: ElementRef;
+  @Output() public titleSucess: string = 'Categoria Adicionada';
+  @Output() public messageSucess: string = 'Categoria Adicionada com sucesso!';
+  @Output() public messageError: string =
+    'Não foi possível adicionar a categoria. Tente Novamente.';
+  @Output() public titleError: string = 'Tente Novamente!';
+  @Output() public titleAtention: string = 'Atenção!';
+  @Output() public messageAtention: string =
+    'A categoria foi criada mas, a imagem da categoria não foi adicionada. Verifique a imagem na edição de categoria';
+  public eventSubjectError: Subject<void> = new Subject<void>();
+  public eventSubjectSucess: Subject<void> = new Subject<void>();
+  public eventSubjectAtention: Subject<void> = new Subject<void>();
+  private files: Array<File> = [];
   public form: FormGroup;
   public filesThumb: Array<string> = [];
   public placeHolderInputFile: string = 'Selecione uma Foto';
   private listNameFiles: Array<string> = [];
-  private files: Array<File> = [];
-  private formData = new FormData();
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoriesService
@@ -32,20 +51,31 @@ export class CategoryComponent extends AddProductComponent {
   }
 
   public onSubmit = (): void => {
+    window.scroll(0, 0);
     this.categoryService.createCategory(this.form.value).subscribe({
       next: (res) => {
-        console.log(res);
         this.createImageCategory(res.id);
       },
 
       error: (err) => {
-        console.log(err);
+        this.messageError = err.error.message;
+        this.eventSubjectError.next();
       },
     });
   };
 
   private createImageCategory = (idCategory: number) => {
-    this.categoryService.createImageCategory(this.formData, idCategory);
+    this.categoryService.createImageCategory(this.files, idCategory).subscribe({
+      next: (res: any) => {
+        this.eventSubjectSucess.next();
+        this.form.reset();
+        this.removeFiles();
+      },
+
+      err: (err: any) => {
+        this.eventSubjectAtention.next();
+      },
+    });
   };
 
   public addImage = (): void => {
@@ -62,7 +92,6 @@ export class CategoryComponent extends AddProductComponent {
       this.listNameFiles.push(file.name);
       this.placeHolderInputFile = this.listNameFiles.join(', ');
       this.files.push(file);
-      this.formData.append('photo', file);
     };
     reader.readAsDataURL(file);
   };

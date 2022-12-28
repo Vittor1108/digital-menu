@@ -8,3 +8,11 @@ export interface IUploadPhoto {
   length: number;
 }
 
+export interface IReturnUploadPhoto {
+  id: number;
+  category_id: number;
+  originalname: string;
+  url: string;
+  updated_at: Date;
+  created_at: Date;
+}

@@ -22,6 +22,10 @@ import { ProductComponent } from './pages/product/product.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
 import { LoggedGuard } from './guards/logged/logged.guard';
 import { CategoryComponent } from './pages/product/category/category.component';
+import { SnackSucessComponent } from './components/snacksbars/snack-sucess/snack-sucess.component';
+import { SnackErrorComponent } from './components/snacksbars/snack-error/snack-error.component';
+import { SnackAtetionComponent } from './components/snacksbars/snack-atetion/snack-atetion.component';
+
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -40,6 +44,9 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     ProductComponent,
     AddProductComponent,
     CategoryComponent,
+    SnackSucessComponent,
+    SnackErrorComponent,
+    SnackAtetionComponent,
   ],
   imports: [
     BrowserModule,
