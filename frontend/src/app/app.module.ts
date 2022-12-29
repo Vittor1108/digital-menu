@@ -25,6 +25,7 @@ import { CategoryComponent } from './pages/product/category/category.component';
 import { SnackSucessComponent } from './components/snacksbars/snack-sucess/snack-sucess.component';
 import { SnackErrorComponent } from './components/snacksbars/snack-error/snack-error.component';
 import { SnackAtetionComponent } from './components/snacksbars/snack-atetion/snack-atetion.component';
+import { EditCategoryComponent } from './pages/product/edit-category/edit-category.component';
 
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
@@ -47,6 +48,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     SnackSucessComponent,
     SnackErrorComponent,
     SnackAtetionComponent,
+    EditCategoryComponent,
   ],
   imports: [
     BrowserModule,
