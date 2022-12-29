@@ -37,7 +37,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <!-- <tr>
                 <td>001</td>
                 <td class="tdImage">
                   <img src="../../../../assets/images/french-fries.jpg" />
@@ -45,6 +45,18 @@
                 </td>
                 <td>20</td>
                 <td class="acoes">
+                  <a href="#">Editar</a>
+                  <a href="#">Excluir</a>
+                </td>
+              </tr> -->
+              <tr *ngFor="let category of allCategories">
+                <td>{{ category.id }}</td>
+                <td class="tdImage">
+                  <img src="{{ category.PhotoCategory[0].url }}" alt="" />
+                  {{ category.name }}
+                </td>
+                <td>20</td>
+                <td>
                   <a href="#">Editar</a>
                   <a href="#">Excluir</a>
                 </td>

@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   ICategoriesCreate,
   ICategoriesForm,
+  IGetAllCategories,
 } from '../../interfaces/ICategories-interface';
 import { IReturnUploadPhoto } from 'src/app/interfaces/IUpload-photo.interface';
 
@@ -14,7 +15,7 @@ import { Observable, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class CategoriesService {
-  private apiCreateCategory: string = `${urlApi}/category`;
+  private apiCategory: string = `${urlApi}/category`;
   private apiCategoryPhoto: string = `${urlApi}/photo-category`;
   private token: string =
     sessionStorage.getItem('token')! || localStorage.getItem('token')!;
@@ -24,7 +25,7 @@ export class CategoriesService {
     dataForm: ICategoriesForm
   ): Observable<ICategoriesCreate> => {
     return this.httpService.post<ICategoriesCreate>(
-      this.apiCreateCategory,
+      this.apiCategory,
       {
         name: dataForm.name,
         description: dataForm.description,
@@ -35,9 +36,11 @@ export class CategoriesService {
     );
   };
 
-  public createImageCategory = (files: Array<File>, idCategory: number): any => {
+  public createImageCategory = (
+    files: Array<File>,
+    idCategory: number
+  ): any => {
     const formData = new FormData();
-    const filesReturn = [];
     for (let file of files) {
       formData.delete('file');
       formData.append('file', file);
@@ -52,5 +55,11 @@ export class CategoriesService {
         }
       );
     }
+  };
+
+  public getAllCategoires = (): Observable<IGetAllCategories[]> => {
+    return this.httpService.get<IGetAllCategories[]>(this.apiCategory, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
   };
 }

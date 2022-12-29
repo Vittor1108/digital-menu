@@ -12,3 +12,15 @@ export interface ICategoriesCreate {
   updeated_at: Date;
   created_at: Date;
 }
+
+export interface IGetAllCategories {
+  id: number;
+  name: string;
+  description: string;
+  PhotoCategory: IPhotoCategory[];
+}
+
+interface IPhotoCategory {
+  filename: string;
+  url: string;
+}
