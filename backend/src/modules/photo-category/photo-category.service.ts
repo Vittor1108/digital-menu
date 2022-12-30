@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PhotoCategory } from '@prisma/client';
-import { resolve } from 'path';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
@@ -38,11 +37,10 @@ export class PhotoCategoryService {
       data: {
         filename: file.filename,
         originalname: file.originalname,
-        url: `${resolve()}/${this.pathImage}/${file.filename}`,
+        url: `${this.pathImage}/${file.filename}`,
         category_id: id,
       },
     });
-
     return photo;
   };
 
