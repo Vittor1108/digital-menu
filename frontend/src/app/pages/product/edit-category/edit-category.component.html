@@ -52,7 +52,12 @@
               <tr *ngFor="let category of allCategories">
                 <td>{{ category.id }}</td>
                 <td class="tdImage">
-                  <img src="{{ category.PhotoCategory[0].url }}" alt="" />
+                  <img
+                    src="../../../../../../backend/{{
+                      category.PhotoCategory[0].url
+                    }}"
+                    alt=""
+                  />
                   {{ category.name }}
                 </td>
                 <td>20</td>

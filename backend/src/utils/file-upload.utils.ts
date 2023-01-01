@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import { HttpException, HttpStatus } from '@nestjs/common';
 export const imageFilter = (req, file, callback) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|jfif)$/)) {
     return callback(new Error('Only image files are allowed!'), false);
   }
   callback(null, true);
