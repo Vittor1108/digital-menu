@@ -16,12 +16,10 @@ export const editFileName = (req, file, callback) => {
 };
 
 export const removeFile = (nameFile: string) => {
-  return fs.unlink(
-    `${resolve()}/src/assets/uploads/images/${nameFile}`,
-    (err) => {
-      if (err) {
-        throw new HttpException('Unknow Error', HttpStatus.BAD_REQUEST);
-      }
-    },
-  );
+  console.log(`${resolve()}`);
+  return fs.unlink(`${resolve()}/assets/uploads/images/${nameFile}`, (err) => {
+    if (err) {
+      throw new HttpException('Unknow Error', HttpStatus.BAD_REQUEST);
+    }
+  });
 };

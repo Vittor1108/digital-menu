@@ -30,9 +30,9 @@
           <table>
             <thead>
               <tr>
-                <th>ID do Produto</th>
+                <th>ID da Categoria</th>
                 <th>Nome da Categoria</th>
-                <th>Quantidade de Produtos</th>
+                <th>QTD de Produtos Relacionados</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -48,9 +48,9 @@
                   {{ category.name }}
                 </td>
                 <td>20</td>
-                <td>
+                <td class="actions">
                   <a href="#">Editar</a>
-                  <a href="#">Excluir</a>
+                  <a (click)="deleteCategory(category.id)">Excluir</a>
                 </td>
               </tr>
             </tbody>

@@ -101,13 +101,14 @@ section {
                 }
               }
 
-              .acoes {
+              .actions {
                 a {
                   text-decoration: none;
                   padding: .3rem 12px;
                   color: white;
                   border-radius: 3px;
                   transition: all .3s;
+                  cursor: pointer;
                   &:hover{
                     opacity: .5;
                   }

@@ -13,7 +13,7 @@ export class PhotoCategoryService {
   public upload = async (
     file: Express.Multer.File,
     id: number,
-  ): Promise<PhotoCategory> => {
+  ): Promise<any> => {
     const category = await this.prismaService.category.findUnique({
       where: {
         id,
@@ -27,21 +27,20 @@ export class PhotoCategoryService {
       );
     }
 
-    console.log(file);
-
     if (!file) {
       throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
     }
 
-    const photo = await this.prismaService.photoCategory.create({
-      data: {
-        filename: file.filename,
-        originalname: file.originalname,
-        url: `${this.baseURL}/${file.filename}`,
-        category_id: id,
-      },
-    });
-    return photo;
+    // const photo = await this.prismaService.photoCategory.create({
+    //   data: {
+    //     filename: file.filename,
+    //     originalname: file.originalname,
+    //     url: `${this.baseURL}/${file.filename}`,
+    //     category_id: id,
+    //   },
+    // });
+    console.log(file);
+    return 'photo';
   };
 
   public deleteFile = async (id: number): Promise<boolean> => {

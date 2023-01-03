@@ -62,4 +62,10 @@ export class CategoriesService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
+
+  public deleteCategory = (id: number): Observable<boolean> => {
+    return this.httpService.delete<boolean>(`${this.apiCategory}/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
+  };
 }

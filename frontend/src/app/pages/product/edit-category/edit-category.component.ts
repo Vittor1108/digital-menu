@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-category',
@@ -9,7 +10,10 @@ import { CategoriesService } from 'src/app/service/categories/categories.service
 })
 export class EditCategoryComponent implements OnInit {
   public allCategories: IGetAllCategories[];
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    private readonly dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -19,12 +23,21 @@ export class EditCategoryComponent implements OnInit {
     this.categoriesService.getAllCategoires().subscribe({
       next: (res) => {
         this.allCategories = res;
-        console.log(res);
       },
 
       error: (err) => {
         console.log(err);
       },
+    });
+  };
+
+  public deleteCategory = (id: number): void => {
+    this.categoriesService.deleteCategory(id).subscribe({
+      next: (res) => {
+        this.getAllCategories();
+      },
+
+      error: (err) => {},
     });
   };
 }

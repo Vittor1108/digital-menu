@@ -126,11 +126,25 @@ export class CategoryService {
       );
     }
 
-    await this.prismaService.category.delete({
+    // await this.prismaService.photoCategory.deleteMany({
+    //   where: {
+    //     category_id: id,
+    //   },
+    // });
+
+    const photoCategory = await this.prismaService.photoCategory.findMany({
       where: {
-        id,
+        category_id: id,
       },
     });
+
+    console.log(photoCategory);
+
+    // await this.prismaService.category.delete({
+    //   where: {
+    //     id,
+    //   },
+    // });
 
     return true;
   };
