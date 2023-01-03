@@ -152,6 +152,8 @@
               max-width: 100%;
               opacity: 0.5;
               cursor: pointer;
+              aspect-ratio: 3/2;
+              object-fit: contain;
             }
           }
         }

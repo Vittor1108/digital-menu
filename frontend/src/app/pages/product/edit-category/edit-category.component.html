@@ -31,28 +31,20 @@
             <thead>
               <tr>
                 <th>ID do Produto</th>
-                <th>Nome do Produto</th>
+                <th>Nome da Categoria</th>
                 <th>Quantidade de Produtos</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              <!-- <tr>
-                <td>001</td>
-                <td class="tdImage">
-                  <img src="../../../../assets/images/french-fries.jpg" />
-                  Pizzas
-                </td>
-                <td>20</td>
-                <td class="acoes">
-                  <a href="#">Editar</a>
-                  <a href="#">Excluir</a>
-                </td>
-              </tr> -->
               <tr *ngFor="let category of allCategories">
                 <td>{{ category.id }}</td>
                 <td class="tdImage">
-                  <img src="{{ category.PhotoCategory[0].url }}" alt="" />
+                  <img
+                    src="{{ category.PhotoCategory[0].url }}"
+                    alt=""
+                    *ngIf="category.PhotoCategory.length > 0"
+                  />
                   {{ category.name }}
                 </td>
                 <td>20</td>

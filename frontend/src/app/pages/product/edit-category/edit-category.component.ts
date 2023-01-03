@@ -19,7 +19,7 @@ export class EditCategoryComponent implements OnInit {
     this.categoriesService.getAllCategoires().subscribe({
       next: (res) => {
         this.allCategories = res;
-        console.log(this.allCategories);
+        console.log(res);
       },
 
       error: (err) => {

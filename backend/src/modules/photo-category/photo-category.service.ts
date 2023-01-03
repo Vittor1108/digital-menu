@@ -6,7 +6,7 @@ import { removeFile } from 'src/utils/file-upload.utils';
 
 @Injectable()
 export class PhotoCategoryService {
-  private pathImage = 'src/assets/uploads/images';
+  private baseURL = 'http://localhost:3000/assets/uploads/images';
 
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -37,7 +37,7 @@ export class PhotoCategoryService {
       data: {
         filename: file.filename,
         originalname: file.originalname,
-        url: `${this.pathImage}/${file.filename}`,
+        url: `${this.baseURL}/${file.filename}`,
         category_id: id,
       },
     });

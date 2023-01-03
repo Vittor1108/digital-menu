@@ -21,7 +21,7 @@ export class PhotoProductController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: `${resolve()}/src/assets/uploads/images`,
+        destination: `${resolve()}/assets/uploads/images`,
         filename: editFileName,
       }),
       fileFilter: imageFilter,
