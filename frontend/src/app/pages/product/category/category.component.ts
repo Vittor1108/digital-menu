@@ -99,7 +99,11 @@ export class CategoryComponent extends AddProductComponent {
   public removeFiles = (): void => {
     this.filesThumb = [];
     this.listNameFiles = [];
+    this.files = [];
     this.placeHolderInputFile = 'Selecione uma foto';
     this.form.value.photo = '';
+    const inputFile =
+      document.querySelector<HTMLInputElement>('input[type=file]');
+    inputFile!.value = '';
   };
 }
