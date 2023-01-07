@@ -158,4 +158,32 @@ export class CategoryService {
 
     return true;
   };
+
+  public findOne = async (id: number): Promise<Category> => {
+    const category = await this.prismaService.category.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        PhotoCategory: {
+          select: {
+            filename: true,
+            url: true,
+          },
+        },
+      },
+    });
+
+    if (!category) {
+      throw new HttpException(
+        HelpMessager.category_not_exits,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return category;
+  };
 }

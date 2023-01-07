@@ -64,4 +64,20 @@ export class CategoriesService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
+
+  public getCategoryId = (id: number) => {
+    this.httpService
+      .get(`${this.apiCategory}/${id}`, {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      })
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  };
 }

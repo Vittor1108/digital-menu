@@ -42,6 +42,11 @@ export class CategoryController {
     return this.categoryService.findAll(req);
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<Category> {
+    return this.categoryService.findOne(id);
+  }
+
   @Delete(':id')
   delete(@Param('id') id: number, @Request() req: any): Promise<boolean> {
     return this.categoryService.delete(id, req);

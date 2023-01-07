@@ -7,10 +7,10 @@ import { DialogDeleteCategoryComponent } from 'src/app/components/dialog-delete-
 
 @Component({
   selector: 'app-edit-category',
-  templateUrl: './edit-category.component.html',
-  styleUrls: ['./edit-category.component.scss'],
+  templateUrl: './edit-category-list.component.html',
+  styleUrls: ['./edit-category-list.component.scss'],
 })
-export class EditCategoryComponent implements OnInit {
+export class EditCategoryListComponent implements OnInit {
   @Output() public titleSucess: string = 'Categoria Excluida!';
   @Output() public messageSucess: string = 'Categoria Excluida com sucesso!';
   @Output() public messageError: string =
