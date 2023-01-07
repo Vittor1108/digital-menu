@@ -1,19 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PhotoCategory } from '@prisma/client';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
+import { PhotoCategory } from 'src/modules/photo-category/entities/photo-category.entity';
 import { removeFile } from 'src/utils/file-upload.utils';
 
 @Injectable()
 export class PhotoCategoryService {
   private baseURL = 'http://localhost:3000/assets/uploads/images';
-
+  private dataPhoto: Array<PhotoCategory> = [];
   constructor(private readonly prismaService: PrismaService) {}
 
   public upload = async (
-    file: Express.Multer.File,
+    files: Express.Multer.File,
     id: number,
-  ): Promise<PhotoCategory> => {
+  ): Promise<boolean> => {
     const category = await this.prismaService.category.findUnique({
       where: {
         id,
@@ -27,20 +27,26 @@ export class PhotoCategoryService {
       );
     }
 
-    if (!file) {
+    if (!files) {
       throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
     }
 
-    const photo = await this.prismaService.photoCategory.create({
-      data: {
-        filename: file.filename,
-        originalname: file.originalname,
-        url: `${this.baseURL}/${file.filename}`,
-        category_id: id,
-      },
+    if (Array.isArray(files)) {
+      this.dataPhoto = files.map((file: PhotoCategory) => {
+        return {
+          filename: file.filename,
+          originalname: file.originalname,
+          url: `${this.baseURL}/${file.filename}`,
+          category_id: id,
+        };
+      });
+    }
+
+    await this.prismaService.photoCategory.createMany({
+      data: this.dataPhoto,
     });
-    console.log(file);
-    return photo;
+
+    return true;
   };
 
   public deleteFile = async (id: number): Promise<boolean> => {

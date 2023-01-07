@@ -41,20 +41,16 @@ export class CategoriesService {
     idCategory: number
   ): any => {
     const formData = new FormData();
-    for (let file of files) {
-      formData.delete('file');
-      formData.append('file', file);
-      return this.httpService.post<IReturnUploadPhoto>(
-        `${this.apiCategoryPhoto}/${idCategory}`,
-        formData,
-        {
-          headers: new HttpHeaders().set(
-            'Authorization',
-            'Bearer ' + this.token
-          ),
-        }
-      );
-    }
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+    return this.httpService.post<IReturnUploadPhoto>(
+      `${this.apiCategoryPhoto}/${idCategory}`,
+      formData,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
   };
 
   public getAllCategoires = (): Observable<IGetAllCategories[]> => {

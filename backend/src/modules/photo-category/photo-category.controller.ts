@@ -5,16 +5,15 @@ import {
   Param,
   Post,
   Res,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { resolve } from 'path';
 import { editFileName, imageFilter } from 'src/utils/file-upload.utils';
-import { PhotoCategory } from './entities/photo-category.entity';
 import { PhotoCategoryService } from './photo-category.service';
 
 @Controller('photo-category')
@@ -24,19 +23,26 @@ export class PhotoCategoryController {
 
   @Post(':id')
   @UseInterceptors(
-    FileInterceptor('file', {
+    // FilesInterceptor('file', {
+    //   storage: diskStorage({
+    //     destination: `${resolve()}/assets/uploads/images`,
+    //     filename: editFileName,
+    //   }),
+    //   fileFilter: imageFilter,
+    // }),
+    FilesInterceptor('files', 5, {
+      fileFilter: imageFilter,
       storage: diskStorage({
         destination: `${resolve()}/assets/uploads/images`,
         filename: editFileName,
       }),
-      fileFilter: imageFilter,
     }),
   )
   async uploadedFile(
-    @UploadedFile() file,
+    @UploadedFiles() files,
     @Param('id') id: number,
-  ): Promise<PhotoCategory> {
-    return this.photoCategoryService.upload(file, id);
+  ): Promise<boolean> {
+    return this.photoCategoryService.upload(files, id);
   }
 
   @Delete(':id')
