@@ -97,7 +97,12 @@
         <h2>Categoria</h2>
         <div class="slider" *ngIf="filesThumb.length > 0">
           <ul>
-            <li *ngFor="let img of filesThumb">
+            <li
+              *ngFor="let img of filesThumb; let i = index"
+              [ngClass]="{
+                removeImage: i === 0 && filesThumb.length > 1
+              }"
+            >
               <img src="{{ img }}" alt="" />
             </li>
           </ul>
@@ -108,7 +113,7 @@
                   src="{{ img }}"
                   alt=""
                   (click)="changeImage(i)"
-                  [ngClass]="{ imageSelected: i === filesThumb.length - 1}"
+                  [ngClass]="{ imageSelected: i === filesThumb.length - 1 }"
                 />
               </li>
             </ul>
@@ -121,7 +126,12 @@
           />
         </div>
         <div class="buttons">
-          <button type="submit" [disabled]="!form.valid">Salvar</button>
+          <button
+            type="submit"
+            [disabled]="!form.valid || filesThumb.length === 0"
+          >
+            Salvar
+          </button>
           <button type="button" (click)="removeFiles()">Deletar Imagens</button>
         </div>
       </div>

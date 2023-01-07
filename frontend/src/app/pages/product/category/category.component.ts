@@ -106,4 +106,5 @@ export class CategoryComponent extends AddProductComponent {
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
   };
+
 }

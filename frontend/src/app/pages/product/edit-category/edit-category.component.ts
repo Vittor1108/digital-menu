@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { DialogDeleteCategoryComponent } from 'src/app/components/dialog-delete-category/dialog-delete-category.component';
 
 @Component({
   selector: 'app-edit-category',
@@ -9,6 +11,15 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./edit-category.component.scss'],
 })
 export class EditCategoryComponent implements OnInit {
+  @Output() public titleSucess: string = 'Categoria Excluida!';
+  @Output() public messageSucess: string = 'Categoria Excluida com sucesso!';
+  @Output() public messageError: string =
+    'Não foi possível excluir a categoria. Tente Novamente.';
+  @Output() public titleError: string = 'Tente Novamente!';
+  @Output() public titleAtention: string = 'Atenção!';
+  public eventSubjectError: Subject<void> = new Subject<void>();
+  public eventSubjectSucess: Subject<void> = new Subject<void>();
+
   public allCategories: IGetAllCategories[];
   constructor(
     private readonly categoriesService: CategoriesService,
@@ -26,18 +37,27 @@ export class EditCategoryComponent implements OnInit {
       },
 
       error: (err) => {
-        console.log(err);
+        this.eventSubjectError.next();
+        this.messageError = 'Não foi possível carregar as categorias';
       },
     });
   };
 
   public deleteCategory = (id: number): void => {
-    this.categoriesService.deleteCategory(id).subscribe({
-      next: (res) => {
-        this.getAllCategories();
-      },
+    const dialogRef = this.dialog.open(DialogDeleteCategoryComponent);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.categoriesService.deleteCategory(id).subscribe({
+          next: (res) => {
+            this.eventSubjectSucess.next();
+            this.getAllCategories();
+          },
 
-      error: (err) => {},
+          error: (err) => {
+            this.eventSubjectError.next();
+          },
+        });
+      }
     });
   };
 }

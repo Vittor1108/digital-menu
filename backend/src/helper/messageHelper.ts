@@ -7,7 +7,7 @@ export const HelpMessager = {
   errorResetPasswrod: 'Error resetting password',
   passoword_or_email_invalid: 'Email ou senha inválidos',
   accout_not_activated: 'account not activated',
-  photo_not_found: 'Photo with this id not found',
+  photo_not_found: 'Foto(s) não encontradas',
   email_exits: 'Email já cadastrado',
   category_exits: 'Categoria com este nome já existe',
   category_doNot_user: 'This category does not belong to the User Id sent',

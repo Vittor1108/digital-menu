@@ -6,6 +6,18 @@
       <li>Editar Categoria</li>
     </ul>
   </div>
+  <div class="snack">
+    <app-snack-sucess
+      [messageSucess]="messageSucess"
+      [title]="titleSucess"
+      [events]="eventSubjectSucess.asObservable()"
+    ></app-snack-sucess>
+    <app-snack-error
+      [messageError]="messageError"
+      [title]="titleError"
+      [events]="eventSubjectError.asObservable()"
+    ></app-snack-error>
+  </div>
   <article class="containerTable">
     <div class="titleContainer">
       <h1>Lista de Categorias</h1>

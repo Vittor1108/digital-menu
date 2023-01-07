@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
+import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
@@ -126,25 +127,34 @@ export class CategoryService {
       );
     }
 
-    // await this.prismaService.photoCategory.deleteMany({
-    //   where: {
-    //     category_id: id,
-    //   },
-    // });
-
-    const photoCategory = await this.prismaService.photoCategory.findMany({
+    const photos = await this.prismaService.photoCategory.findMany({
       where: {
         category_id: id,
       },
     });
 
-    console.log(photoCategory);
+    if (!photos) {
+      throw new HttpException(
+        HelpMessager.photo_not_found,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
-    // await this.prismaService.category.delete({
-    //   where: {
-    //     id,
-    //   },
-    // });
+    photos.forEach((photo) => {
+      removeFile(photo.filename);
+    });
+
+    await this.prismaService.photoCategory.deleteMany({
+      where: {
+        category_id: id,
+      },
+    });
+
+    await this.prismaService.category.delete({
+      where: {
+        id,
+      },
+    });
 
     return true;
   };

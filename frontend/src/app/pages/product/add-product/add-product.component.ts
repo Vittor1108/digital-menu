@@ -13,7 +13,7 @@ export class AddProductComponent implements OnInit {
 
   public changeImage = (image: number): void => {
     const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
-    const images = document.querySelectorAll<HTMLElement>('.slider > ul img');
+    const images = document.querySelectorAll<HTMLElement>('.slider > ul li');
     images.forEach((e, index) => {
       if (index === image) {
         images[image].classList.remove('removeImage');
