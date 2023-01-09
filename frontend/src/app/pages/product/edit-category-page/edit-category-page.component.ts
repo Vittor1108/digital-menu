@@ -118,6 +118,14 @@ export class EditCategoryPageComponent
     this.activeRoute.params.subscribe(
       (params) => (this.categoryId = params['id'])
     );
-    this.categoryService.getCategoryId(this.categoryId);
+    this.categoryService.getCategoryId(this.categoryId).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
   };
 }
