@@ -171,6 +171,7 @@ export class CategoryService {
         PhotoCategory: {
           select: {
             filename: true,
+            originalname: true,
             url: true,
           },
         },

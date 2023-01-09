@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { IPhotocategory } from 'src/app/interfaces/IUpload-photo.interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 
@@ -58,17 +59,18 @@ export class EditCategoryPageComponent
   }
 
   public onSubmit = (): void => {
-    window.scroll(0, 0);
-    this.categoryService.createCategory(this.form.value).subscribe({
-      next: (res) => {
-        this.createImageCategory(res.id);
-      },
+    console.log(this.form.value);
+    // window.scroll(0, 0);
+    // this.categoryService.createCategory(this.form.value).subscribe({
+    //   next: (res) => {
+    //     this.createImageCategory(res.id);
+    //   },
 
-      error: (err) => {
-        this.messageError = err.error.message;
-        this.eventSubjectError.next();
-      },
-    });
+    //   error: (err) => {
+    //     this.messageError = err.error.message;
+    //     this.eventSubjectError.next();
+    //   },
+    // });
   };
 
   private createImageCategory = (idCategory: number) => {
@@ -120,12 +122,25 @@ export class EditCategoryPageComponent
     );
     this.categoryService.getCategoryId(this.categoryId).subscribe({
       next: (res) => {
+        this.setFormControlValue(res.name, res.description, res.PhotoCategory);
         console.log(res);
       },
 
       error: (err) => {
         console.log(err);
       },
+    });
+  };
+
+  private setFormControlValue = (name: string, description: string, photosName: IPhotocategory[]): void => {
+    // document.querySelector<HTMLInputElement>('#name')!.value = name;
+    // document.querySelector<HTMLInputElement>('#description')!.value =
+    //   description;
+
+    this.form.setValue({
+      name: name,
+      description: description,
+      photo: '',
     });
   };
 }

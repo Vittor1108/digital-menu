@@ -65,10 +65,12 @@ export class CategoriesService {
     });
   };
 
-  public getCategoryId = (id: number) => {
-    return this.httpService
-      .get(`${this.apiCategory}/${id}`, {
+  public getCategoryId = (id: number): Observable<IGetAllCategories> => {
+    return this.httpService.get<IGetAllCategories>(
+      `${this.apiCategory}/${id}`,
+      {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
-      });
+      }
+    );
   };
 }

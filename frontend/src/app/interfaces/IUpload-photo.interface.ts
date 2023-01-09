@@ -16,3 +16,9 @@ export interface IReturnUploadPhoto {
   updated_at: Date;
   created_at: Date;
 }
+
+export interface IPhotocategory {
+  filename?: string;
+  originalname?: string;
+  url: string;
+}
