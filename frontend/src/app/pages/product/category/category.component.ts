@@ -10,6 +10,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { Subject } from 'rxjs';
+import { PhotoCategoryService } from 'src/app/service/photo-category/photo-category.service';
 
 @Component({
   selector: 'app-category',
@@ -37,7 +38,8 @@ export class CategoryComponent extends AddProductComponent {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly categoryService: CategoriesService
+    private readonly categoryService: CategoriesService,
+    private readonly categoryImageService: PhotoCategoryService
   ) {
     super();
   }
@@ -65,7 +67,7 @@ export class CategoryComponent extends AddProductComponent {
   };
 
   private createImageCategory = (idCategory: number) => {
-    this.categoryService.createImageCategory(this.files, idCategory).subscribe({
+    this.categoryImageService.createImageCategory(this.files, idCategory).subscribe({
       next: (res: any) => {
         this.eventSubjectSucess.next();
         this.form.reset();

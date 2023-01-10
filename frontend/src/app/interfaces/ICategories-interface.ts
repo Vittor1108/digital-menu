@@ -21,6 +21,21 @@ export interface IGetAllCategories {
 }
 
 interface IPhotoCategory {
+  id: number;
   filename: string;
   url: string;
+}
+
+export interface IUpdatedFormCategory {
+  name: string;
+  description: string;
+}
+
+export interface IUpdatedReturnCategory {
+  id: number;
+  user_id: number;
+  description: string;
+  name: string;
+  created_at: Date;
+  updated_at: Date;
 }

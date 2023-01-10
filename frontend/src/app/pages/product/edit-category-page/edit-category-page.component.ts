@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IPhotocategory } from 'src/app/interfaces/IUpload-photo.interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
+import { PhotoCategoryService } from 'src/app/service/photo-category/photo-category.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 
 @Component({
@@ -22,18 +23,14 @@ export class EditCategoryPageComponent
   implements OnInit
 {
   @ViewChild('inputFile') private inputFile: ElementRef;
-  @Output() public titleSucess: string = 'Categoria Adicionada';
-  @Output() public messageSucess: string = 'Categoria Adicionada com sucesso!';
+  @Output() public titleSucess: string = 'Categoria Atualizada';
+  @Output() public messageSucess: string = 'Categoria Atualizada com sucesso!';
   @Output() public messageError: string =
-    'Não foi possível adicionar a categoria. Tente Novamente.';
+    'Não foi possível atualizar a categoria. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
-  @Output() public titleAtention: string = 'Atenção!';
-  @Output() public messageAtention: string =
-    'A categoria foi criada mas, a imagem da categoria não foi adicionada. Verifique a imagem na edição de categoria';
   public eventSubjectError: Subject<void> = new Subject<void>();
   public eventSubjectSucess: Subject<void> = new Subject<void>();
-  public eventSubjectAtention: Subject<void> = new Subject<void>();
-  private files: Array<File> = [];
+  private files: Array<File | IPhotocategory> = [];
   public form: FormGroup;
   public filesThumb: Array<string> = [];
   public placeHolderInputFile: string = 'Selecione uma Foto';
@@ -43,7 +40,8 @@ export class EditCategoryPageComponent
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoriesService,
-    private readonly activeRoute: ActivatedRoute
+    private readonly activeRoute: ActivatedRoute,
+    private readonly categoryImageService: PhotoCategoryService
   ) {
     super();
   }
@@ -52,39 +50,42 @@ export class EditCategoryPageComponent
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      photo: ['', [Validators.required]],
     });
 
     this.getCategoryId();
   }
 
   public onSubmit = (): void => {
-    console.log(this.form.value);
-    // window.scroll(0, 0);
-    // this.categoryService.createCategory(this.form.value).subscribe({
-    //   next: (res) => {
-    //     this.createImageCategory(res.id);
-    //   },
-
-    //   error: (err) => {
-    //     this.messageError = err.error.message;
-    //     this.eventSubjectError.next();
-    //   },
-    // });
+    window.scroll(0, 0);
+    this.categoryService
+      .updatedCategory(this.categoryId, this.form.value)
+      .subscribe({
+        next: (res) => {
+          this.eventSubjectSucess.next();
+          this.createImageCategory(res.id);
+        },
+        error: (err) => {
+          this.eventSubjectError.next();
+          this.messageError = err.error.message;
+        },
+      });
   };
 
   private createImageCategory = (idCategory: number) => {
-    this.categoryService.createImageCategory(this.files, idCategory).subscribe({
-      next: (res: any) => {
-        this.eventSubjectSucess.next();
-        this.form.reset();
-        this.removeFiles();
-      },
+    console.log(this.files);
+    this.categoryImageService
+      .createImageCategory(this.files, idCategory)
+      .subscribe({
+        next: (res: any) => {
+          window.scroll(0, 0);
+          this.eventSubjectSucess.next();
+        },
 
-      err: (err: any) => {
-        this.eventSubjectAtention.next();
-      },
-    });
+        err: (err: any) => {
+          window.scroll(0, 0);
+          this.eventSubjectError.next();
+        },
+      });
   };
 
   public addImage = (): void => {
@@ -106,14 +107,26 @@ export class EditCategoryPageComponent
   };
 
   public removeFiles = (): void => {
+    this.deleteFiles();
     this.filesThumb = [];
     this.listNameFiles = [];
     this.files = [];
     this.placeHolderInputFile = 'Selecione uma foto';
     this.form.value.photo = '';
-    const inputFile =
-      document.querySelector<HTMLInputElement>('input[type=file]');
-    inputFile!.value = '';
+    document.querySelector<HTMLInputElement>('input[type=file]')!.value = '';
+  };
+
+  private deleteFiles = (): void => {
+    this.files.forEach((file: any) => {
+      if (!file.id) return;
+      this.categoryImageService.deleteImage(file.id).subscribe({
+        error: (err) => {
+          this.eventSubjectError.next();
+          this.messageError = 'Não foi possível excluir as imagens.';
+          window.scroll(0, 0);
+        },
+      });
+    });
   };
 
   private getCategoryId = (): void => {
@@ -123,24 +136,34 @@ export class EditCategoryPageComponent
     this.categoryService.getCategoryId(this.categoryId).subscribe({
       next: (res) => {
         this.setFormControlValue(res.name, res.description, res.PhotoCategory);
-        console.log(res);
       },
 
       error: (err) => {
-        console.log(err);
+        this.eventSubjectError.next();
+        this.messageError = 'Erro ao carregar ao categoria. Tente novamente!';
       },
     });
   };
 
-  private setFormControlValue = (name: string, description: string, photosName: IPhotocategory[]): void => {
-    // document.querySelector<HTMLInputElement>('#name')!.value = name;
-    // document.querySelector<HTMLInputElement>('#description')!.value =
-    //   description;
+  private setFormControlValue = (
+    name: string,
+    description: string,
+    photos: IPhotocategory[]
+  ): void => {
+    const photosName = photos.map((photo) => {
+      this.filesThumb.push(photo.url);
+      this.files.push(photo);
+      return photo.originalname;
+    });
+
+    this.listNameFiles.push(photosName.join(', '));
+    this.filesThumb.length === 0
+      ? 'Seleciona uma imagem'
+      : (this.placeHolderInputFile = this.listNameFiles.join(', '));
 
     this.form.setValue({
       name: name,
       description: description,
-      photo: '',
     });
   };
 }

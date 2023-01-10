@@ -9,7 +9,7 @@ export const HelpMessager = {
   accout_not_activated: 'account not activated',
   photo_not_found: 'Foto(s) não encontradas',
   email_exits: 'Email já cadastrado',
-  category_exits: 'Categoria com este nome já existe',
+  category_exits: 'Já existe uma categoria com este nome.',
   category_doNot_user: 'This category does not belong to the User Id sent',
   category_not_exits: 'This id category does not exitis',
   product_exits: 'Name this product already exitis',

@@ -5,18 +5,19 @@ import {
   ICategoriesCreate,
   ICategoriesForm,
   IGetAllCategories,
+  IUpdatedFormCategory,
+  IUpdatedReturnCategory,
 } from '../../interfaces/ICategories-interface';
 import { IReturnUploadPhoto } from 'src/app/interfaces/IUpload-photo.interface';
 
 //MY IMPORTS
 import { urlApi } from 'src/app/config/configAPI';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
   private apiCategory: string = `${urlApi}/category`;
-  private apiCategoryPhoto: string = `${urlApi}/photo-category`;
   private token: string =
     sessionStorage.getItem('token')! || localStorage.getItem('token')!;
   constructor(private readonly httpService: HttpClient) {}
@@ -30,23 +31,6 @@ export class CategoriesService {
         name: dataForm.name,
         description: dataForm.description,
       },
-      {
-        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
-      }
-    );
-  };
-
-  public createImageCategory = (
-    files: Array<File>,
-    idCategory: number
-  ): any => {
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
-    return this.httpService.post<IReturnUploadPhoto>(
-      `${this.apiCategoryPhoto}/${idCategory}`,
-      formData,
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
@@ -73,4 +57,26 @@ export class CategoriesService {
       }
     );
   };
+
+  public updatedCategory = (
+    id: number,
+    dataCategory: IUpdatedFormCategory
+  ): Observable<IUpdatedReturnCategory> => {
+    return this.httpService.patch<IUpdatedReturnCategory>(
+      `${this.apiCategory}/${id}`,
+      {
+        name: dataCategory.name,
+        description: dataCategory.description,
+      },
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
+  };
+
+
+
+
+
+
 }

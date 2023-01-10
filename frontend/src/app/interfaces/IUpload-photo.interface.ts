@@ -18,6 +18,7 @@ export interface IReturnUploadPhoto {
 }
 
 export interface IPhotocategory {
+  id: number;
   filename?: string;
   originalname?: string;
   url: string;

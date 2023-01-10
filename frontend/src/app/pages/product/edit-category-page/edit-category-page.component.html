@@ -22,11 +22,6 @@
         [title]="titleError"
         [events]="eventSubjectError.asObservable()"
       ></app-snack-error>
-      <app-snack-atetion
-        [messageAtention]="messageAtention"
-        [title]="titleAtention"
-        [events]="eventSubjectAtention.asObservable()"
-      ></app-snack-atetion>
     </div>
     <div class="infoProduct">
       <div class="dataProduct">
@@ -76,12 +71,12 @@
               accept="image/png, image/jpeg, image/jpg, image/gif"
               (change)="getInfoImage($event)"
               #inputFile
-              formControlName="photo"
             />
             <input
               type="text"
               placeholder="{{ placeHolderInputFile }}"
               disabled
+              id="placeholderFile"
             />
             <button type="button" (click)="addImage()">Selecionar</button>
           </div>
@@ -130,7 +125,7 @@
             type="submit"
             [disabled]="!form.valid || filesThumb.length === 0"
           >
-            Salvar
+            Atualizar
           </button>
           <button type="button" (click)="removeFiles()">Deletar Imagens</button>
         </div>

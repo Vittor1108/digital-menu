@@ -31,7 +31,7 @@ export class CategoryService {
     const category = await this.prismaService.category.create({
       data: {
         name: data.name.toLowerCase(),
-        description: data.description,
+        description: data.description.toLocaleLowerCase(),
         user_id: req.user.id,
       },
     });
@@ -76,8 +76,8 @@ export class CategoryService {
       },
 
       data: {
-        name: data.name,
-        description: data.description,
+        name: data.name.toLocaleLowerCase(),
+        description: data.description.toLocaleLowerCase(),
         updeated_at: new Date(),
       },
     });
@@ -170,6 +170,7 @@ export class CategoryService {
         description: true,
         PhotoCategory: {
           select: {
+            id: true,
             filename: true,
             originalname: true,
             url: true,
