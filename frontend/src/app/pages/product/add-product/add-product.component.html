@@ -76,7 +76,12 @@
       <div class="divInputFile">
         <label for="">Imagens do Produto</label>
         <div>
-          <input type="file" hidden (change)="getInfoImage($event)" />
+          <input
+            type="file"
+            hidden
+            (change)="getInfoImage($event)"
+            accept="image/png, image/jpeg, image/jpg, image/gif"
+          />
           <input
             type="text"
             placeholder="{{ placeHolderInputFile }}"
@@ -121,7 +126,12 @@
         />
       </div>
       <div class="buttons">
-        <button type="submit" [disabled]="!form.valid || filesThumbProduct.length === 0">Salvar</button>
+        <button
+          type="submit"
+          [disabled]="!form.valid || filesThumbProduct.length === 0"
+        >
+          Salvar
+        </button>
         <button type="button" (click)="removeFiles()">Deletar Imagens</button>
       </div>
     </div>
