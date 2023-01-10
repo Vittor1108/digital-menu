@@ -18,10 +18,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
   templateUrl: './edit-category-page.component.html',
   styleUrls: ['./edit-category-page.component.scss'],
 })
-export class EditCategoryPageComponent
-  extends AddProductComponent
-  implements OnInit
-{
+export class EditCategoryPageComponent implements OnInit {
   @ViewChild('inputFile') private inputFile: ElementRef;
   @Output() public titleSucess: string = 'Categoria Atualizada';
   @Output() public messageSucess: string = 'Categoria Atualizada com sucesso!';
@@ -43,10 +40,10 @@ export class EditCategoryPageComponent
     private readonly activeRoute: ActivatedRoute,
     private readonly categoryImageService: PhotoCategoryService
   ) {
-    super();
+
   }
 
-  override ngOnInit(): void {
+  ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -165,4 +162,25 @@ export class EditCategoryPageComponent
       description: description,
     });
   };
+
+  public changeImage = (image: number): void => {
+    const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
+    const images = document.querySelectorAll<HTMLElement>('.slider > ul li');
+    images.forEach((e, index) => {
+      if (index === image) {
+        images[image].classList.remove('removeImage');
+        return;
+      }
+      e.classList.add('removeImage');
+    });
+
+    thumbImages.forEach((e, index) => {
+      if (index === image) {
+        thumbImages[image].classList.add('imageSelected');
+        return;
+      }
+      e.classList.remove('imageSelected');
+    });
+  };
+
 }

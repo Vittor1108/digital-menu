@@ -3,23 +3,34 @@
     <ul>
       <li><i class="fa-solid fa-house"></i>Home/</li>
       <li>Produtos/</li>
-      <li>Adicionar</li>
+      <li>Adicionar Produto</li>
     </ul>
   </div>
   <div class="snack"></div>
-  <div class="infoProduct">
+  <form class="infoProduct" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="dataProduct">
       <h1>Adicionar Produto</h1>
       <div>
         <label for="">Nome do Produto</label>
-        <input type="text" placeholder="Pizza" />
+        <input type="text" placeholder="Pizza" formControlName="name" />
+        <p
+          class="errorMessage"
+          *ngIf="form.get('name')?.errors && form.get('name')?.touched"
+        >
+          Nome é Obrigatório
+        </p>
       </div>
       <div class="doubleInput">
         <div>
           <label for="">Selecione a Categoria</label>
-          <select name="" id="">
-            <option value="">Pizzas</option>
-            <option value="">Pasteis</option>
+          <select name="" id="" formControlName="category">
+            <option
+              *ngFor="let category of allCategories"
+              value="{{ category.id }}"
+              [selected]="allCategories[0]"
+            >
+              {{ category.name }}
+            </option>
           </select>
         </div>
         <div>
@@ -28,9 +39,18 @@
             type="text"
             prefix="R$"
             mask="separator.2"
-            thousandSeparator=","
+            [thousandSeparator]="'.'"
+            [decimalMarker]="','"
+            [dropSpecialCharacters]="true"
             placeholder="R$"
+            formControlName="price"
           />
+          <p
+            class="errorMessage"
+            *ngIf="form.get('price')?.errors && form.get('price')?.touched"
+          >
+            Preço é Obrigatório
+          </p>
         </div>
       </div>
       <div>
@@ -42,51 +62,68 @@
           rows="10"
           (resize)="(false)"
           placeholder="Descrição do produto..."
+          formControlName="description"
         ></textarea>
+        <p
+          class="errorMessage"
+          *ngIf="
+            form.get('description')?.errors && form.get('description')?.touched
+          "
+        >
+          Descrição é Obrigatório
+        </p>
       </div>
       <div class="divInputFile">
         <label for="">Imagens do Produto</label>
         <div>
-          <input type="file" hidden/>
-          <input type="text" placeholder="Selecione uma foto" />
-          <button type="button">Selecionar</button>
+          <input type="file" hidden (change)="getInfoImage($event)" />
+          <input
+            type="text"
+            placeholder="{{ placeHolderInputFile }}"
+            disabled
+          />
+          <button type="button" (click)="addImage()">Selecionar</button>
         </div>
       </div>
     </div>
     <div class="previewProduct">
-      <h2>Produto</h2>
-      <div class="slider">
+      <h2>Categoria</h2>
+      <div class="slider" *ngIf="filesThumbProduct.length > 0">
         <ul>
-          <li>
-            <img src="../../../../assets/images/logo.png" alt="" />
-          </li>
-          <li>
-            <img src="../../../../assets/images/defaultLoginBg.jpeg" alt="" />
+          <li
+            *ngFor="let img of filesThumbProduct; let i = index"
+            [ngClass]="{
+              removeImage: i === 0 && filesThumbProduct.length > 1
+            }"
+          >
+            <img src="{{ img }}" alt="" />
           </li>
         </ul>
         <div class="thumb">
           <ul>
-            <li>
+            <li *ngFor="let img of filesThumbProduct; let i = index">
               <img
-                src="../../../../assets/images/logo.png"
+                src="{{ img }}"
                 alt=""
-                (click)="changeImage(0)"
-              />
-            </li>
-            <li>
-              <img
-                src="../../../../assets/images/defaultLoginBg.jpeg"
-                alt=""
-                (click)="changeImage(1)"
+                (click)="changeImage(i)"
+                [ngClass]="{
+                  imageSelected: i === filesThumbProduct.length - 1
+                }"
               />
             </li>
           </ul>
         </div>
       </div>
+      <div class="noImage" *ngIf="filesThumbProduct.length === 0">
+        <img
+          src="../../../../assets/images/noImageIcon.png"
+          alt="Adicine uma imagem"
+        />
+      </div>
       <div class="buttons">
-        <button>Salvar</button>
-        <button>Deletar Imagens</button>
+        <button type="submit" [disabled]="!form.valid || filesThumbProduct.length === 0">Salvar</button>
+        <button type="button" (click)="removeFiles()">Deletar Imagens</button>
       </div>
     </div>
-  </div>
+  </form>
 </article>

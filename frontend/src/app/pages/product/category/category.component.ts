@@ -17,7 +17,7 @@ import { PhotoCategoryService } from 'src/app/service/photo-category/photo-categ
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
 })
-export class CategoryComponent extends AddProductComponent {
+export class CategoryComponent implements OnInit {
   @ViewChild('inputFile') private inputFile: ElementRef;
   @Output() public titleSucess: string = 'Categoria Adicionada';
   @Output() public messageSucess: string = 'Categoria Adicionada com sucesso!';
@@ -40,11 +40,9 @@ export class CategoryComponent extends AddProductComponent {
     private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoriesService,
     private readonly categoryImageService: PhotoCategoryService
-  ) {
-    super();
-  }
+  ) {}
 
-  override ngOnInit(): void {
+  ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -67,17 +65,19 @@ export class CategoryComponent extends AddProductComponent {
   };
 
   private createImageCategory = (idCategory: number) => {
-    this.categoryImageService.createImageCategory(this.files, idCategory).subscribe({
-      next: (res: any) => {
-        this.eventSubjectSucess.next();
-        this.form.reset();
-        this.removeFiles();
-      },
+    this.categoryImageService
+      .createImageCategory(this.files, idCategory)
+      .subscribe({
+        next: (res: any) => {
+          this.eventSubjectSucess.next();
+          this.form.reset();
+          this.removeFiles();
+        },
 
-      err: (err: any) => {
-        this.eventSubjectAtention.next();
-      },
-    });
+        err: (err: any) => {
+          this.eventSubjectAtention.next();
+        },
+      });
   };
 
   public addImage = (): void => {
@@ -109,4 +109,23 @@ export class CategoryComponent extends AddProductComponent {
     inputFile!.value = '';
   };
 
+  public changeImage = (image: number): void => {
+    const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
+    const images = document.querySelectorAll<HTMLElement>('.slider > ul li');
+    images.forEach((e, index) => {
+      if (index === image) {
+        images[image].classList.remove('removeImage');
+        return;
+      }
+      e.classList.add('removeImage');
+    });
+
+    thumbImages.forEach((e, index) => {
+      if (index === image) {
+        thumbImages[image].classList.add('imageSelected');
+        return;
+      }
+      e.classList.remove('imageSelected');
+    });
+  };
 }
