@@ -72,7 +72,6 @@ export class EditCategoryPageComponent
   };
 
   private createImageCategory = (idCategory: number) => {
-    console.log(this.files);
     this.categoryImageService
       .createImageCategory(this.files, idCategory)
       .subscribe({
