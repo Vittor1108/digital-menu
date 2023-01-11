@@ -25,7 +25,7 @@ export class ProductService {
         description: dataProduct.description,
       },
       {
-        headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
     );
   };

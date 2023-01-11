@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { urlApi } from 'src/app/config/configAPI';
-import { IPhotocategory, IReturnUploadPhoto } from 'src/app/interfaces/IUpload-photo.interface';
+import {
+  IPhotocategory,
+  IReturnUploadPhoto,
+} from 'src/app/interfaces/IUpload-photo.interface';
 import { token } from 'src/app/helper/tokenHelper';
 import { Observable } from 'rxjs';
 @Injectable({
@@ -9,6 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class PhotoCategoryService {
   private apiCategoryPhoto: string = `${urlApi}/photo-category`;
+  private token: string = token;
   constructor(private readonly httpService: HttpClient) {}
 
   public createImageCategory = (
@@ -30,7 +34,7 @@ export class PhotoCategoryService {
 
   public deleteImage = (id: number): Observable<boolean> => {
     return this.httpService.delete<boolean>(`${this.apiCategoryPhoto}/${id}`, {
-      headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
 }

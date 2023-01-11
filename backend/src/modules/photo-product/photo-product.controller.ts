@@ -3,35 +3,38 @@ import {
   Delete,
   Param,
   Post,
-  UploadedFile,
   UseInterceptors,
+  UseGuards,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { FilesInterceptor } from '@nestjs/platform-express/multer';
 import { diskStorage } from 'multer';
 import { resolve } from 'path';
 import { editFileName, imageFilter } from 'src/utils/file-upload.utils';
 import { PhotoProduct } from './entities/photo-product.entity';
 import { PhotoProductService } from './photo-product.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('photo-product')
+@UseGuards(AuthGuard('jwt'))
 export class PhotoProductController {
   constructor(private readonly photoProductService: PhotoProductService) {}
 
   @Post(':id')
   @UseInterceptors(
-    FileInterceptor('file', {
+    FilesInterceptor('files', 5, {
+      fileFilter: imageFilter,
       storage: diskStorage({
         destination: `${resolve()}/assets/uploads/images`,
         filename: editFileName,
       }),
-      fileFilter: imageFilter,
     }),
   )
   async uploadedFile(
-    @UploadedFile() file,
+    @UploadedFiles() files,
     @Param('id') id: number,
-  ): Promise<PhotoProduct> {
-    return this.photoProductService.upload(file, id);
+  ): Promise<string> {
+    return this.photoProductService.upload(files, id);
   }
 
   @Delete(':id')

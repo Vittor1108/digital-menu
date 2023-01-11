@@ -1,10 +1,8 @@
 import {
   Controller,
   Delete,
-  Get,
   Param,
   Post,
-  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -23,13 +21,6 @@ export class PhotoCategoryController {
 
   @Post(':id')
   @UseInterceptors(
-    // FilesInterceptor('file', {
-    //   storage: diskStorage({
-    //     destination: `${resolve()}/assets/uploads/images`,
-    //     filename: editFileName,
-    //   }),
-    //   fileFilter: imageFilter,
-    // }),
     FilesInterceptor('files', 5, {
       fileFilter: imageFilter,
       storage: diskStorage({
@@ -48,12 +39,5 @@ export class PhotoCategoryController {
   @Delete(':id')
   async deletFile(@Param('id') id: number): Promise<boolean> {
     return this.photoCategoryService.deleteFile(id);
-  }
-
-  @Get()
-  async sendFile(@Res() res) {
-    res.sendFile('8ed28fbc966bdd21de821c63c145b0448407cfb5..jpg', {
-      root: './assets',
-    });
   }
 }

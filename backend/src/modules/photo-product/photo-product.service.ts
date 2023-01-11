@@ -10,9 +10,9 @@ export class PhotoProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public upload = async (
-    file: Express.Multer.File,
+    files: Express.Multer.File,
     id: number,
-  ): Promise<PhotoProduct> => {
+  ): Promise<string> => {
     const productExitis = await this.prismaService.product.findUnique({
       where: {
         id,
@@ -26,16 +26,16 @@ export class PhotoProductService {
       );
     }
 
-    const photo = await this.prismaService.productPhoto.create({
-      data: {
-        filename: file.filename,
-        originalname: file.originalname,
-        url: `${this.baseURL}/${file.filename}`,
-        product_id: id,
-      },
-    });
-
-    return photo;
+    // const photo = await this.prismaService.productPhoto.create({
+    //   data: {
+    //     filename: file.filename,
+    //     originalname: file.originalname,
+    //     url: `${this.baseURL}/${file.filename}`,
+    //     product_id: id,
+    //   },
+    // });
+    console.log(files);
+    return 'OK';
   };
 
   public delete = async (id: number): Promise<boolean> => {

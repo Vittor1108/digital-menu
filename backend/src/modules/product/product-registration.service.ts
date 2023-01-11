@@ -67,6 +67,7 @@ export class ProductRegistrationService {
       },
 
       select: {
+        id: true,
         name: true,
         price: true,
         description: true,

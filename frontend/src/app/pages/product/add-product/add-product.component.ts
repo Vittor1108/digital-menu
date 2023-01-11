@@ -5,6 +5,7 @@ import { CategoriesService } from 'src/app/service/categories/categories.service
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ICategorySelect } from 'src/app/interfaces/IProduct-interface';
 import { ProductService } from 'src/app/service/product/product.service';
+import { PhotoProductService } from 'src/app/service/photo-product/photo-product.service';
 
 @Component({
   selector: 'app-add-product',
@@ -22,7 +23,8 @@ export class AddProductComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly categoriesService: CategoriesService,
-    private readonly productService: ProductService
+    private readonly productService: ProductService,
+    private readonly productPhotoService: PhotoProductService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +72,20 @@ export class AddProductComponent implements OnInit {
       (category: ICategorySelect) => category.id
     );
     this.form.value.category = categories;
-    this.productService.createProduct(this.form.value);
+    this.productService.createProduct(this.form.value).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.createProductImage(res.id);
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  };
+
+  private createProductImage = (idProduct: number): void => {
+    this.productPhotoService.createImage(idProduct, this.files);
   };
 
   private getAllCategories = (): void => {
