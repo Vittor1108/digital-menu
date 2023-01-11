@@ -1,15 +1,15 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class UpdateProductRegistrationDto {
-  @IsNotEmpty()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
   @IsNumber()
   price: number;
 
+  @IsString()
+  description: string;
+
   @IsArray()
-  @IsNotEmpty()
   categories_id: Array<number>;
 }

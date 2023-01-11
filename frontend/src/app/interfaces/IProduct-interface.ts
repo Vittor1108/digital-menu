@@ -9,3 +9,4 @@ export interface ICategorySelect {
   id: number;
   name: string;
 }
+

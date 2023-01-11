@@ -58,11 +58,18 @@ export class ProductRegistrationService {
         name: createProductRegistrationDto.name.toLocaleLowerCase(),
         price: createProductRegistrationDto.price,
         user_id: req.user.id,
+        description: createProductRegistrationDto.description,
         Product_Category: {
           createMany: {
             data: categories_id,
           },
         },
+      },
+
+      select: {
+        name: true,
+        price: true,
+        description: true,
       },
     });
     return product;
@@ -130,6 +137,7 @@ export class ProductRegistrationService {
         name: updateProductRegistrationDto.name.toLocaleLowerCase(),
         price: updateProductRegistrationDto.price,
         user_id: req.user.id,
+        description: updateProductRegistrationDto.description,
         Product_Category: {
           createMany: {
             data: categories_id,
@@ -149,6 +157,7 @@ export class ProductRegistrationService {
         id: true,
         name: true,
         price: true,
+        description: true,
         Product_Category: {
           select: {
             category_id: true,
@@ -180,6 +189,7 @@ export class ProductRegistrationService {
       select: {
         name: true,
         price: true,
+        description: true,
         ProductPhoto: {
           select: {
             url: true,

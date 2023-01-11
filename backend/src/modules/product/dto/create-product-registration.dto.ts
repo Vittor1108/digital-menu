@@ -9,6 +9,10 @@ export class CreateProductRegistrationDto {
   @IsNumber()
   price: number;
 
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
   @IsArray()
   @IsNotEmpty()
   categories_id: Array<number>;

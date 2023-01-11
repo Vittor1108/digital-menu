@@ -1,6 +1,7 @@
 export class ProductRegistration {
   id?: number;
   name: string;
+  description: string;
   price: number;
   user_id?: number;
   Product_Category?: Array<Product_Category>;
