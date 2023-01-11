@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
+import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import { ProductRegistration } from './entities/product-registration.entity';
@@ -241,6 +242,22 @@ export class ProductRegistrationService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+
+    const photos = await this.prismaService.productPhoto.findMany({
+      where: {
+        product_id: id,
+      },
+    });
+
+    photos.forEach((photo) => {
+      removeFile(photo.filename);
+    });
+
+    await this.prismaService.productPhoto.deleteMany({
+      where: {
+        product_id: id,
+      },
+    });
 
     await this.prismaService.product.delete({
       where: {

@@ -90,9 +90,9 @@ export class AddProductComponent implements OnInit {
       },
 
       error: (err) => {
-        window.scroll(0, 0)
+        window.scroll(0, 0);
         this.eventSubjectError.next();
-        this.messageError =err.error.message;
+        this.messageError = err.error.message;
       },
     });
   };
@@ -100,12 +100,14 @@ export class AddProductComponent implements OnInit {
   private createProductImage = (idProduct: number): void => {
     this.productPhotoService.createImage(idProduct, this.files).subscribe({
       next: (res) => {
-        window.scroll(0, 0)
+        window.scroll(0, 0);
         this.eventSubjectSucess.next();
+        this.form.reset();
+        this.removeFiles();
       },
 
       error: (err) => {
-        window.scroll(0, 0)
+        window.scroll(0, 0);
         this.eventSubjectAtention.next();
       },
     });
@@ -118,7 +120,7 @@ export class AddProductComponent implements OnInit {
       },
 
       error: (err) => {
-        window.scroll(0, 0)
+        window.scroll(0, 0);
         this.eventSubjectError.next();
         this.titleError = 'Atenção!';
         this.messageError =

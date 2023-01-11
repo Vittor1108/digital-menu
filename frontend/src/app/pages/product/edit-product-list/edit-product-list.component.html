@@ -1,0 +1,108 @@
+<section>
+  <div class="path">
+    <ul>
+      <li><i class="fa-solid fa-house"></i>Home/</li>
+      <li>Produtos/</li>
+      <li>Editar Produto</li>
+    </ul>
+  </div>
+  <div class="snack">
+    <app-snack-sucess
+      [messageSucess]="messageSucess"
+      [title]="titleSucess"
+      [events]="eventSubjectSucess.asObservable()"
+    ></app-snack-sucess>
+    <app-snack-error
+      [messageError]="messageError"
+      [title]="titleError"
+      [events]="eventSubjectError.asObservable()"
+    ></app-snack-error>
+  </div>
+  <article class="containerTable">
+    <div class="titleContainer">
+      <h1>Lista de Produtos</h1>
+    </div>
+    <div class="table">
+      <div>
+        <div class="filterContainer">
+          <div>
+            <span>Listar</span>
+            <select name="" id="">
+              <option value="">10</option>
+              <option value="">25</option>
+              <option value="">50</option>
+              <option value="">100</option>
+            </select>
+          </div>
+          <div>
+            <input type="text" placeholder="Pesquisar" />
+          </div>
+        </div>
+        <div class="containerTable">
+          <table>
+            <thead>
+              <tr>
+                <th>ID do Produto</th>
+                <th>Nome do Produto</th>
+                <th>Preço do Produto</th>
+                <th>Categorias do Produto</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of allProducts">
+                <td>{{ product.id }}</td>
+                <td class="tdImage">
+                  <img
+                    src="{{ product.ProductPhoto[0].url }}"
+                    *ngIf="product.ProductPhoto.length > 0"
+                  />
+                  {{ product.name }}
+                </td>
+                <td>R${{ product.price }}</td>
+                <td>
+                  <select>
+                    <option *ngFor="let category of product.Product_Category">
+                      {{ category.category.name }}
+                    </option>
+                  </select>
+                </td>
+                <td class="actions">
+                  <a>Editar</a>
+                  <a (click)="deleteProduct(product.id)">Excluir</a>
+                </td>
+              </tr>
+              <!-- <tr *ngFor="let category of allCategories">
+                <td>{{ category.id }}</td>
+                <td class="tdImage">
+                  <img
+                    src="{{ category.PhotoCategory[0].url }}"
+                    alt=""
+                    *ngIf="category.PhotoCategory.length > 0"
+                  />
+                  {{ category.name }}
+                </td>
+                <td>20</td>
+                <td class="actions">
+                  <a routerLink="/home/updated-category-product/{{category.id}}">Editar</a>
+                  <a>Excluir</a>
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <div class="infoTable">
+          <p>Exibindo 10 de 36 categorias</p>
+          <div>
+            <button>Voltar</button>
+            <p class="pageSelected">1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+            <button>Avançar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>

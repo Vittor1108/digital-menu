@@ -11,6 +11,7 @@ import { AddProductComponent } from './pages/product/add-product/add-product.com
 import { CategoryComponent } from './pages/product/category/category.component';
 import { EditCategoryListComponent } from './pages/product/edit-category-list/edit-category-list.component';
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
+import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,11 @@ const routes: Routes = [
         component: EditCategoryPageComponent,
         canActivate: [LoggedGuard],
       },
+      {
+        path: 'edit-product',
+        component: EditProductListComponent,
+        canActivate: [LoggedGuard],
+      }
     ],
   },
 ];
