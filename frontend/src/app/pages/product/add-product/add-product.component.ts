@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { ICategorySelect } from 'src/app/interfaces/IProduct-interface';
 
 @Component({
   selector: 'app-add-product',
@@ -12,6 +14,7 @@ export class AddProductComponent implements OnInit {
   public filesThumbProduct: Array<string> = [];
   public form: FormGroup;
   public placeHolderInputFile: string = 'Seleciona uma foto';
+  public dropdownSettings: IDropdownSettings = {};
   public allCategories: IGetAllCategories[] = [];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
@@ -28,6 +31,16 @@ export class AddProductComponent implements OnInit {
       price: ['', [Validators.required]],
       description: ['', [Validators.required]],
     });
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'name',
+      itemsShowLimit: 3,
+      allowSearchFilter: true,
+      enableCheckAll: false,
+      searchPlaceholderText: 'Categoria...',
+    };
   }
 
   public changeImage = (image: number): void => {
@@ -51,19 +64,17 @@ export class AddProductComponent implements OnInit {
   };
 
   public onSubmit = (): void => {
-    console.log(this.form.value);
+    const categories = this.form.value.category.map(
+      (category: ICategorySelect) => category.id
+    );
+
+
   };
 
   private getAllCategories = (): void => {
     this.categoriesService.getAllCategoires().subscribe({
       next: (res) => {
         this.allCategories = res;
-        this.form.setValue({
-          name: '',
-          description: '',
-          price: '',
-          category: res[res.length - 1].id,
-        });
       },
 
       error: (err) => {

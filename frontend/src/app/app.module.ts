@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,6 +63,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     HttpClientModule,
     NgxSpinnerModule,
     FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     ...RXJS_Services,

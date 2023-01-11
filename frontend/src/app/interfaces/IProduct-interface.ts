@@ -4,3 +4,8 @@ export interface ICreateProduct {
   price: number;
   description: string;
 }
+
+export interface ICategorySelect {
+  id: number;
+  name: string;
+}

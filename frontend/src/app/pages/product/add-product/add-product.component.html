@@ -23,7 +23,7 @@
       <div class="doubleInput">
         <div>
           <label for="">Selecione a Categoria</label>
-          <select name="" id="" formControlName="category">
+          <!-- <select name="" id="" formControlName="category">
             <option
               *ngFor="let category of allCategories"
               value="{{ category.id }}"
@@ -31,7 +31,14 @@
             >
               {{ category.name }}
             </option>
-          </select>
+          </select> -->
+          <ng-multiselect-dropdown
+            [settings]="dropdownSettings"
+            [data]="allCategories"
+            formControlName="category"
+            placeholder="Selecione"
+          >
+          </ng-multiselect-dropdown>
         </div>
         <div>
           <label for="">Preço</label>
