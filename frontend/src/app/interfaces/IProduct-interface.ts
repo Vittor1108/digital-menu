@@ -11,3 +11,9 @@ export interface ICategorySelect {
   name: string;
 }
 
+export interface IReturnCreatedProduct {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+}

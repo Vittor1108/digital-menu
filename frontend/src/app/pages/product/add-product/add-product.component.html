@@ -6,7 +6,23 @@
       <li>Adicionar Produto</li>
     </ul>
   </div>
-  <div class="snack"></div>
+  <div class="snack">
+    <app-snack-sucess
+        [messageSucess]="messageSucess"
+        [title]="titleSucess"
+        [events]="eventSubjectSucess.asObservable()"
+      ></app-snack-sucess>
+      <app-snack-error
+        [messageError]="messageError"
+        [title]="titleError"
+        [events]="eventSubjectError.asObservable()"
+      ></app-snack-error>
+      <app-snack-atetion
+        [messageAtention]="messageAtention"
+        [title]="titleAtention"
+        [events]="eventSubjectAtention.asObservable()"
+      ></app-snack-atetion>
+  </div>
   <form class="infoProduct" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="dataProduct">
       <h1>Adicionar Produto</h1>
@@ -23,15 +39,6 @@
       <div class="doubleInput">
         <div>
           <label for="">Selecione a Categoria</label>
-          <!-- <select name="" id="" formControlName="category">
-            <option
-              *ngFor="let category of allCategories"
-              value="{{ category.id }}"
-              [selected]="allCategories[0]"
-            >
-              {{ category.name }}
-            </option>
-          </select> -->
           <ng-multiselect-dropdown
             [settings]="dropdownSettings"
             [data]="allCategories"

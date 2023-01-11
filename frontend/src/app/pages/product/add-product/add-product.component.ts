@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
@@ -6,6 +6,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ICategorySelect } from 'src/app/interfaces/IProduct-interface';
 import { ProductService } from 'src/app/service/product/product.service';
 import { PhotoProductService } from 'src/app/service/photo-product/photo-product.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-product',
@@ -13,6 +14,17 @@ import { PhotoProductService } from 'src/app/service/photo-product/photo-product
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
+  @Output() public titleSucess: string = 'Produto Adicionado';
+  @Output() public messageSucess: string = 'Produto Adicionado com sucesso!';
+  @Output() public messageError: string =
+    'Não foi possível adicionar o produto. Tente Novamente.';
+  @Output() public titleError: string = 'Tente Novamente!';
+  @Output() public titleAtention: string = 'Atenção!';
+  @Output() public messageAtention: string =
+    'O produto foi criada mas, a imagem do produto não foi adicionada. Verifique a imagem na edição de categoria';
+  public eventSubjectError: Subject<void> = new Subject<void>();
+  public eventSubjectSucess: Subject<void> = new Subject<void>();
+  public eventSubjectAtention: Subject<void> = new Subject<void>();
   public filesThumbProduct: Array<string> = [];
   public form: FormGroup;
   public placeHolderInputFile: string = 'Seleciona uma foto';
@@ -74,18 +86,29 @@ export class AddProductComponent implements OnInit {
     this.form.value.category = categories;
     this.productService.createProduct(this.form.value).subscribe({
       next: (res) => {
-        console.log(res);
         this.createProductImage(res.id);
       },
 
       error: (err) => {
-        console.log(err);
+        window.scroll(0, 0)
+        this.eventSubjectError.next();
+        this.messageError =err.error.message;
       },
     });
   };
 
   private createProductImage = (idProduct: number): void => {
-    this.productPhotoService.createImage(idProduct, this.files);
+    this.productPhotoService.createImage(idProduct, this.files).subscribe({
+      next: (res) => {
+        window.scroll(0, 0)
+        this.eventSubjectSucess.next();
+      },
+
+      error: (err) => {
+        window.scroll(0, 0)
+        this.eventSubjectAtention.next();
+      },
+    });
   };
 
   private getAllCategories = (): void => {
@@ -95,7 +118,11 @@ export class AddProductComponent implements OnInit {
       },
 
       error: (err) => {
-        console.log(err);
+        window.scroll(0, 0)
+        this.eventSubjectError.next();
+        this.titleError = 'Atenção!';
+        this.messageError =
+          'Não foi possível carregar as categorias registradas. Tente novamente!';
       },
     });
   };
