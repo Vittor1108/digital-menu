@@ -5,9 +5,11 @@ import { urlApi } from '../../config/configAPI';
 import {
   ICreateProduct,
   IGettAllProducsts,
+  IReturnCreatedProduct,
 } from 'src/app/interfaces/IProduct-interface';
 import { Observable } from 'rxjs';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
+import { IReturnCreateUser } from 'src/app/interfaces/ICreate-user-interface';
 
 @Injectable({
   providedIn: 'root',
@@ -59,31 +61,18 @@ export class ProductService {
     idProduct: number,
     dataProduct: ICreateProduct,
     categories: number[]
-  ) => {
-    this.httpSerivce
-      .put(
-        `${this.apiProduct}/${idProduct}`,
-        {
-          name: dataProduct.name,
-          description: dataProduct.description,
-          categories_id: categories,
-          price: dataProduct.price,
-        },
-        {
-          headers: new HttpHeaders().set(
-            'Authorization',
-            'Bearer ' + this.token
-          ),
-        }
-      )
-      .subscribe({
-        next: (res) => {
-          // console.log(res);
-        },
-
-        error: (err) => {
-          // console.log(err);
-        },
-      });
+  ): Observable<IGettAllProducsts> => {
+    return this.httpSerivce.put<IGettAllProducsts>(
+      `${this.apiProduct}/${idProduct}`,
+      {
+        name: dataProduct.name,
+        description: dataProduct.description,
+        categories_id: categories,
+        price: dataProduct.price,
+      },
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
   };
 }

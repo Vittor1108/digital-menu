@@ -19,10 +19,10 @@ import { ProductService } from 'src/app/service/product/product.service';
   styleUrls: ['./edit-product-page.component.scss'],
 })
 export class EditProductPageComponent implements OnInit {
-  @Output() public titleSucess: string = 'Produto Adicionado';
-  @Output() public messageSucess: string = 'Produto Adicionado com sucesso!';
+  @Output() public titleSucess: string = 'Produto Editado';
+  @Output() public messageSucess: string = 'Produto Editado com sucesso!';
   @Output() public messageError: string =
-    'Não foi possível adicionar o produto. Tente Novamente.';
+    'Não foi possível editar o produto. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
   @Output() public titleAtention: string = 'Atenção!';
   @Output() public messageAtention: string =
@@ -48,7 +48,7 @@ export class EditProductPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCategories();
-    this.getInfoProduct();
+    this.getInfoProduct(true);
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       category: ['', [Validators.required]],
@@ -67,7 +67,7 @@ export class EditProductPageComponent implements OnInit {
     };
   }
 
-  private getInfoProduct = (): void => {
+  private getInfoProduct = (addImage: boolean): void => {
     this.activeRoute.params.subscribe(
       (params) => (this.productId = params['id'])
     );
@@ -79,7 +79,8 @@ export class EditProductPageComponent implements OnInit {
           res.price,
           res.description,
           res.Product_Category,
-          res.ProductPhoto
+          res.ProductPhoto,
+          addImage
         );
       },
 
@@ -94,10 +95,11 @@ export class EditProductPageComponent implements OnInit {
     price: number,
     description: string,
     categories: IProductCategory[],
-    photos: IPhotocategory[]
+    photos: IPhotocategory[],
+    addImage: boolean
   ): void => {
     const photosName = photos.map((photo) => {
-      this.filesThumbProduct.push(photo.url);
+      if (addImage) this.filesThumbProduct.push(photo.url);
       this.files.push(photo);
       return photo.originalname;
     });
@@ -146,17 +148,26 @@ export class EditProductPageComponent implements OnInit {
     const categories = this.form.value.category.map(
       (category: ICategorySelect) => category.id
     );
-    console.log(categories);
-    this.productService.updatedProduct(this.productId, this.form.value, categories);
+    this.productService
+      .updatedProduct(this.productId, this.form.value, categories)
+      .subscribe({
+        next: (res) => {
+          this.createProductImage(res.id);
+          this.getInfoProduct(false);
+        },
+
+        error: (err) => {
+          this.eventSubjectError.next();
+        },
+      });
   };
 
   private createProductImage = (idProduct: number): void => {
-    this.productPhotoService.createImage(idProduct, this.files).subscribe({
+    const newFiles = this.files.filter((file: any) => !file.id);
+    this.productPhotoService.createImage(idProduct, newFiles).subscribe({
       next: (res) => {
         window.scroll(0, 0);
         this.eventSubjectSucess.next();
-        this.form.reset();
-        this.removeFiles();
       },
 
       error: (err) => {

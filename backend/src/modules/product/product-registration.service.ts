@@ -81,7 +81,7 @@ export class ProductRegistrationService {
     updateProductRegistrationDto: UpdateProductRegistrationDto,
     id: number,
     req: any,
-  ): Promise<ProductRegistration> => {
+  ): Promise<any> => {
     const productExistis = await this.prismaService.product.findUnique({
       where: {
         id,
@@ -147,6 +147,11 @@ export class ProductRegistrationService {
             },
           ),
         },
+      },
+
+      include: {
+        Product_Category: true,
+        ProductPhoto: true,
       },
     });
 
