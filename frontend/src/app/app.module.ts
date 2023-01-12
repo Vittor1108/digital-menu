@@ -19,7 +19,6 @@ import { DialogCreatAccountComponent } from './components/dialog-creat-account/d
 import { ConfirmAccountComponent } from './pages/login/confirm-account/confirm-account.component';
 import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
 import { DialogConfirmResetPasswordComponent } from './components/dialog-confirm-reset-password/dialog-confirm-reset-password.component';
-import { ProductComponent } from './pages/product/product.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
 import { LoggedGuard } from './guards/logged/logged.guard';
 import { CategoryComponent } from './pages/product/category/category.component';
@@ -29,6 +28,7 @@ import { SnackAtetionComponent } from './components/snacksbars/snack-atetion/sna
 import { EditCategoryListComponent } from './pages/product/edit-category-list/edit-category-list.component';
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
 import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
+import { EditProductPageComponent } from './pages/product/edit-product-page/edit-product-page.component';
 
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
@@ -45,7 +45,6 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     ConfirmAccountComponent,
     ResetPasswordComponent,
     DialogConfirmResetPasswordComponent,
-    ProductComponent,
     AddProductComponent,
     CategoryComponent,
     SnackSucessComponent,
@@ -54,6 +53,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     EditCategoryListComponent,
     EditCategoryPageComponent,
     EditProductListComponent,
+    EditProductPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +65,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     HttpClientModule,
     NgxSpinnerModule,
     FormsModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [
     ...RXJS_Services,

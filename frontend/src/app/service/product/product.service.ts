@@ -45,4 +45,41 @@ export class ProductService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
+
+  public findOne = (idProduct: number): Observable<IGettAllProducsts> => {
+    return this.httpSerivce.get<IGettAllProducsts>(
+      `${this.apiProduct}/${idProduct}`,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
+  };
+
+  public updatedProduct = (idProduct: number, dataProduct: ICreateProduct) => {
+    this.httpSerivce
+      .put(
+        `${this.apiProduct}/${idProduct}`,
+        {
+          name: dataProduct.name,
+          description: dataProduct.description,
+          categories_id: dataProduct.category,
+          price: dataProduct.price,
+        },
+        {
+          headers: new HttpHeaders().set(
+            'Authorization',
+            'Bearer ' + this.token
+          ),
+        }
+      )
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  };
 }

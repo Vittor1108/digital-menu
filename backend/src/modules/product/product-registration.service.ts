@@ -81,7 +81,7 @@ export class ProductRegistrationService {
     updateProductRegistrationDto: UpdateProductRegistrationDto,
     id: number,
     req: any,
-  ): Promise<ProductRegistration> => {
+  ): Promise<boolean> => {
     const productExistis = await this.prismaService.product.findUnique({
       where: {
         id,
@@ -102,52 +102,52 @@ export class ProductRegistrationService {
       );
     }
 
-    await this.prismaService.product.delete({
-      where: {
-        id: id,
-      },
-    });
+    // await this.prismaService.product.delete({
+    //   where: {
+    //     id: id,
+    //   },
+    // });
 
-    const categories_id = updateProductRegistrationDto.categories_id.map(
-      (id) => {
-        return {
-          category_id: id,
-        };
-      },
-    );
-    const categoriesExitis = await this.prismaService.category.findMany({
-      where: {
-        id: {
-          in: updateProductRegistrationDto.categories_id,
-        },
-      },
-    });
+    // const categories_id = updateProductRegistrationDto.categories_id.map(
+    //   (id) => {
+    //     return {
+    //       category_id: id,
+    //     };
+    //   },
+    // );
+    // const categoriesExitis = await this.prismaService.category.findMany({
+    //   where: {
+    //     id: {
+    //       in: updateProductRegistrationDto.categories_id,
+    //     },
+    //   },
+    // });
 
-    if (
-      categoriesExitis.length <
-      updateProductRegistrationDto.categories_id.length
-    ) {
-      throw new HttpException(
-        HelpMessager.category_not_exits,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // if (
+    //   categoriesExitis.length <
+    //   updateProductRegistrationDto.categories_id.length
+    // ) {
+    //   throw new HttpException(
+    //     HelpMessager.category_not_exits,
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
 
-    const newProduct = await this.prismaService.product.create({
-      data: {
-        id: productExistis.id,
-        name: updateProductRegistrationDto.name.toLocaleLowerCase(),
-        price: updateProductRegistrationDto.price,
-        user_id: req.user.id,
-        description: updateProductRegistrationDto.description,
-        Product_Category: {
-          createMany: {
-            data: categories_id,
-          },
-        },
-      },
-    });
-    return newProduct;
+    // const newProduct = await this.prismaService.product.create({
+    //   data: {
+    //     id: productExistis.id,
+    //     name: updateProductRegistrationDto.name.toLocaleLowerCase(),
+    //     price: updateProductRegistrationDto.price,
+    //     user_id: req.user.id,
+    //     description: updateProductRegistrationDto.description,
+    //     Product_Category: {
+    //       createMany: {
+    //         data: categories_id,
+    //       },
+    //     },
+    //   },
+    // });
+    return true;
   };
 
   public findAll = async (req: any): Promise<ProductRegistration[]> => {
@@ -194,8 +194,10 @@ export class ProductRegistrationService {
         description: true,
         ProductPhoto: {
           select: {
+            id: true,
             url: true,
             filename: true,
+            originalname: true,
           },
         },
         Product_Category: {

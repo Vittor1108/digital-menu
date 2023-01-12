@@ -12,6 +12,7 @@ import { CategoryComponent } from './pages/product/category/category.component';
 import { EditCategoryListComponent } from './pages/product/edit-category-list/edit-category-list.component';
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
 import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
+import { EditProductPageComponent } from './pages/product/edit-product-page/edit-product-page.component';
 
 const routes: Routes = [
   {
@@ -44,27 +45,26 @@ const routes: Routes = [
       {
         path: 'add-product',
         component: AddProductComponent,
-        canActivate: [LoggedGuard],
       },
       {
         path: 'category-product',
         component: CategoryComponent,
-        canActivate: [LoggedGuard],
       },
       {
         path: 'edit-category-product',
         component: EditCategoryListComponent,
-        canActivate: [LoggedGuard],
       },
       {
         path: 'updated-category-product/:id',
         component: EditCategoryPageComponent,
-        canActivate: [LoggedGuard],
       },
       {
         path: 'edit-product',
         component: EditProductListComponent,
-        canActivate: [LoggedGuard],
+      },
+      {
+        path: 'updated-product/:id',
+        component: EditProductPageComponent,
       }
     ],
   },

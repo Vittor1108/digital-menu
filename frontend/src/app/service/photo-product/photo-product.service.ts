@@ -4,6 +4,7 @@ import { token } from 'src/app/helper/tokenHelper';
 import { urlApi } from 'src/app/config/configAPI';
 import { Observable } from 'rxjs';
 import { IReturnCreatedProduct } from 'src/app/interfaces/IProduct-interface';
+import { IPhotocategory } from 'src/app/interfaces/IUpload-photo.interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,7 +15,7 @@ export class PhotoProductService {
 
   public createImage = (
     idProduct: number,
-    files: File[]
+    files: Array<File | IPhotocategory>
   ): Observable<IReturnCreatedProduct> => {
     const formData = new FormData();
     files.forEach((file) => {
@@ -28,5 +29,11 @@ export class PhotoProductService {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
     );
+  };
+
+  public deleteImage = (idImage: number): Observable<boolean> => {
+    return this.httpService.delete<boolean>(`${this.apiProductPhoto}/${idImage}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
   };
 }
