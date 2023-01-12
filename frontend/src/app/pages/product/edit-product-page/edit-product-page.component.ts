@@ -212,7 +212,6 @@ export class EditProductPageComponent implements OnInit {
 
   private deleteFiles = (): void => {
     this.files.forEach((file: any) => {
-      console.log(file);
       if (!file.id) return;
       this.productPhotoService.deleteImage(file.id).subscribe({
         error: (err) => {

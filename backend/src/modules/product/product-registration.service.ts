@@ -81,7 +81,7 @@ export class ProductRegistrationService {
     updateProductRegistrationDto: UpdateProductRegistrationDto,
     id: number,
     req: any,
-  ): Promise<boolean> => {
+  ): Promise<any> => {
     const productExistis = await this.prismaService.product.findUnique({
       where: {
         id,
@@ -102,6 +102,20 @@ export class ProductRegistrationService {
       );
     }
 
+    const photos = await this.prismaService.productPhoto.findMany({
+      where: {
+        product_id: id,
+      },
+    });
+
+    console.log(photos);
+
+    // await this.prismaService.productPhoto.deleteMany({
+    //   where: {
+    //     product_id: id,
+    //   },
+    // });
+
     // await this.prismaService.product.delete({
     //   where: {
     //     id: id,
@@ -115,6 +129,7 @@ export class ProductRegistrationService {
     //     };
     //   },
     // );
+
     // const categoriesExitis = await this.prismaService.category.findMany({
     //   where: {
     //     id: {
@@ -143,6 +158,11 @@ export class ProductRegistrationService {
     //     Product_Category: {
     //       createMany: {
     //         data: categories_id,
+    //       },
+    //     },
+    //     ProductPhoto: {
+    //       createMany: {
+    //         data: photos,
     //       },
     //     },
     //   },
