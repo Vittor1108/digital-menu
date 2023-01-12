@@ -55,14 +55,18 @@ export class ProductService {
     );
   };
 
-  public updatedProduct = (idProduct: number, dataProduct: ICreateProduct) => {
+  public updatedProduct = (
+    idProduct: number,
+    dataProduct: ICreateProduct,
+    categories: number[]
+  ) => {
     this.httpSerivce
       .put(
         `${this.apiProduct}/${idProduct}`,
         {
           name: dataProduct.name,
           description: dataProduct.description,
-          categories_id: dataProduct.category,
+          categories_id: categories,
           price: dataProduct.price,
         },
         {
@@ -74,11 +78,11 @@ export class ProductService {
       )
       .subscribe({
         next: (res) => {
-          console.log(res);
+          // console.log(res);
         },
 
         error: (err) => {
-          console.log(err);
+          // console.log(err);
         },
       });
   };

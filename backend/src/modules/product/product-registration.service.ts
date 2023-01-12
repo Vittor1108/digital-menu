@@ -102,71 +102,63 @@ export class ProductRegistrationService {
       );
     }
 
-    const photos = await this.prismaService.productPhoto.findMany({
+    console.log(updateProductRegistrationDto.categories_id);
+
+    const newProduct = await this.prismaService.product.update({
       where: {
-        product_id: id,
+        id,
+      },
+
+      data: {
+        name: updateProductRegistrationDto.name,
+        description: updateProductRegistrationDto.description,
+        price: updateProductRegistrationDto.price,
+        Product_Category: {
+          connectOrCreate: updateProductRegistrationDto.categories_id.map(
+            (category) => {
+              return {
+                where: {
+                  category_id_product_id: {
+                    category_id: category,
+                    product_id: id,
+                  },
+                },
+
+                create: {
+                  category_id: category,
+                },
+              };
+            },
+          ),
+        },
       },
     });
 
-    console.log(photos);
-
-    // await this.prismaService.productPhoto.deleteMany({
+    // await this.prismaService.product.update({
     //   where: {
-    //     product_id: id,
+    //     id,
     //   },
-    // });
 
-    // await this.prismaService.product.delete({
-    //   where: {
-    //     id: id,
-    //   },
-    // });
-
-    // const categories_id = updateProductRegistrationDto.categories_id.map(
-    //   (id) => {
-    //     return {
-    //       category_id: id,
-    //     };
-    //   },
-    // );
-
-    // const categoriesExitis = await this.prismaService.category.findMany({
-    //   where: {
-    //     id: {
-    //       in: updateProductRegistrationDto.categories_id,
-    //     },
-    //   },
-    // });
-
-    // if (
-    //   categoriesExitis.length <
-    //   updateProductRegistrationDto.categories_id.length
-    // ) {
-    //   throw new HttpException(
-    //     HelpMessager.category_not_exits,
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
-
-    // const newProduct = await this.prismaService.product.create({
     //   data: {
-    //     id: productExistis.id,
-    //     name: updateProductRegistrationDto.name.toLocaleLowerCase(),
-    //     price: updateProductRegistrationDto.price,
-    //     user_id: req.user.id,
-    //     description: updateProductRegistrationDto.description,
     //     Product_Category: {
-    //       createMany: {
-    //         data: categories_id,
-    //       },
-    //     },
-    //     ProductPhoto: {
-    //       createMany: {
-    //         data: photos,
-    //       },
+    //       set: [
+    //         {
+    //           category_id_product_id: {
+    //             category_id: 3,
+    //             product_id: id,
+    //           },
+    //         },
+    //         {
+    //           category_id_product_id: {
+    //             category_id: 2,
+    //             product_id: id,
+    //           },
+    //         },
+    //       ],
     //     },
     //   },
     // });
+
     return true;
   };
 
