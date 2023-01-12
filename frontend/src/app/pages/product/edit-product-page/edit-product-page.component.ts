@@ -146,6 +146,7 @@ export class EditProductPageComponent implements OnInit {
     const categories = this.form.value.category.map(
       (category: ICategorySelect) => category.id
     );
+    console.log(categories);
     this.productService.updatedProduct(this.productId, this.form.value, categories);
   };
 

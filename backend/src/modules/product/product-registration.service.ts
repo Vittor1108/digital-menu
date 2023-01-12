@@ -81,7 +81,7 @@ export class ProductRegistrationService {
     updateProductRegistrationDto: UpdateProductRegistrationDto,
     id: number,
     req: any,
-  ): Promise<any> => {
+  ): Promise<ProductRegistration> => {
     const productExistis = await this.prismaService.product.findUnique({
       where: {
         id,
@@ -102,7 +102,23 @@ export class ProductRegistrationService {
       );
     }
 
-    console.log(updateProductRegistrationDto.categories_id);
+    await this.prismaService.product.update({
+      where: {
+        id,
+      },
+
+      data: {
+        Product_Category: {
+          deleteMany: {
+            product_id: id,
+          },
+        },
+      },
+
+      select: {
+        Product_Category: true,
+      },
+    });
 
     const newProduct = await this.prismaService.product.update({
       where: {
@@ -134,32 +150,7 @@ export class ProductRegistrationService {
       },
     });
 
-    // await this.prismaService.product.update({
-    //   where: {
-    //     id,
-    //   },
-
-    //   data: {
-    //     Product_Category: {
-    //       set: [
-    //         {
-    //           category_id_product_id: {
-    //             category_id: 3,
-    //             product_id: id,
-    //           },
-    //         },
-    //         {
-    //           category_id_product_id: {
-    //             category_id: 2,
-    //             product_id: id,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
-
-    return true;
+    return newProduct;
   };
 
   public findAll = async (req: any): Promise<ProductRegistration[]> => {

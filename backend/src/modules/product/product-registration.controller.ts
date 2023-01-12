@@ -38,7 +38,7 @@ export class ProductRegistrationController {
     @Body() updateProductRegistrationDto: UpdateProductRegistrationDto,
     @Param('id') id: number,
     @Request() req: any,
-  ): Promise<any> {
+  ): Promise<ProductRegistration> {
     return this.productRegistrationService.updated(
       updateProductRegistrationDto,
       id,

@@ -65,15 +65,15 @@ model PhotoCategory {
 }
 
 model Product {
-  id               Int                @id @default(autoincrement())
+  id               Int                 @id @default(autoincrement())
   name             String
   description      String
   price            Float
   user_id          Int
   Product_Category Product_Category[]
   ProductPhoto     ProductPhoto[]
-  created_at       DateTime           @default(now())
-  updeated_at      DateTime           @default(now()) @updatedAt
+  created_at       DateTime            @default(now())
+  updeated_at      DateTime            @default(now()) @updatedAt
 
   @@map("products")
 }
