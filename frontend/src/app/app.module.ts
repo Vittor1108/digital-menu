@@ -29,6 +29,7 @@ import { EditCategoryListComponent } from './pages/product/edit-category-list/ed
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
 import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
 import { EditProductPageComponent } from './pages/product/edit-product-page/edit-product-page.component';
+import { CatalogComponent } from './pages/product/catalog/catalog.component';
 
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
@@ -54,6 +55,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     EditCategoryPageComponent,
     EditProductListComponent,
     EditProductPageComponent,
+    CatalogComponent,
   ],
   imports: [
     BrowserModule,

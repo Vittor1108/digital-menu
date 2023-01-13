@@ -1,0 +1,125 @@
+@import "../../../../assets/scss/generalStyles.scss";
+@import "../../../../assets/scss/variables.scss";
+
+section {
+  min-height: 100vh;
+  .path {
+    width: 100%;
+  }
+
+  .containerCards {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    article {
+      width: calc(25% - 20px);
+      margin-left: 20px;
+      margin-bottom: 2rem;
+      background-color: white;
+      box-shadow: 0 1px 6px 1px rgb(69 65 78 / 10%);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+
+      @media screen and (max-width: 1440px) {
+        width: calc(33.333333% - 20px);
+      }
+
+      @media screen and (max-width: 768px) {
+        width: calc(50% - 20px);
+      }
+
+      @media screen and (max-width: 575px) {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      > div {
+        width: 100%;
+        img {
+          max-width: 100%;
+          border-radius: 10px 10px 0 0;
+          object-fit: contain;
+        }
+
+        &:nth-child(2) {
+          padding: 10px 15px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          font-size: 14px;
+          > p {
+            width: 100%;
+            color: #878793;
+            margin-top: 15px;
+          }
+
+          h1 {
+            color: #333;
+            font-size: 16px;
+          }
+
+          span {
+            font-size: 16px;
+            color: $primary-red;
+            font-weight: 500;
+          }
+
+          .buttons {
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            @media screen and (max-width: 290px) {
+              display: block;
+            }
+
+            button {
+              color: #fff;
+              outline: none;
+              font-size: 14px;
+              padding: 0.3rem;
+              border-radius: 0.2rem;
+              min-width: 90px;
+              cursor: pointer;
+              transition: opacity 0.3s;
+
+              @media screen and (max-width: 290px) {
+                display: block;
+                width: 100%;
+              }
+
+              &:hover {
+                opacity: 0.5;
+              }
+              &:nth-child(1) {
+                background-color: #ff0018;
+                border: 1px solid #ff0018;
+
+                @media screen and (max-width: 290px) {
+                  margin-bottom: 10px;
+                }
+              }
+
+              a {
+                color: white;
+                text-decoration: none;
+              }
+
+              &:nth-child(2) {
+                background-color: #333;
+                border: 1px solid #333;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.noProducts {
+  text-align: center;
+  font-size: 24px;
+}

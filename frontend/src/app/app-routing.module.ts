@@ -8,6 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ResetPasswordComponent } from './pages/login/reset-password/reset-password.component';
 import { SignComponent } from './pages/login/sign/sign.component';
 import { AddProductComponent } from './pages/product/add-product/add-product.component';
+import { CatalogComponent } from './pages/product/catalog/catalog.component';
 import { CategoryComponent } from './pages/product/category/category.component';
 import { EditCategoryListComponent } from './pages/product/edit-category-list/edit-category-list.component';
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
@@ -65,7 +66,11 @@ const routes: Routes = [
       {
         path: 'updated-product/:id',
         component: EditProductPageComponent,
-      }
+      },
+      {
+        path: 'product-catalog',
+        component: CatalogComponent,
+      },
     ],
   },
 ];
