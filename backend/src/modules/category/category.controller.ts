@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { FindByStringDto } from './dto/findby-string.dto';
+import { PaginationCategroyDto } from './dto/pagination-category';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
@@ -38,9 +38,12 @@ export class CategoryController {
     return this.categoryService.updated(updtaedCategoryDto, id, req);
   }
 
-  @Get()
-  findAll(@Request() req: any): Promise<Category[]> {
-    return this.categoryService.findAll(req);
+  @Get('/take=:take/skip=:skip/text=:text?')
+  findAll(
+    @Request() req: any,
+    @Param() params: PaginationCategroyDto,
+  ): Promise<Category[]> {
+    return this.categoryService.findAll(req, params);
   }
 
   @Get(':id')
@@ -51,14 +54,5 @@ export class CategoryController {
   @Delete(':id')
   delete(@Param('id') id: number, @Request() req: any): Promise<boolean> {
     return this.categoryService.delete(id, req);
-  }
-
-  @Post(':id')
-  findByStringOrPagination(
-    @Param('id') id: number,
-    @Body() data: FindByStringDto,
-    @Request() req: any,
-  ) {
-    return this.categoryService.findByStringOrPagination(id, data, req);
   }
 }

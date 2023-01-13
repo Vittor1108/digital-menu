@@ -3,7 +3,7 @@ import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { FindByStringDto } from './dto/findby-string.dto';
+import { PaginationCategroyDto } from './dto/pagination-category';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
@@ -86,7 +86,41 @@ export class CategoryService {
     return newCategory;
   };
 
-  public findAll = async (req: any): Promise<Category[]> => {
+  public findAll = async (
+    req: any,
+    params: PaginationCategroyDto,
+  ): Promise<Category[]> => {
+    if (params.text) {
+      const categoriesByText = await this.prismaService.category.findMany({
+        where: {
+          user_id: req.user.id,
+
+          AND: {
+            name: {
+              contains: params.text,
+            },
+          },
+        },
+
+        take: Number(params.take),
+        skip: Number(params.skip),
+
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          PhotoCategory: {
+            select: {
+              filename: true,
+              url: true,
+            },
+          },
+        },
+      });
+
+      return categoriesByText;
+    }
+
     const allCategories = await this.prismaService.category.findMany({
       where: {
         user_id: req.user.id,
@@ -102,6 +136,9 @@ export class CategoryService {
           },
         },
       },
+
+      take: Number(params.take),
+      skip: Number(params.skip),
     });
 
     return allCategories;
@@ -188,31 +225,5 @@ export class CategoryService {
     }
 
     return category;
-  };
-
-  public findByStringOrPagination = async (
-    id: number,
-    data: FindByStringDto,
-    req: any,
-  ) => {
-    if (id === 1) {
-      const products = await this.prismaService.product.findMany({
-        where: {
-          user_id: req.id,
-          AND: {
-            name: {
-              contains: data.text,
-            },
-          },
-        },
-
-        include: {
-          ProductPhoto: true,
-          Product_Category: true,
-        },
-      });
-
-      return products;
-    }
   };
 }
