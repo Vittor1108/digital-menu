@@ -30,7 +30,7 @@ export class EditCategoryListComponent implements OnInit {
   public quantityProducts: number;
   public allCategories: IGetAllCategories[];
   public numberPages: number;
-  public page: number = 1;
+  public currentPage: number = 1;
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly dialog: MatDialog
@@ -41,6 +41,9 @@ export class EditCategoryListComponent implements OnInit {
   }
 
   public getAllCategories = (): void => {
+    if (this.dataGet.take > this.quantityProducts)
+      this.dataGet.take = this.quantityProducts;
+
     this.categoriesService.getAllCategoires(this.dataGet).subscribe({
       next: (res) => {
         this.allCategories = res.categories;
@@ -77,21 +80,32 @@ export class EditCategoryListComponent implements OnInit {
   };
 
   public changePagination = (numberPage: number): void => {
-    if (numberPage > this.page) {
-      this.page = numberPage;
+    if (numberPage > this.currentPage) {
+      this.currentPage = numberPage;
       this.dataGet.skip = this.dataGet.take * (numberPage - 1);
     }
 
-    if (numberPage < this.page) {
-      this.dataGet.skip = (this.page - numberPage) * this.dataGet.take;
+    if (numberPage < this.currentPage) {
+      this.dataGet.skip = (this.currentPage - numberPage) * this.dataGet.take;
       this.dataGet;
-      this.page = numberPage;
+      this.currentPage = numberPage;
     }
 
     if (numberPage === 1) {
-      this.page = numberPage;
+      this.currentPage = numberPage;
       this.dataGet.skip = 0;
     }
     this.getAllCategories();
+  };
+
+  public buttonPage = (nextOrPrevius: boolean): void => {
+    if (this.currentPage === this.numberPages) return;
+    let currentPage = nextOrPrevius
+      ? this.currentPage + 1
+      : this.currentPage - 1;
+
+    if (currentPage === 0) currentPage = 1;
+
+    this.changePagination(currentPage);
   };
 }

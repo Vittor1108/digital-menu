@@ -28,14 +28,24 @@
           <div>
             <span>Listar</span>
             <select [(ngModel)]="dataGet.take" (change)="getAllCategories()">
-              <option value=10>10</option>
-              <option value=25>25</option>
-              <option value=50>50</option>
-              <option value=100>100</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option
+                value="{{ dataGet.take }}"
+                *ngIf="dataGet.take >= quantityProducts"
+              >
+                {{ dataGet.take }}
+              </option>
             </select>
           </div>
           <div>
-            <input type="text" placeholder="Pesquisar" [(ngModel)]="dataGet.text"/>
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              [(ngModel)]="dataGet.text"
+            />
           </div>
         </div>
         <div class="containerTable">
@@ -61,7 +71,12 @@
                 </td>
                 <td>20</td>
                 <td class="actions">
-                  <a routerLink="/home/updated-category-product/{{category.id}}">Editar</a>
+                  <a
+                    routerLink="/home/updated-category-product/{{
+                      category.id
+                    }}"
+                    >Editar</a
+                  >
                   <a (click)="deleteCategory(category.id)">Excluir</a>
                 </td>
               </tr>
@@ -69,11 +84,19 @@
           </table>
         </div>
         <div class="infoTable">
-          <p>Exibindo {{dataGet.take}} de {{quantityProducts}} categorias</p>
+          <p>
+            Exibindo {{ dataGet.take }} de {{ quantityProducts }} categorias
+          </p>
           <div>
-            <button>Voltar</button>
-            <p *ngFor="let page of [].constructor(numberPages); let i = index" (click)="changePagination(i + 1)">{{i + 1}}</p>
-            <button>Avançar</button>
+            <button (click)="buttonPage(false)">Voltar</button>
+            <p
+              *ngFor="let page of [].constructor(numberPages); let i = index"
+              (click)="changePagination(i + 1)"
+              [ngClass]="{ pageSelected: i + 1 === currentPage }"
+            >
+              {{ i + 1 }}
+            </p>
+            <button (click)="buttonPage(true)">Avançar</button>
           </div>
         </div>
       </div>
