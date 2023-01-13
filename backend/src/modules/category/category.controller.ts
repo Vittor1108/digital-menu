@@ -14,7 +14,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { PaginationCategroyDto } from './dto/pagination-category';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { AllCategories, Category } from './entities/category.entity';
 
 @Controller('category')
 @UseGuards(AuthGuard('jwt'))
@@ -42,7 +42,7 @@ export class CategoryController {
   findAll(
     @Request() req: any,
     @Param() params: PaginationCategroyDto,
-  ): Promise<Category[]> {
+  ): Promise<AllCategories> {
     return this.categoryService.findAll(req, params);
   }
 

@@ -5,7 +5,7 @@ import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { PaginationCategroyDto } from './dto/pagination-category';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { AllCategories, Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
@@ -89,7 +89,7 @@ export class CategoryService {
   public findAll = async (
     req: any,
     params: PaginationCategroyDto,
-  ): Promise<Category[]> => {
+  ): Promise<AllCategories> => {
     if (params.text) {
       const categoriesByText = await this.prismaService.category.findMany({
         where: {
@@ -118,8 +118,18 @@ export class CategoryService {
         },
       });
 
-      return categoriesByText;
+      return { categories: categoriesByText, count: 0 };
     }
+
+    const countProducts = await this.prismaService.category.aggregate({
+      where: {
+        user_id: req.user.id,
+      },
+
+      _count: {
+        user_id: true,
+      },
+    });
 
     const allCategories = await this.prismaService.category.findMany({
       where: {
@@ -141,7 +151,10 @@ export class CategoryService {
       skip: Number(params.skip),
     });
 
-    return allCategories;
+    return {
+      categories: allCategories,
+      count: countProducts._count.user_id,
+    };
   };
 
   public delete = async (id: number, req: any): Promise<boolean> => {

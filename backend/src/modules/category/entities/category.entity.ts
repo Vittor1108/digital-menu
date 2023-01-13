@@ -10,3 +10,8 @@ interface PhotoCategory {
   filename: string;
   url: string;
 }
+
+export class AllCategories {
+  categories: Category[];
+  count: number;
+}

@@ -1,5 +1,8 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
+import {
+  IDataGetCategories,
+  IGetAllCategories,
+} from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -19,8 +22,15 @@ export class EditCategoryListComponent implements OnInit {
   @Output() public titleAtention: string = 'Atenção!';
   public eventSubjectError: Subject<void> = new Subject<void>();
   public eventSubjectSucess: Subject<void> = new Subject<void>();
-
+  public dataGet: IDataGetCategories = {
+    take: 10,
+    skip: 0,
+    text: '',
+  };
+  public quantityProducts: number;
   public allCategories: IGetAllCategories[];
+  public numberPages: number;
+  public page: number = 1;
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly dialog: MatDialog
@@ -30,12 +40,13 @@ export class EditCategoryListComponent implements OnInit {
     this.getAllCategories();
   }
 
-  private getAllCategories = (): void => {
-    this.categoriesService.getAllCategoires().subscribe({
+  public getAllCategories = (): void => {
+    this.categoriesService.getAllCategoires(this.dataGet).subscribe({
       next: (res) => {
-        this.allCategories = res;
+        this.allCategories = res.categories;
+        this.pagination(res.count);
+        this.quantityProducts = res.count;
       },
-
       error: (err) => {
         this.eventSubjectError.next();
         this.messageError = 'Não foi possível carregar as categorias';
@@ -59,5 +70,28 @@ export class EditCategoryListComponent implements OnInit {
         });
       }
     });
+  };
+
+  public pagination = (amountRequest: number): void => {
+    this.numberPages = Math.ceil(amountRequest / this.dataGet.take);
+  };
+
+  public changePagination = (numberPage: number): void => {
+    if (numberPage > this.page) {
+      this.page = numberPage;
+      this.dataGet.skip = this.dataGet.take * (numberPage - 1);
+    }
+
+    if (numberPage < this.page) {
+      this.dataGet.skip = (this.page - numberPage) * this.dataGet.take;
+      this.dataGet;
+      this.page = numberPage;
+    }
+
+    if (numberPage === 1) {
+      this.page = numberPage;
+      this.dataGet.skip = 0;
+    }
+    this.getAllCategories();
   };
 }

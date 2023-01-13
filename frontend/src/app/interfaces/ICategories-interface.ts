@@ -20,6 +20,11 @@ export interface IGetAllCategories {
   PhotoCategory: IPhotoCategory[];
 }
 
+export interface IGetAllCategoriesCount {
+  categories: Array<IGetAllCategories>;
+  count: number;
+}
+
 interface IPhotoCategory {
   id: number;
   filename: string;
@@ -38,4 +43,10 @@ export interface IUpdatedReturnCategory {
   name: string;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface IDataGetCategories {
+  skip: number;
+  take: number;
+  text: string;
 }

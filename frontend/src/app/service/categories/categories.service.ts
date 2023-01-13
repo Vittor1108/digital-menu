@@ -5,6 +5,7 @@ import {
   ICategoriesCreate,
   ICategoriesForm,
   IGetAllCategories,
+  IGetAllCategoriesCount,
   IUpdatedFormCategory,
   IUpdatedReturnCategory,
 } from '../../interfaces/ICategories-interface';
@@ -37,10 +38,15 @@ export class CategoriesService {
     );
   };
 
-  public getAllCategoires = (): Observable<IGetAllCategories[]> => {
-    return this.httpService.get<IGetAllCategories[]>(this.apiCategory, {
-      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
-    });
+  public getAllCategoires = (
+    dataGett: any
+  ): Observable<IGetAllCategoriesCount> => {
+    return this.httpService.get<IGetAllCategoriesCount>(
+      `${this.apiCategory}/take=${dataGett.take}/skip=${dataGett.skip}/text=${dataGett.text}`,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
   };
 
   public deleteCategory = (id: number): Observable<boolean> => {
@@ -73,10 +79,4 @@ export class CategoriesService {
       }
     );
   };
-
-
-
-
-
-
 }

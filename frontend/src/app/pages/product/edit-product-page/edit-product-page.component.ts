@@ -178,19 +178,19 @@ export class EditProductPageComponent implements OnInit {
   };
 
   private getAllCategories = (): void => {
-    this.categoriesService.getAllCategoires().subscribe({
-      next: (res) => {
-        this.allCategories = res;
-      },
+    // this.categoriesService.getAllCategoires().subscribe({
+    //   next: (res) => {
+    //     this.allCategories = res;
+    //   },
 
-      error: (err) => {
-        window.scroll(0, 0);
-        this.eventSubjectError.next();
-        this.titleError = 'Atenção!';
-        this.messageError =
-          'Não foi possível carregar as categorias registradas. Tente novamente!';
-      },
-    });
+    //   error: (err) => {
+    //     window.scroll(0, 0);
+    //     this.eventSubjectError.next();
+    //     this.titleError = 'Atenção!';
+    //     this.messageError =
+    //       'Não foi possível carregar as categorias registradas. Tente novamente!';
+    //   },
+    // });
   };
 
   public addImage = (): void => {
