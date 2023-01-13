@@ -3,6 +3,7 @@ import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { FindByStringDto } from './dto/findby-string.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
@@ -187,5 +188,31 @@ export class CategoryService {
     }
 
     return category;
+  };
+
+  public findByStringOrPagination = async (
+    id: number,
+    data: FindByStringDto,
+    req: any,
+  ) => {
+    if (id === 1) {
+      const products = await this.prismaService.product.findMany({
+        where: {
+          user_id: req.id,
+          AND: {
+            name: {
+              contains: data.text,
+            },
+          },
+        },
+
+        include: {
+          ProductPhoto: true,
+          Product_Category: true,
+        },
+      });
+
+      return products;
+    }
   };
 }
