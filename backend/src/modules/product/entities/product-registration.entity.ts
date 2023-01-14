@@ -18,3 +18,8 @@ interface Product_Category {
 interface ProductPhoto {
   url: string;
 }
+
+export class allProducts {
+  products: ProductRegistration[];
+  count: number;
+}

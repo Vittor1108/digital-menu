@@ -38,7 +38,7 @@ export class CategoryController {
     return this.categoryService.updated(updtaedCategoryDto, id, req);
   }
 
-  @Get('/take=:take/skip=:skip/text=:text?')
+  @Get('/take=:take?/skip=:skip?/text=:text?')
   findAll(
     @Request() req: any,
     @Param() params: PaginationCategroyDto,

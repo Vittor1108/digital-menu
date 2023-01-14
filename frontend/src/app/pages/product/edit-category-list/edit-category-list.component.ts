@@ -76,17 +76,18 @@ export class EditCategoryListComponent implements OnInit {
   };
 
   public pagination = (amountRequest: number): void => {
-    this.numberPages = Math.ceil(amountRequest / this.dataGet.take);
+    this.numberPages = Math.ceil(amountRequest / Number(this.dataGet.take));
   };
 
   public changePagination = (numberPage: number): void => {
     if (numberPage > this.currentPage) {
       this.currentPage = numberPage;
-      this.dataGet.skip = this.dataGet.take * (numberPage - 1);
+      this.dataGet.skip = Number(this.dataGet.take) * (numberPage - 1);
     }
 
     if (numberPage < this.currentPage) {
-      this.dataGet.skip = (this.currentPage - numberPage) * this.dataGet.take;
+      this.dataGet.skip =
+        (this.currentPage - numberPage) * Number(this.dataGet.take);
       this.dataGet;
       this.currentPage = numberPage;
     }

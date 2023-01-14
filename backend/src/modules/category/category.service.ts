@@ -90,6 +90,7 @@ export class CategoryService {
     req: any,
     params: PaginationCategroyDto,
   ): Promise<AllCategories> => {
+    let allCategories;
     if (params.text) {
       const categoriesByText = await this.prismaService.category.findMany({
         where: {
@@ -131,30 +132,54 @@ export class CategoryService {
       },
     });
 
-    const allCategories = await this.prismaService.category.findMany({
-      where: {
-        user_id: req.user.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        PhotoCategory: {
-          select: {
-            filename: true,
-            url: true,
+    if (params.skip && params.take) {
+      allCategories = await this.prismaService.category.findMany({
+        where: {
+          user_id: req.user.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          PhotoCategory: {
+            select: {
+              filename: true,
+              url: true,
+            },
           },
         },
-      },
 
-      take: Number(params.take),
-      skip: Number(params.skip),
-    });
+        take: Number(params.take),
+        skip: Number(params.skip),
+      });
 
-    return {
-      categories: allCategories,
-      count: countProducts._count.user_id,
-    };
+      return {
+        categories: allCategories,
+        count: countProducts._count.user_id,
+      };
+    } else {
+      allCategories = await this.prismaService.category.findMany({
+        where: {
+          user_id: req.user.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          PhotoCategory: {
+            select: {
+              filename: true,
+              url: true,
+            },
+          },
+        },
+      });
+
+      return {
+        categories: allCategories,
+        count: countProducts._count.user_id,
+      };
+    }
   };
 
   public delete = async (id: number, req: any): Promise<boolean> => {

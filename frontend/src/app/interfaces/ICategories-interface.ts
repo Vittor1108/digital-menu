@@ -46,7 +46,7 @@ export interface IUpdatedReturnCategory {
 }
 
 export interface IDataGetCategories {
-  skip: number;
-  take: number;
+  skip: number | string;
+  take: number | string;
   text: string;
 }

@@ -3,8 +3,12 @@ import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
+import { PaginationProductRegistrationDto } from './dto/pagination-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
-import { ProductRegistration } from './entities/product-registration.entity';
+import {
+  allProducts,
+  ProductRegistration,
+} from './entities/product-registration.entity';
 
 @Injectable()
 export class ProductRegistrationService {
@@ -158,37 +162,74 @@ export class ProductRegistrationService {
     return newProduct;
   };
 
-  public findAll = async (req: any): Promise<ProductRegistration[]> => {
-    const allProducts = await this.prismaService.product.findMany({
-      where: {
-        user_id: req.user.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        description: true,
-        Product_Category: {
-          select: {
-            category_id: true,
-            category: {
-              select: {
-                name: true,
-              },
-            },
-            product_id: false,
+  public findAll = async (
+    req: any,
+    params: PaginationProductRegistrationDto,
+  ): Promise<allProducts> => {
+    let allProducts;
+    if (params.text) {
+      allProducts = await this.prismaService.product.findMany({
+        where: {
+          name: {
+            contains: params.text,
           },
         },
-        ProductPhoto: {
-          select: {
-            url: true,
-            filename: true,
-          },
-        },
-      },
-    });
+      });
 
-    return allProducts;
+      return {
+        products: allProducts,
+        count: 0,
+      };
+    }
+
+    if (params.take && params.skip) {
+      allProducts = await this.prismaService.product.findMany({
+        where: {
+          user_id: req.user.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
+            },
+          },
+          ProductPhoto: {
+            select: {
+              url: true,
+              filename: true,
+            },
+          },
+        },
+
+        take: Number(params.take),
+        skip: Number(params.skip),
+      });
+
+      const amouthProducts = await this.prismaService.product.aggregate({
+        where: {
+          user_id: req.user.id,
+        },
+
+        _count: {
+          user_id: true,
+        },
+      });
+
+      return {
+        products: allProducts,
+        count: amouthProducts._count.user_id,
+      };
+    }
   };
 
   public findOne = async (id: number): Promise<ProductRegistration> => {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
+import { IDataGetCategories, IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ICategorySelect } from 'src/app/interfaces/IProduct-interface';
@@ -114,19 +114,24 @@ export class AddProductComponent implements OnInit {
   };
 
   private getAllCategories = (): void => {
-    // this.categoriesService.getAllCategoires().subscribe({
-    //   next: (res) => {
-    //     this.allCategories = res;
-    //   },
+    const dataGet: IDataGetCategories = {
+      skip: "",
+      take: "",
+      text: "",
+    }
+    this.categoriesService.getAllCategoires(dataGet).subscribe({
+      next: (res) => {
+        this.allCategories = res.categories;
+      },
 
-    //   error: (err) => {
-    //     window.scroll(0, 0);
-    //     this.eventSubjectError.next();
-    //     this.titleError = 'Atenção!';
-    //     this.messageError =
-    //       'Não foi possível carregar as categorias registradas. Tente novamente!';
-    //   },
-    // });
+      error: (err) => {
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.titleError = 'Atenção!';
+        this.messageError =
+          'Não foi possível carregar as categorias registradas. Tente novamente!';
+      },
+    });
   };
 
   public addImage = (): void => {

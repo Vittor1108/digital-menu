@@ -11,8 +11,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
+import { PaginationProductRegistrationDto } from './dto/pagination-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
-import { ProductRegistration } from './entities/product-registration.entity';
+import {
+  allProducts,
+  ProductRegistration,
+} from './entities/product-registration.entity';
 import { ProductRegistrationService } from './product-registration.service';
 
 @Controller('product')
@@ -46,9 +50,12 @@ export class ProductRegistrationController {
     );
   }
 
-  @Get()
-  findAll(@Request() req: any): Promise<ProductRegistration[]> {
-    return this.productRegistrationService.findAll(req);
+  @Get('/take=:take?/skip=:skip?/text=:text?')
+  findAll(
+    @Request() req: any,
+    @Param() params: PaginationProductRegistrationDto,
+  ): Promise<allProducts> {
+    return this.productRegistrationService.findAll(req, params);
   }
 
   @Get(':id')

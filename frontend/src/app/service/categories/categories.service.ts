@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   ICategoriesCreate,
   ICategoriesForm,
+  IDataGetCategories,
   IGetAllCategories,
   IGetAllCategoriesCount,
   IUpdatedFormCategory,
@@ -39,7 +40,7 @@ export class CategoriesService {
   };
 
   public getAllCategoires = (
-    dataGett: any
+    dataGett: IDataGetCategories,
   ): Observable<IGetAllCategoriesCount> => {
     return this.httpService.get<IGetAllCategoriesCount>(
       `${this.apiCategory}/take=${dataGett.take}/skip=${dataGett.skip}/text=${dataGett.text}`,
