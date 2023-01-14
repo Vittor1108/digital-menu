@@ -29,17 +29,17 @@ export class CatalogComponent implements OnInit {
   }
 
   private getAllProducts = (): void => {
-    this.productService.getAllProducts().subscribe({
-      next: (res) => {
-        this.allProducts = res;
-      },
+    // this.productService.getAllProducts().subscribe({
+    //   next: (res) => {
+    //     this.allProducts = res;
+    //   },
 
-      error: (err) => {
-        this.eventSubjectError.next();
-        this.messageError =
-          'Não foi possível listar os produtos. Tente Novamente';
-      },
-    });
+    //   error: (err) => {
+    //     this.eventSubjectError.next();
+    //     this.messageError =
+    //       'Não foi possível listar os produtos. Tente Novamente';
+    //   },
+    // });
   };
 
   public removeProduct = (idProduct: number): void => {

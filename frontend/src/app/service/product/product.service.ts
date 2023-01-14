@@ -4,6 +4,8 @@ import { token } from 'src/app/helper/tokenHelper';
 import { urlApi } from '../../config/configAPI';
 import {
   ICreateProduct,
+  IDataGetProducts,
+  IGetAllProductsCount,
   IGettAllProducsts,
   IReturnCreatedProduct,
 } from 'src/app/interfaces/IProduct-interface';
@@ -36,10 +38,15 @@ export class ProductService {
     );
   };
 
-  public getAllProducts = (): Observable<IGettAllProducsts[]> => {
-    return this.httpSerivce.get<IGettAllProducsts[]>(`${this.apiProduct}`, {
-      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
-    });
+  public getAllProducts = (
+    dataGet: IDataGetProducts
+  ): Observable<IGetAllProductsCount> => {
+    return this.httpSerivce.get<IGetAllProductsCount>(
+      `${this.apiProduct}/take=${dataGet.take}/skip=${dataGet.skip}/text=${dataGet.text}`,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
   };
 
   public deleteProduct = (idProduct: number): Observable<boolean> => {

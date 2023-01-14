@@ -27,15 +27,25 @@
         <div class="filterContainer">
           <div>
             <span>Listar</span>
-            <select name="" id="">
-              <option value="">10</option>
-              <option value="">25</option>
-              <option value="">50</option>
-              <option value="">100</option>
+            <select [(ngModel)]="dataGet.take" (change)="getAllProducts()">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option
+                value="{{ dataGet.take }}"
+                *ngIf="dataGet.take >= quantityProducts"
+              >
+                {{ dataGet.take }}
+              </option>
             </select>
           </div>
           <div>
-            <input type="text" placeholder="Pesquisar" />
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              [(ngModel)]="dataGet.text"
+            />
           </div>
         </div>
         <div class="containerTable">
@@ -78,14 +88,19 @@
           </table>
         </div>
         <div class="infoTable">
-          <p>Exibindo 10 de 36 categorias</p>
+          <p>
+            Exibindo {{ dataGet.take }} de {{ quantityProducts }} categorias
+          </p>
           <div>
-            <button>Voltar</button>
-            <p class="pageSelected">1</p>
-            <p>2</p>
-            <p>3</p>
-            <p>4</p>
-            <button>Avançar</button>
+            <button (click)="buttonPage(false)">Voltar</button>
+            <p
+              *ngFor="let page of [].constructor(numberPages); let i = index"
+              (click)="changePagination(i + 1)"
+              [ngClass]="{ pageSelected: i + 1 === currentPage }"
+            >
+              {{ i + 1 }}
+            </p>
+            <button (click)="buttonPage(true)">Avançar</button>
           </div>
         </div>
       </div>

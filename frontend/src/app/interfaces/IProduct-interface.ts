@@ -35,3 +35,14 @@ export interface IProductCategory {
     name: string;
   };
 }
+
+export interface IDataGetProducts {
+  skip: number | string;
+  take: number | string;
+  text: string;
+}
+
+export interface IGetAllProductsCount {
+  products: Array<IGettAllProducsts>;
+  count: number;
+}
