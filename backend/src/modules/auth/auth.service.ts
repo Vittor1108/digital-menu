@@ -17,11 +17,22 @@ export class AuthService {
       },
     });
 
-    if (!user) {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    console.log(employee);
+
+    if (!user && !employee) {
       return null;
     }
 
-    if (!(await bcrypt.comparePassword(password, user.password))) {
+    if (
+      !(await bcrypt.comparePassword(password, user.password)) &&
+      !(await bcrypt.comparePassword(password, employee.password))
+    ) {
       return null;
     }
     return user;

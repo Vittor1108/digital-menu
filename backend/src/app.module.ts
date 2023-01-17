@@ -8,6 +8,7 @@ import { PhotoUserModule } from './modules/photo-user/photo-user.module';
 import { ProductRegistrationModule } from './modules/product/product-registration.module';
 import { ResetPasswordModule } from './modules/reset-password/reset-password.module';
 import { UserModule } from './modules/user/user.module';
+import { EmployeesModule } from './modules/employees/employees.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserModule } from './modules/user/user.module';
     CategoryModule,
     PhotoCategoryModule,
     PhotoProductModule,
+    EmployeesModule,
   ],
   controllers: [],
   providers: [],

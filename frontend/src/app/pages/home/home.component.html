@@ -71,16 +71,20 @@
             </span>
           </a>
         </li>
-        <li>
-          <a href="#">
-            <span>
-              <i class="fa-solid fa-list-check"></i>
-              Lista de Restaurantes
-            </span>
-          </a>
-        </li>
         <li class="treeMenu">
           <a (click)="showAccordion(1)">
+            <span>
+              <i class="fa-solid fa-list-check"></i>
+              Personalizar Cárdapio
+            </span>
+          </a>
+          <ul class="accordion">
+            <li><a href="#">Detalhes</a></li>
+            <li><a href="#">Lista</a></li>
+          </ul>
+        </li>
+        <li class="treeMenu">
+          <a (click)="showAccordion(2)">
             <span>
               <i class="fas fa-file-invoice fs-16"></i>
               Faturas
@@ -91,15 +95,15 @@
             <li><a href="#">Lista</a></li>
           </ul>
         </li>
-        <li class="treeMenu" (click)="showAccordion(2)">
+        <li class="treeMenu" (click)="showAccordion(3)">
           <a>
             <span>
               <i class="fas fa-user-friends fs-16"></i>
-              Clientes
+              Funcionários
             </span>
           </a>
           <ul class="accordion">
-            <li><a href="#">Review</a></li>
+            <li><a href="#">Criar</a></li>
             <li><a href="#">Lista</a></li>
             <li><a href="#">Social</a></li>
           </ul>
