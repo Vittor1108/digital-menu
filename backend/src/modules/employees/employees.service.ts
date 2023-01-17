@@ -1,26 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/database/PrismaService';
+import { HelpMessager } from 'src/helper/messageHelper';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 
 @Injectable()
 export class EmployeesService {
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
-  findAll() {
-    return `This action returns all employees`;
-  }
+  create = async (data: CreateEmployeeDto, req: any) => {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
-  }
-
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
-  }
+    if (employee) {
+      throw new HttpException(
+        HelpMessager.CpfOrCnpjExitis,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  };
 }

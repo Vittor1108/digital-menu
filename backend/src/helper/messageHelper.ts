@@ -16,4 +16,5 @@ export const HelpMessager = {
   product: 'This product does not belong to the User Id sent',
   product_not_exits: 'This id product does not exitis',
   product_doNot_user: 'This product does not belong to the User Id sent',
+  employees_exists: 'Funcionário com este email já cadastrado',
 };
