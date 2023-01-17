@@ -167,11 +167,46 @@ export class ProductRegistrationService {
     params: PaginationProductRegistrationDto,
   ): Promise<allProducts> => {
     let allProducts;
+
+    const amouthProducts = await this.prismaService.product.aggregate({
+      where: {
+        user_id: req.user.id,
+      },
+
+      _count: {
+        user_id: true,
+      },
+    });
+
     if (params.text) {
       allProducts = await this.prismaService.product.findMany({
         where: {
           name: {
             contains: params.text,
+          },
+        },
+
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
+            },
+          },
+          ProductPhoto: {
+            select: {
+              url: true,
+              filename: true,
+            },
           },
         },
       });
@@ -214,22 +249,41 @@ export class ProductRegistrationService {
         take: Number(params.take),
         skip: Number(params.skip),
       });
-
-      const amouthProducts = await this.prismaService.product.aggregate({
+    } else {
+      allProducts = await this.prismaService.product.findMany({
         where: {
           user_id: req.user.id,
         },
-
-        _count: {
-          user_id: true,
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
+            },
+          },
+          ProductPhoto: {
+            select: {
+              url: true,
+              filename: true,
+            },
+          },
         },
       });
-
-      return {
-        products: allProducts,
-        count: amouthProducts._count.user_id,
-      };
     }
+
+    return {
+      products: allProducts,
+      count: amouthProducts._count.user_id,
+    };
   };
 
   public findOne = async (id: number): Promise<ProductRegistration> => {

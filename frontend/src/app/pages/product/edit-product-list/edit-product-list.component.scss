@@ -44,6 +44,18 @@ section {
           }
           &:nth-child(2) {
             text-align: right;
+            position: relative;
+            i{
+              position: absolute;
+              top: 8px;
+              right: 15px;
+              cursor: pointer;
+              transition: all .3s;
+              padding: 5px;
+              &:hover{
+                color: $primary-red;
+              }
+            }
           }
         }
 
