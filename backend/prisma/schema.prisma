@@ -108,7 +108,9 @@ model employee {
   name             String
   email            String    @unique
   password         String
-  active           Boolean
+  acess_screens    String
+  active           Boolean   @default(true)
+  user_id          Int
   admission_date   DateTime  @default(now())
   resignation_date DateTime?
 
