@@ -68,13 +68,13 @@ export class CategoryComponent implements OnInit {
     this.categoryImageService
       .createImageCategory(this.files, idCategory)
       .subscribe({
-        next: (res: any) => {
+        next: () => {
           this.eventSubjectSucess.next();
           this.form.reset();
           this.removeFiles();
         },
 
-        err: (err: any) => {
+        err: () => {
           this.eventSubjectAtention.next();
         },
       });
@@ -86,7 +86,7 @@ export class CategoryComponent implements OnInit {
     inputFile?.click();
   };
 
-  public getInfoImage = (event: any): void => {
+  public getInfoImage = (event: Event): void => {
     const file = (event.target as HTMLInputElement).files![0];
     const reader = new FileReader();
     reader.onload = () => {

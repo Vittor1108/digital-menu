@@ -14,6 +14,7 @@ import { editFileName, imageFilter } from 'src/utils/file-upload.utils';
 import { PhotoUserService } from './photo-user.service';
 import { resolve } from 'path';
 import { AuthGuard } from '@nestjs/passport';
+import { IReq } from 'src/@types/req';
 
 @Controller('photo-user')
 @UseGuards(AuthGuard('jwt'))
@@ -30,7 +31,7 @@ export class PhotoUserController {
       fileFilter: imageFilter,
     }),
   )
-  async uploadedFile(@UploadedFile() file, @Request() req: any) {
+  async uploadedFile(@UploadedFile() file, @Request() req: IReq) {
     return this.photoUserService.upload(file, req);
   }
 

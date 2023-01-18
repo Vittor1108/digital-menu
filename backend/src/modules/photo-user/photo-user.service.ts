@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { resolve } from 'path';
+import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
@@ -13,7 +14,7 @@ export class PhotoUserService {
 
   public upload = async (
     file: Express.Multer.File,
-    req: any,
+    req: IReq,
   ): Promise<PhotoUser> => {
     const photo = await this.prismaService.photoUser.create({
       data: {

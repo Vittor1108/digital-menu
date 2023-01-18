@@ -138,7 +138,7 @@ export class AddProductComponent implements OnInit {
     document.querySelector<HTMLElement>('input[type=file]')!.click();
   };
 
-  public getInfoImage = (event: any): void => {
+  public getInfoImage = (event: Event): void => {
     const file = (event.target as HTMLInputElement).files![0];
     const reader = new FileReader();
     reader.onload = () => {

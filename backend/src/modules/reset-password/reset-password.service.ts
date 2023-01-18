@@ -60,7 +60,7 @@ export class ResetPasswordService {
   public resetPassword = async (
     token: string,
     data: ResetPassworDto,
-  ): Promise<any> => {
+  ): Promise<boolean> => {
     const user = await this.prismaService.user.findUnique({
       where: {
         tokenForgotPassword: token,

@@ -72,12 +72,12 @@ export class EditCategoryPageComponent implements OnInit {
     this.categoryImageService
       .createImageCategory(this.files, idCategory)
       .subscribe({
-        next: (res: any) => {
+        next: () => {
           window.scroll(0, 0);
           this.eventSubjectSucess.next();
         },
 
-        err: (err: any) => {
+        err: () => {
           window.scroll(0, 0);
           this.eventSubjectError.next();
         },

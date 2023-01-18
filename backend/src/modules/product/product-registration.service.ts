@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
@@ -16,7 +17,7 @@ export class ProductRegistrationService {
 
   public create = async (
     createProductRegistrationDto: CreateProductRegistrationDto,
-    req: any,
+    req: IReq,
   ): Promise<ProductRegistration> => {
     const productExistis = await this.prismaService.product.findFirst({
       where: {
@@ -84,7 +85,7 @@ export class ProductRegistrationService {
   public updated = async (
     updateProductRegistrationDto: UpdateProductRegistrationDto,
     id: number,
-    req: any,
+    req: IReq,
   ): Promise<any> => {
     const productExistis = await this.prismaService.product.findUnique({
       where: {
@@ -163,7 +164,7 @@ export class ProductRegistrationService {
   };
 
   public findAll = async (
-    req: any,
+    req: IReq,
     params: PaginationProductRegistrationDto,
   ): Promise<allProducts> => {
     let allProducts;
@@ -327,7 +328,7 @@ export class ProductRegistrationService {
     return product;
   };
 
-  public delete = async (id: number, req: any): Promise<boolean> => {
+  public delete = async (id: number, req: IReq): Promise<boolean> => {
     const product = await this.prismaService.product.findUnique({
       where: {
         id,
