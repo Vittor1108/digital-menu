@@ -54,16 +54,99 @@ export class EmployeesService {
     return employee;
   };
 
-  public findAll = async (params: PaginationEmployee, req: IReq) => {
+  public findAll = async (
+    params: PaginationEmployee,
+    req: IReq,
+  ): Promise<Employee[]> => {
     let employees: Employee[];
     if (params.text) {
       employees = await this.prismaService.employee.findMany({
         where: {
           user_id: req.user.id,
+          AND: {
+            name: {
+              contains: params.text,
+            },
+          },
+        },
+
+        include: {
+          screeens: true,
+        },
+      });
+    }
+
+    if (params.skip && params.take) {
+      employees = await this.prismaService.employee.findMany({
+        where: {
+          user_id: req.user.id,
+        },
+
+        take: Number(params.take),
+        skip: Number(params.skip),
+
+        include: {
+          screeens: true,
+        },
+      });
+    }
+
+    if (!params.skip && !params.take && !params.text) {
+      employees = await this.prismaService.employee.findMany({
+        where: {
+          user_id: req.user.id,
+        },
+
+        include: {
+          screeens: true,
         },
       });
     }
 
     return employees;
+  };
+
+  public findOne = async (id: number): Promise<Employee> => {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        id: Number(id),
+      },
+
+      include: {
+        screeens: true,
+      },
+    });
+
+    if (!employee) {
+      throw new HttpException(
+        HelpMessager.employees_not_exists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return employee;
+  };
+
+  public delete = async (id: number): Promise<boolean> => {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!employee) {
+      throw new HttpException(
+        HelpMessager.employees_not_exists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.prismaService.employee.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return true;
   };
 }

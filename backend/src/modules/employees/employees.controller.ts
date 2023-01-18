@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -28,7 +29,20 @@ export class EmployeesController {
   }
 
   @Get('/take=:take?/skip=:skip?/text=:text?')
-  findAll(@Param() params: PaginationEmployee, @Request() req: IReq) {
+  findAll(
+    @Param() params: PaginationEmployee,
+    @Request() req: IReq,
+  ): Promise<Employee[]> {
     return this.employeesService.findAll(params, req);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<Employee> {
+    return this.employeesService.findOne(id);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<boolean> {
+    return this.employeesService.delete(id);
   }
 }
