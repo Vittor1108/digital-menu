@@ -5,6 +5,7 @@ import { HelpMessager } from 'src/helper/messageHelper';
 import bcrypt from 'src/utils/bcrypt';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { PaginationEmployee } from './dto/pagination-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
 @Injectable()
 export class EmployeesService {
@@ -52,6 +53,70 @@ export class EmployeesService {
     });
 
     return employee;
+  };
+
+  public updated = async (id: number, data: UpdateEmployeeDto) => {
+    const employee = await this.prismaService.employee.findUnique({
+      where: {
+        id,
+      },
+
+      include: {
+        screeens: true,
+      },
+    });
+
+    if (!employee) {
+      throw new HttpException(
+        HelpMessager.employees_not_exists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const newScreeens = data.screens.map((e) => {
+      return {
+        id: e,
+      };
+    });
+    const oldScreeens = employee.screeens.map((e) => e.id);
+
+    const hashPassword = await bcrypt.hashPassword(data.password);
+
+    await this.prismaService.employee.update({
+      where: {
+        id,
+      },
+
+      data: {
+        screeens: {
+          deleteMany: oldScreeens.map((id) => {
+            return {
+              id,
+            };
+          }),
+        },
+      },
+    });
+
+    const newEmployee = await this.prismaService.employee.update({
+      where: {
+        id,
+      },
+
+      data: {
+        name: data.name,
+        password: hashPassword,
+        screeens: {
+          connect: newScreeens,
+        },
+      },
+
+      include: {
+        screeens: true,
+      },
+    });
+
+    return newEmployee;
   };
 
   public findAll = async (

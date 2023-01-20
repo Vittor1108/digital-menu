@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { IReq } from 'src/@types/req';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { PaginationEmployee } from './dto/pagination-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
 
@@ -44,5 +46,13 @@ export class EmployeesController {
   @Delete(':id')
   delete(@Param('id') id: number): Promise<boolean> {
     return this.employeesService.delete(id);
+  }
+
+  @Put(':id')
+  updated(
+    @Param('id') id: number,
+    @Body() updateEmployeeDto: UpdateEmployeeDto,
+  ) {
+    return this.employeesService.updated(id, updateEmployeeDto);
   }
 }
