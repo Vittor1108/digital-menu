@@ -5,7 +5,6 @@ import { PrismaService } from 'src/database/PrismaService';
 
 @Module({
   controllers: [HomeAuthController],
-  providers: [HomeAuthService],
-  imports: [PrismaService],
+  providers: [HomeAuthService, PrismaService],
 })
 export class HomeAuthModule {}

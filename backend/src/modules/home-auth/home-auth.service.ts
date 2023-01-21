@@ -12,7 +12,16 @@ export class HomeAuthService {
       },
     });
 
-    console.log(user);
-    return 'Ok';
+    const employee = await this.prismaService.employee.findFirst({
+      where: {
+        email: req.user.email,
+      },
+
+      include: {
+        screeens: true,
+      },
+    });
+
+    return !user ? employee : user;
   };
 }
