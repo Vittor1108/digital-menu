@@ -20,6 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user.activeAccount) {
       throw new UnauthorizedException(HelpMessager.accout_not_activated);
     }
+    console.log(user);
     return user;
   }
 }
