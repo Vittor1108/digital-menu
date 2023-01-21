@@ -39,7 +39,6 @@ export class EditProductListComponent implements OnInit {
   }
 
   public getAllProducts = (): void => {
-    console.log(this.dataGet.text);
     if (this.dataGet.take > this.quantityProducts)
       this.dataGet.take = this.quantityProducts;
     this.productService.getAllProducts(this.dataGet).subscribe({

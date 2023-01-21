@@ -23,7 +23,7 @@ export class AuthService {
       },
     });
 
-    console.log(employee);
+    console.log(password);
 
     if (!user && !employee) {
       return null;
