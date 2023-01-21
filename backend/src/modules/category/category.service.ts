@@ -91,11 +91,19 @@ export class CategoryService {
     req: IReq,
     params: PaginationCategroyDto,
   ): Promise<AllCategories> => {
+    const employees = await this.prismaService.employee.findMany({
+      where: {
+        user_id: req.user.id,
+      },
+    });
+
     let allCategories;
     if (params.text) {
       const categoriesByText = await this.prismaService.category.findMany({
         where: {
-          user_id: req.user.id,
+          user_id: {
+            in: employees.map((e) => e.id),
+          },
 
           AND: {
             name: {
@@ -136,7 +144,9 @@ export class CategoryService {
     if (params.skip && params.take) {
       allCategories = await this.prismaService.category.findMany({
         where: {
-          user_id: req.user.id,
+          user_id: {
+            in: employees.map((e) => e.id),
+          },
         },
         select: {
           id: true,
@@ -161,7 +171,9 @@ export class CategoryService {
     } else {
       allCategories = await this.prismaService.category.findMany({
         where: {
-          user_id: req.user.id,
+          user_id: {
+            in: employees.map((e) => e.id),
+          },
         },
         select: {
           id: true,
