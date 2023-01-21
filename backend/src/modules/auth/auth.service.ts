@@ -23,19 +23,22 @@ export class AuthService {
       },
     });
 
-    console.log(password);
-
     if (!user && !employee) {
       return null;
     }
 
+    if (user && !(await bcrypt.comparePassword(password, user.password))) {
+      return null;
+    }
+
     if (
-      !(await bcrypt.comparePassword(password, user.password)) &&
+      employee &&
       !(await bcrypt.comparePassword(password, employee.password))
     ) {
       return null;
     }
-    return user;
+
+    return user ? user : employee;
   };
 
   public login = async (req: IReq) => {
