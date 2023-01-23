@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HomeService } from 'src/app/service/home/home.service';
 
 @Component({
   selector: 'app-home',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
-  ngOnInit(): void {}
+  constructor(private readonly homeService: HomeService) {}
+
+  ngOnInit(): void {
+    this.getFunctionUser();
+  }
 
   public showAccordion = (numberAccordion: number): void => {
     const accordions = document.querySelectorAll<HTMLElement>('.accordion');
@@ -50,5 +54,9 @@ export class HomeComponent implements OnInit {
     const location = window.location.href;
     const verify = location.includes(route) ? true : false;
     return verify;
+  };
+
+  private getFunctionUser = (): void => {
+    this.homeService.getFunctionUser();
   };
 }

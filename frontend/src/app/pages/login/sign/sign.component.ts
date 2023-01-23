@@ -57,5 +57,5 @@ export class SignComponent implements OnInit {
   private checkLogged = () => {
     const token = localStorage.getItem('token');
     token ? this.router.navigate(['home']) : false;
-  }
+  };
 }

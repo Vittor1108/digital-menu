@@ -38,7 +38,7 @@ export class EmployeesService {
 
     const employee = await this.prismaService.employee.create({
       data: {
-        name: data.email,
+        name: data.name,
         email: data.email,
         password: hashPassword,
         user_id: req.user.id,
