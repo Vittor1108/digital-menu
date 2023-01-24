@@ -15,7 +15,10 @@
             </span>
           </a>
         </li>
-        <li class="treeMenu" *ngIf="authorizationScreens('produtos') || !isAnEmployee">
+        <li
+          class="treeMenu"
+          *ngIf="authorizationScreens('produtos') || !isAnEmployee"
+        >
           <a
             (click)="showAccordion(0)"
             [ngClass]="{ activeRouteAccordion: verifyRoute('product') }"
@@ -86,7 +89,10 @@
             <li><a href="#">Lista</a></li>
           </ul>
         </li>
-        <li class="treeMenu" *ngIf="authorizationScreens('faturas') || !isAnEmployee">
+        <li
+          class="treeMenu"
+          *ngIf="authorizationScreens('faturas') || !isAnEmployee"
+        >
           <a (click)="showAccordion(2)">
             <span>
               <i class="fas fa-file-invoice fs-16"></i>
@@ -103,14 +109,20 @@
           (click)="showAccordion(3)"
           *ngIf="authorizationScreens('funcionarios') || !isAnEmployee"
         >
-          <a>
+          <a [ngClass]="{ activeRouteAccordion: verifyRoute('employees') }">
             <span>
               <i class="fas fa-user-friends fs-16"></i>
               Funcionários
             </span>
           </a>
           <ul class="accordion">
-            <li><a href="#">Criar</a></li>
+            <li>
+              <a
+                routerLink="add-employees"
+                routerLinkActive="activeRouteAccordion"
+                >Criar</a
+              >
+            </li>
             <li><a href="#">Lista</a></li>
             <li><a href="#">Social</a></li>
           </ul>
