@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Param,
   Post,
   UploadedFile,
@@ -28,7 +29,12 @@ export class PhotoEmployeesController {
       }),
     }),
   )
-  create(@UploadedFile() files, @Param('id') id): Promise<boolean> {
+  create(@UploadedFile() files, @Param('id') id: number): Promise<boolean> {
     return this.photoEmployeesService.create(files, id);
+  }
+
+  @Delete(':id')
+  deleteFile(@Param('id') id: number): Promise<boolean> {
+    return this.photoEmployeesService.deleteFile(id);
   }
 }

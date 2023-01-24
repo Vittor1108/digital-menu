@@ -19,7 +19,7 @@ export class PhotoEmployeesService {
     });
 
     if (!userExists) {
-      removeFile(file.originalname);
+      removeFile(file.filename);
       throw new HttpException(
         HelpMessager.employees_not_exists,
         HttpStatus.BAD_REQUEST,
@@ -33,7 +33,7 @@ export class PhotoEmployeesService {
     });
 
     if (userHasPhoto) {
-      removeFile(file.originalname);
+      removeFile(file.filename);
       throw new HttpException(
         HelpMessager.employee_has_photo,
         HttpStatus.BAD_REQUEST,
@@ -46,6 +46,30 @@ export class PhotoEmployeesService {
         originalname: file.originalname,
         employee_id: Number(id),
         url: `${this.baseURL}/${file.filename}`,
+      },
+    });
+
+    return true;
+  };
+
+  public deleteFile = async (id: number): Promise<boolean> => {
+    const file = await this.prismaService.employeePhoto.findFirst({
+      where: {
+        employee_id: Number(id),
+      },
+    });
+
+    if (!file) {
+      throw new HttpException(
+        HelpMessager.employee_has_photo,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    removeFile(file.filename);
+    await this.prismaService.employeePhoto.deleteMany({
+      where: {
+        employee_id: Number(id),
       },
     });
 
