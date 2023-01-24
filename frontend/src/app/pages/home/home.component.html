@@ -3,7 +3,7 @@
     <nav>
       <div><img src="../../../assets/images/logo.png" alt="Logo" /></div>
       <ul>
-        <li>
+        <li *ngIf="authorizationScreens('dashboard') || !isAnEmployee">
           <a
             routerLinkActive="activeRoute"
             routerLink="/home"
@@ -15,7 +15,7 @@
             </span>
           </a>
         </li>
-        <li class="treeMenu">
+        <li class="treeMenu" *ngIf="authorizationScreens('produtos') || !isAnEmployee">
           <a
             (click)="showAccordion(0)"
             [ngClass]="{ activeRouteAccordion: verifyRoute('product') }"
@@ -63,7 +63,7 @@
             </li>
           </ul>
         </li>
-        <li>
+        <li *ngIf="authorizationScreens('pedidos') || !isAnEmployee">
           <a href="#">
             <span>
               <i class="fas fa-clipboard-list fs-16"></i>
@@ -71,7 +71,10 @@
             </span>
           </a>
         </li>
-        <li class="treeMenu">
+        <li
+          class="treeMenu"
+          *ngIf="authorizationScreens('personalziar_cardapio') || !isAnEmployee"
+        >
           <a (click)="showAccordion(1)">
             <span>
               <i class="fa-solid fa-list-check"></i>
@@ -83,7 +86,7 @@
             <li><a href="#">Lista</a></li>
           </ul>
         </li>
-        <li class="treeMenu">
+        <li class="treeMenu" *ngIf="authorizationScreens('faturas') || !isAnEmployee">
           <a (click)="showAccordion(2)">
             <span>
               <i class="fas fa-file-invoice fs-16"></i>
@@ -95,7 +98,11 @@
             <li><a href="#">Lista</a></li>
           </ul>
         </li>
-        <li class="treeMenu" (click)="showAccordion(3)">
+        <li
+          class="treeMenu"
+          (click)="showAccordion(3)"
+          *ngIf="authorizationScreens('funcionarios') || !isAnEmployee"
+        >
           <a>
             <span>
               <i class="fas fa-user-friends fs-16"></i>
@@ -108,19 +115,11 @@
             <li><a href="#">Social</a></li>
           </ul>
         </li>
-        <li>
+        <li *ngIf="authorizationScreens('vendas') || !isAnEmployee">
           <a href="#">
             <span>
               <i class="fa fa-briefcase fs-16"></i>
               Vendas
-            </span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span>
-              <i class="material-icons fs-16">widgets</i>
-              Widgets
             </span>
           </a>
         </li>
