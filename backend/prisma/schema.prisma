@@ -104,17 +104,31 @@ model ProductPhoto {
 }
 
 model Employee {
-  id               Int       @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   name             String
-  email            String    @unique
+  email            String          @unique
   password         String
   screeens         Screens[]
-  activeAccount    Boolean  @default(true)
+  activeAccount    Boolean         @default(true)
   user_id          Int
-  admission_date   DateTime  @default(now())
+  admission_date   DateTime        @default(now())
   resignation_date DateTime?
+  EmployeePhoto    EmployeePhoto[]
 
   @@map("employees")
+}
+
+model EmployeePhoto {
+  id           Int      @id @default(autoincrement())
+  filename     String
+  originalname String
+  employee_id  Int
+  Employee     Employee @relation(fields: [employee_id], references: [id])
+  url          String
+  created_at   DateTime @default(now())
+  updeated_at  DateTime @default(now()) @updatedAt
+
+  @@map("employees_photo")
 }
 
 model Screens {

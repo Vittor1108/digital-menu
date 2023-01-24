@@ -49,6 +49,7 @@ export class EmployeesService {
 
       include: {
         screeens: true,
+        EmployeePhoto: true,
       },
     });
 
@@ -113,6 +114,7 @@ export class EmployeesService {
 
       include: {
         screeens: true,
+        EmployeePhoto: true,
       },
     });
 
@@ -137,6 +139,7 @@ export class EmployeesService {
 
         include: {
           screeens: true,
+          EmployeePhoto: true,
         },
       });
     }
@@ -152,6 +155,7 @@ export class EmployeesService {
 
         include: {
           screeens: true,
+          EmployeePhoto: true,
         },
       });
     }
@@ -164,6 +168,7 @@ export class EmployeesService {
 
         include: {
           screeens: true,
+          EmployeePhoto: true,
         },
       });
     }
@@ -179,6 +184,7 @@ export class EmployeesService {
 
       include: {
         screeens: true,
+        EmployeePhoto: true,
       },
     });
 

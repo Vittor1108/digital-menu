@@ -10,7 +10,7 @@ import { PhotoUserModule } from './modules/photo-user/photo-user.module';
 import { ProductRegistrationModule } from './modules/product/product-registration.module';
 import { ResetPasswordModule } from './modules/reset-password/reset-password.module';
 import { UserModule } from './modules/user/user.module';
-import { ScreensModule } from './modules/screens/screens.module';
+import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.module';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { ScreensModule } from './modules/screens/screens.module';
     PhotoProductModule,
     EmployeesModule,
     HomeAuthModule,
-    ScreensModule,
+    PhotoEmployeesModule,
   ],
   controllers: [],
   providers: [],

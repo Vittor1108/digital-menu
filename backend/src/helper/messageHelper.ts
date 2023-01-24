@@ -18,4 +18,5 @@ export const HelpMessager = {
   product_doNot_user: 'This product does not belong to the User Id sent',
   employees_exists: 'Funcionário com este email já cadastrado',
   employees_not_exists: 'Funcionar não existe',
+  employee_has_photo: 'Funcionario já possuiu uma foto',
 };
