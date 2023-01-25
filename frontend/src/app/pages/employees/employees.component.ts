@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { Subject } from 'rxjs';
 import { IScreen } from 'src/app/interfaces/IScreens-interface';
 import { EmployeeService } from 'src/app/service/employee/employee.service';
 import { ScreensService } from 'src/app/service/screens/screens.service';
@@ -11,6 +12,14 @@ import { ScreensService } from 'src/app/service/screens/screens.service';
   styleUrls: ['./employees.component.scss'],
 })
 export class EmployeesComponent implements OnInit {
+  @Output() public titleSucess: string = 'Funcionário Adicionado';
+  @Output() public messageSucess: string =
+    'Funcionário Adicionado com sucesso!';
+  @Output() public messageError: string =
+    'Não foi possível adicionar o funcionário. Tente Novamente.';
+  @Output() public titleError: string = 'Tente Novamente!';
+  public eventSubjectError: Subject<void> = new Subject<void>();
+  public eventSubjectSucess: Subject<void> = new Subject<void>();
   public filesThumbProduct: Array<string> = [];
   public placeHolderInputFile: string = 'Seleciona uma foto';
   public form: FormGroup;
@@ -96,7 +105,17 @@ export class EmployeesComponent implements OnInit {
 
   public onSubmit = (): void => {
     const screens = this.form.value.screens.map((e: IScreen) => e.id);
-    this.employeeService.createEmployee(this.form.value);
+    this.form.value.screeens = screens;
+    this.employeeService.createEmployee(this.form.value).subscribe({
+      next: (res) => {
+        this.registerPhoto(res.id!);
+      },
+
+      error: (err) => {
+        this.messageError = err.error.message;
+        this.eventSubjectError.next();
+      },
+    });
   };
 
   private getAllScreens = (): void => {
@@ -104,6 +123,22 @@ export class EmployeesComponent implements OnInit {
       next: (res) => {
         this.screens = res;
       },
+    });
+  };
+
+  private registerPhoto = (idEmployee: number): void => {
+    this.employeeService.registerPhoto(idEmployee, this.files).subscribe({
+      next: res => {
+        this.form.reset();
+        this.files = [];
+        this.filesThumbProduct = [];
+        this.eventSubjectSucess.next();
+      },
+
+      error: err => {
+        this.eventSubjectError.next();
+        this.messageError = err.error.message;
+      }
     });
   };
 }

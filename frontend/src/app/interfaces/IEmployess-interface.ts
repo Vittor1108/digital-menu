@@ -1,13 +1,13 @@
 export interface IEmploye {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   password: string;
-  activeAccount: boolean;
-  admission_date: Date;
+  activeAccount?: boolean;
+  admission_date?: Date;
   resignation_date?: Date;
   screeens: IScreens[];
-  user_id: number;
+  user_id?: number;
 }
 
 export interface IScreens {
