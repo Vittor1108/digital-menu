@@ -108,12 +108,18 @@ export class EmployeesComponent implements OnInit {
     this.form.value.screeens = screens;
     this.employeeService.createEmployee(this.form.value).subscribe({
       next: (res) => {
-        this.registerPhoto(res.id!);
+        if (this.files) {
+          this.registerPhoto(res.id!);
+          return;
+        }
+        window.scroll(0, 0);
+        this.eventSubjectSucess.next();
       },
 
       error: (err) => {
         this.messageError = err.error.message;
         this.eventSubjectError.next();
+        window.scroll(0, 0);
       },
     });
   };
@@ -128,17 +134,19 @@ export class EmployeesComponent implements OnInit {
 
   private registerPhoto = (idEmployee: number): void => {
     this.employeeService.registerPhoto(idEmployee, this.files).subscribe({
-      next: res => {
+      next: (res) => {
         this.form.reset();
         this.files = [];
         this.filesThumbProduct = [];
         this.eventSubjectSucess.next();
+        window.scroll(0, 0);
       },
 
-      error: err => {
+      error: (err) => {
         this.eventSubjectError.next();
         this.messageError = err.error.message;
-      }
+        window.scroll(0, 0);
+      },
     });
   };
 }

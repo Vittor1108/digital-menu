@@ -42,4 +42,13 @@ export class EmployeeService {
       }
     );
   };
+
+  public getAllEmployee = (): Observable<IEmploye[]> => {
+    return this.httpService.get<IEmploye[]>(
+      `${urlApi}/employees/take=/skip=/text=`,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
+  };
 }
