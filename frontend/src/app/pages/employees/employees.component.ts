@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { IScreen } from 'src/app/interfaces/IScreens-interface';
+import { EmployeeService } from 'src/app/service/employee/employee.service';
 import { ScreensService } from 'src/app/service/screens/screens.service';
 
 @Component({
@@ -21,15 +22,16 @@ export class EmployeesComponent implements OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly screensService: ScreensService
+    private readonly screensService: ScreensService,
+    private readonly employeeService: EmployeeService
   ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      name: ['', []],
-      screens: ['', []],
-      email: ['', []],
-      password: ['', []],
+      name: ['', [Validators.required]],
+      screens: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
 
     this.dropdownSettings = {
@@ -93,17 +95,14 @@ export class EmployeesComponent implements OnInit {
   };
 
   public onSubmit = (): void => {
-    console.log(this.form.value);
+    const screens = this.form.value.screens.map((e: IScreen) => e.id);
+    this.employeeService.createEmployee(this.form.value);
   };
 
   private getAllScreens = (): void => {
     this.screensService.findAllScreens().subscribe({
       next: (res) => {
         this.screens = res;
-      },
-
-      error: (err) => {
-        console.log(err);
       },
     });
   };

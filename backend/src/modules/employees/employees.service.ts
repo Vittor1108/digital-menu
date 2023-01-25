@@ -18,7 +18,9 @@ export class EmployeesService {
     const employeExists = await this.prismaService.employee.findFirst({
       where: {
         user_id: req.user.id,
-        email: data.email,
+        AND: {
+          email: data.email,
+        },
       },
     });
 

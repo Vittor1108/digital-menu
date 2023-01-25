@@ -29,6 +29,12 @@
       <div>
         <label for="">Nome completo do Funcionário</label>
         <input type="text" placeholder="Nome" formControlName="name" />
+        <p
+          *ngIf="form.get('name')?.errors && form.get('name')?.touched"
+          class="errorMessage"
+        >
+          Nome é obrigatório
+        </p>
       </div>
       <div>
         <div>
@@ -50,6 +56,12 @@
             placeholder="login@teste"
             formControlName="email"
           />
+          <p
+            *ngIf="form.get('email')?.errors && form.get('email')?.touched"
+            class="errorMessage"
+          >
+            Login é obrigatório
+          </p>
         </div>
         <div>
           <label for="">Senha</label>
@@ -58,6 +70,14 @@
             placeholder="*****"
             formControlName="password"
           />
+          <p
+            *ngIf="
+              form.get('password')?.errors && form.get('password')?.touched
+            "
+            class="errorMessage"
+          >
+            Senha é obrigatório
+          </p>
         </div>
       </div>
       <div class="divInputFile">
@@ -120,7 +140,7 @@
         />
       </div>
       <div class="buttons">
-        <button type="submit">Salvar</button>
+        <button type="submit" [disabled]="form.invalid">Salvar</button>
         <button type="button" (click)="removeFiles()">Deletar Imagens</button>
       </div>
     </div>
