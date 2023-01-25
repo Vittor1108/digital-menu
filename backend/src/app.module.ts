@@ -11,6 +11,7 @@ import { ProductRegistrationModule } from './modules/product/product-registratio
 import { ResetPasswordModule } from './modules/reset-password/reset-password.module';
 import { UserModule } from './modules/user/user.module';
 import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.module';
+import { ScreensModule } from './modules/screens/screens.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.
     EmployeesModule,
     HomeAuthModule,
     PhotoEmployeesModule,
+    ScreensModule,
   ],
   controllers: [],
   providers: [],

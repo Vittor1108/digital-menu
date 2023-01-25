@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { IScreen } from 'src/app/interfaces/IScreens-interface';
+import { ScreensService } from 'src/app/service/screens/screens.service';
 
 @Component({
   selector: 'app-employees',
@@ -12,10 +14,15 @@ export class EmployeesComponent implements OnInit {
   public placeHolderInputFile: string = 'Seleciona uma foto';
   public form: FormGroup;
   public dropdownSettings: IDropdownSettings = {};
+  public screens: IScreen[] = [];
+
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
 
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly screensService: ScreensService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -28,12 +35,14 @@ export class EmployeesComponent implements OnInit {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
-      textField: 'name',
+      textField: 'surname',
       itemsShowLimit: 3,
       allowSearchFilter: true,
       enableCheckAll: false,
       searchPlaceholderText: 'Telas...',
     };
+
+    this.getAllScreens();
   }
 
   public getInfoImage = (event: Event): void => {
@@ -85,5 +94,17 @@ export class EmployeesComponent implements OnInit {
 
   public onSubmit = (): void => {
     console.log(this.form.value);
+  };
+
+  private getAllScreens = (): void => {
+    this.screensService.findAllScreens().subscribe({
+      next: (res) => {
+        this.screens = res;
+      },
+
+      error: (err) => {
+        console.log(err);
+      },
+    });
   };
 }

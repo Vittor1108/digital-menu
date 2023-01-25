@@ -134,5 +134,6 @@ model EmployeePhoto {
 model Screens {
   id       Int        @id @default(autoincrement())
   name     String
+  surname  String
   employee Employee[]
 }
