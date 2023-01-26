@@ -11,10 +11,10 @@ import { DialogDeleteCategoryComponent } from 'src/app/components/dialog-delete-
   styleUrls: ['./list-employees.component.scss'],
 })
 export class ListEmployeesComponent implements OnInit {
-  @Output() public titleSucess: string = 'Categoria Excluida!';
-  @Output() public messageSucess: string = 'Categoria Excluida com sucesso!';
+  @Output() public titleSucess: string = 'Funcionário Excluida!';
+  @Output() public messageSucess: string = 'Funcionário Excluida com sucesso!';
   @Output() public messageError: string =
-    'Não foi possível excluir a categoria. Tente Novamente.';
+    'Não foi possível excluir a funcionário. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
   @Output() public titleAtention: string = 'Atenção!';
   public eventSubjectError: Subject<void> = new Subject<void>();

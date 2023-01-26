@@ -108,7 +108,7 @@ export class EmployeesComponent implements OnInit {
     this.form.value.screeens = screens;
     this.employeeService.createEmployee(this.form.value).subscribe({
       next: (res) => {
-        if (this.files) {
+        if (this.files.length) {
           this.registerPhoto(res.id!);
           return;
         }

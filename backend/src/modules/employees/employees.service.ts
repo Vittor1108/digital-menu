@@ -75,7 +75,6 @@ export class EmployeesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     const newScreeens = data.screens.map((e) => {
       return {
         id: e,
@@ -92,7 +91,7 @@ export class EmployeesService {
 
       data: {
         screeens: {
-          deleteMany: oldScreeens.map((id) => {
+          disconnect: oldScreeens.map((id) => {
             return {
               id,
             };
@@ -222,6 +221,12 @@ export class EmployeesService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
+    await this.prismaService.employeePhoto.deleteMany({
+      where: {
+        employee_id: Number(id),
+      },
+    });
 
     await this.prismaService.employee.delete({
       where: {

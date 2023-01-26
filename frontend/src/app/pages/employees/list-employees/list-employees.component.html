@@ -65,9 +65,9 @@
                 <td>{{ employee.id }}</td>
                 <td class="tdImage">
                   <img
+                  *ngIf="employee.EmployeePhoto!.length > 0"
                     src="{{ employee.EmployeePhoto![0].url }}"
                     alt=""
-                    *ngIf="employee.EmployeePhoto!.length > 0"
                   />
                   {{ employee.name }}
                 </td>

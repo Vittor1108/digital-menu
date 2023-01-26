@@ -53,23 +53,16 @@ export class PhotoEmployeesService {
   };
 
   public deleteFile = async (id: number): Promise<boolean> => {
-    const file = await this.prismaService.employeePhoto.findFirst({
+    const file = await this.prismaService.employeePhoto.findUnique({
       where: {
-        employee_id: Number(id),
+        id: Number(id),
       },
     });
 
-    if (!file) {
-      throw new HttpException(
-        HelpMessager.employee_has_photo,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     removeFile(file.filename);
-    await this.prismaService.employeePhoto.deleteMany({
+    await this.prismaService.employeePhoto.delete({
       where: {
-        employee_id: Number(id),
+        id: Number(id),
       },
     });
 

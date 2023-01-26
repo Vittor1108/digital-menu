@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IEmploye } from 'src/app/interfaces/IEmployess-interface';
 import { Observable } from 'rxjs';
 import { IDataGetCategories } from 'src/app/interfaces/ICategories-interface';
+import { IPhotocategory } from 'src/app/interfaces/IUpload-photo.interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,10 +32,10 @@ export class EmployeeService {
 
   public registerPhoto = (
     idEmployee: number,
-    file: File[]
+    file: Array<File | IPhotocategory>
   ): Observable<boolean> => {
     const formData = new FormData();
-    formData.append('file', file[0]);
+    formData.append('file', file[0] as File);
     return this.httpService.post<boolean>(
       `${urlApi}/photo-employees/${idEmployee}`,
       formData,
@@ -42,6 +43,12 @@ export class EmployeeService {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
     );
+  };
+
+  public deletePhoto = (id: number): Observable<boolean> => {
+    return this.httpService.delete<boolean>(`${urlApi}/photo-employees/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
   };
 
   public getAllEmployee = (
@@ -72,4 +79,17 @@ export class EmployeeService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
+
+  public update = (id: number, data: IEmploye) => {
+    return this.httpService.put<IEmploye>(`${urlApi}/employees/${id}`,
+    {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      screens: data.screeens,
+    },
+    {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
+  }
 }

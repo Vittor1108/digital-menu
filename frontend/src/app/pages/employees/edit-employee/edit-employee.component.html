@@ -36,8 +36,8 @@
           <label for="">Selecione as Telas de Acesso</label>
           <ng-multiselect-dropdown
             [settings]="dropdownSettings"
-            [data]="['teste']"
-            formControlName="screens"
+            [data]="allScreens"
+            formControlName="screeens"
             placeholder="Selecione"
           >
           </ng-multiselect-dropdown>
@@ -136,7 +136,7 @@
       </div>
       <div class="buttons">
         <button type="submit" [disabled]="form.invalid">Salvar</button>
-        <button type="button" (click)="removeFiles()">Deletar Imagens</button>
+        <button type="button" (click)="removeFiles()" [disabled]="!filesThumb.length">Deletar Imagens</button>
       </div>
     </div>
   </form>

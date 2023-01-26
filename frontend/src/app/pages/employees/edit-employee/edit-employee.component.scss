@@ -203,3 +203,9 @@
   opacity: 1 !important;
   transform: scale(0.9);
 }
+
+.buttonImage {
+  &:disabled {
+    cursor: no-drop !important;
+  }
+}

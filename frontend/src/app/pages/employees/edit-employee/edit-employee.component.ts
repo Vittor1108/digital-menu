@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Subject } from 'rxjs';
 import { IEmploye } from 'src/app/interfaces/IEmployess-interface';
+import { IScreen } from 'src/app/interfaces/IScreens-interface';
 import { IPhotocategory } from 'src/app/interfaces/IUpload-photo.interface';
 import { EmployeeService } from 'src/app/service/employee/employee.service';
 import { ScreensService } from 'src/app/service/screens/screens.service';
@@ -21,16 +22,18 @@ import { ScreensService } from 'src/app/service/screens/screens.service';
 })
 export class EditEmployeeComponent implements OnInit {
   @ViewChild('inputFile') private inputFile: ElementRef;
-  @Output() public titleSucess: string = 'Categoria Atualizada';
-  @Output() public messageSucess: string = 'Categoria Atualizada com sucesso!';
+  @Output() public titleSucess: string = 'Atualizado';
+  @Output() public messageSucess: string =
+    'Dados do funcionário Atualizado com sucesso!';
   @Output() public messageError: string =
-    'Não foi possível atualizar a categoria. Tente Novamente.';
+    'Não foi possível atualizar os dados funcionário. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
   public eventSubjectError: Subject<void> = new Subject<void>();
   public eventSubjectSucess: Subject<void> = new Subject<void>();
   private files: Array<File | IPhotocategory> = [];
   public form: FormGroup;
   public filesThumb: Array<string> = [];
+  public allScreens: IScreen[] = [];
   public placeHolderInputFile: string = 'Selecione uma Foto';
   private listNameFiles: Array<string> = [];
   private employeeId: number;
@@ -46,7 +49,7 @@ export class EditEmployeeComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      screens: ['', [Validators.required]],
+      screeens: ['', [Validators.required]],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
@@ -62,6 +65,7 @@ export class EditEmployeeComponent implements OnInit {
     };
 
     this.getEmployee();
+    this.getAllScreens();
   }
 
   public getInfoImage = (event: any): void => {
@@ -102,11 +106,58 @@ export class EditEmployeeComponent implements OnInit {
     inputFile?.click();
   };
 
-  public removeFiles = (): void => {};
+  public onSubmit = (): void => {
+    const screens = this.form.value.screeens.map((e: IScreen) => e.id);
+    this.form.value.screeens = screens;
+    this.employeeService.update(this.employeeId, this.form.value).subscribe({
+      next: (res) => {
+        if (this.files.length) {
+          this.createImage(res.id!);
+          return;
+        }
 
-  public onSubmit = (): void => {};
+        this.eventSubjectSucess.next();
+      },
 
-  private getEmployee = () => {
+      error: (err) => {
+        this.eventSubjectError.next();
+        this.messageError = err.error.message;
+      },
+    });
+  };
+
+  public createImage = (id: number) => {
+    this.employeeService.registerPhoto(id, this.files).subscribe({
+      next: (res) => {
+        this.eventSubjectSucess.next();
+      },
+
+      error: (err) => {
+        this.eventSubjectError.next();
+        this.messageError = err.error.message;
+      },
+    });
+  };
+
+  public removeFiles = (): void => {
+    if ('id' in this.files[0]) {
+      const id = this.files[0].id;
+      this.employeeService.deletePhoto(id!).subscribe({
+        next: (res) => {
+          this.files = [];
+          this.filesThumb = [];
+        },
+
+        error: (err) => {
+          window.scroll(0, 0);
+          this.eventSubjectError.next();
+          this.messageError = 'Não foi possível excluir a foto do usuário.';
+        },
+      });
+    }
+  };
+
+  private getEmployee = (): void => {
     this.activeRoute.params.subscribe(
       (params) => (this.employeeId = params['id'])
     );
@@ -114,11 +165,13 @@ export class EditEmployeeComponent implements OnInit {
     this.employeeService.findById(Number(this.employeeId)).subscribe({
       next: (res) => {
         this.setDataForm(res);
-        console.log(res);
       },
 
       error: (err) => {
-        console.log(err);
+        this.eventSubjectError.next();
+        this.messageError =
+          'Não foi possível carregar as informações do usuário.';
+        window.scroll(0, 0);
       },
     });
   };
@@ -126,17 +179,27 @@ export class EditEmployeeComponent implements OnInit {
   private setDataForm = (data: IEmploye): void => {
     this.form.setValue({
       name: data.name,
-      screens: [1],
+      screeens: data.screeens,
       email: data.email,
       password: data.password,
     });
+
+    if (data.EmployeePhoto?.length) {
+      this.filesThumb.push(data.EmployeePhoto[0].url);
+      this.files.push(data.EmployeePhoto[0]);
+    }
   };
 
   private getAllScreens = (): void => {
     this.screenService.findAllScreens().subscribe({
-      next: (res) => {},
+      next: (res) => {
+        this.allScreens = res;
+      },
 
-      error: (err) => {},
+      error: (err) => {
+        this.eventSubjectError.next();
+        this.messageError = 'A pagina não carregou corretamente.';
+      },
     });
   };
 }
