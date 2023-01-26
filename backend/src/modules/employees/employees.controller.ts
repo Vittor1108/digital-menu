@@ -34,7 +34,7 @@ export class EmployeesController {
   findAll(
     @Param() params: PaginationEmployee,
     @Request() req: IReq,
-  ): Promise<Employee[]> {
+  ): Promise<{ employees: Employee[]; count: number }> {
     return this.employeesService.findAll(params, req);
   }
 

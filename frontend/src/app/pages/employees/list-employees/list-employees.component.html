@@ -2,8 +2,8 @@
   <div class="path">
     <ul>
       <li><i class="fa-solid fa-house"></i>Home/</li>
-      <li>Produtos/</li>
-      <li>Editar Categoria</li>
+      <li>Funcionários/</li>
+      <li>Editar Funcionários</li>
     </ul>
   </div>
   <div class="snack">
@@ -20,25 +20,26 @@
   </div>
   <article class="containerTable">
     <div class="titleContainer">
-      <h1>Lista de Categorias</h1>
+      <h1>Lista de Funcionários</h1>
     </div>
     <div class="table">
       <div>
         <div class="filterContainer">
           <div>
             <span>Listar</span>
-            <!-- <select [(ngModel)]="dataGet.take" (change)="getAllCategories()">
+            <select [(ngModel)]="dataGet.take" (change)="getAllEmployees()">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
               <option value="100">100</option>
               <option
+                disabled
                 value="{{ dataGet.take }}"
-                *ngIf="dataGet.take >= quantityProducts"
+                *ngIf="dataGet.take >= quantityEmployees"
               >
                 {{ dataGet.take }}
               </option>
-            </select> -->
+            </select>
           </div>
           <div>
             <input
@@ -80,12 +81,12 @@
                 </td>
                 <td class="actions">
                   <a
-                    routerLink="/home/updated-category-product/{{
+                    routerLink="/home/edit-employee/{{
                       employee.id
                     }}"
                     >Editar</a
                   >
-                  <a>Excluir</a>
+                  <a (click)="deleteEmployee(employee.id!)">Excluir</a>
                 </td>
               </tr>
             </tbody>
@@ -96,14 +97,15 @@
             Exibindo {{ dataGet.take }} de {{ quantityEmployees }} categorias
           </p>
           <div>
-            <button>Voltar</button>
+            <button (click)="buttonPage(false)">Voltar</button>
             <p
               *ngFor="let page of [].constructor(numberPages); let i = index"
+              (click)="changePagination(i + 1)"
               [ngClass]="{ pageSelected: i + 1 === currentPage }"
             >
               {{ i + 1 }}
             </p>
-            <button>Avançar</button>
+            <button (click)="buttonPage(true)">Avançar</button>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { urlApi } from 'src/app/config/configAPI';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IEmploye } from 'src/app/interfaces/IEmployess-interface';
 import { Observable } from 'rxjs';
+import { IDataGetCategories } from 'src/app/interfaces/ICategories-interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -43,12 +44,32 @@ export class EmployeeService {
     );
   };
 
-  public getAllEmployee = (): Observable<IEmploye[]> => {
-    return this.httpService.get<IEmploye[]>(
-      `${urlApi}/employees/take=/skip=/text=`,
+  public getAllEmployee = (
+    dataGet: IDataGetCategories
+  ): Observable<{
+    employees: IEmploye[];
+    count: number;
+  }> => {
+    return this.httpService.get<{
+      employees: IEmploye[];
+      count: number;
+    }>(
+      `${urlApi}/employees/take=${dataGet.take}/skip=${dataGet.skip}/text=${dataGet.text}`,
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
     );
+  };
+
+  public delete = (id: number): Observable<boolean> => {
+    return this.httpService.delete<boolean>(`${urlApi}/employees/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
+  };
+
+  public findById = (id: number): Observable<IEmploye> => {
+    return this.httpService.get<IEmploye>(`${urlApi}/employees/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
   };
 }

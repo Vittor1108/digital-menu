@@ -126,8 +126,15 @@ export class EmployeesService {
   public findAll = async (
     params: PaginationEmployee,
     req: IReq,
-  ): Promise<Employee[]> => {
+  ): Promise<{ employees: Employee[]; count: number }> => {
     let employees: Employee[];
+
+    const countEmployees = await this.prismaService.employee.count({
+      where: {
+        user_id: req.user.id,
+      },
+    });
+
     if (params.text) {
       employees = await this.prismaService.employee.findMany({
         where: {
@@ -174,7 +181,10 @@ export class EmployeesService {
         },
       });
     }
-    return employees;
+    return {
+      employees,
+      count: countEmployees,
+    };
   };
 
   public findOne = async (id: number): Promise<Employee> => {

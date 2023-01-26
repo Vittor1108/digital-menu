@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoggedGuard } from './guards/logged/logged.guard';
+import { EditEmployeeComponent } from './pages/employees/edit-employee/edit-employee.component';
 import { EmployeesComponent } from './pages/employees/employees.component';
 import { ListEmployeesComponent } from './pages/employees/list-employees/list-employees.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -80,6 +81,10 @@ const routes: Routes = [
       {
         path: 'list-employees',
         component: ListEmployeesComponent,
+      },
+      {
+        path: 'edit-employee/:id',
+        component: EditEmployeeComponent,
       },
     ],
   },
