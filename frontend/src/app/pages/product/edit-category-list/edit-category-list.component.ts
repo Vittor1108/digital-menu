@@ -41,14 +41,15 @@ export class EditCategoryListComponent implements OnInit {
   }
 
   public getAllCategories = (): void => {
-    if (this.dataGet.take > this.quantityProducts)
-      this.dataGet.take = this.quantityProducts;
-
     this.categoriesService.getAllCategoires(this.dataGet).subscribe({
       next: (res) => {
         this.allCategories = res.categories;
         this.pagination(res.count);
         this.quantityProducts = res.count;
+        console.log(res);
+        this.dataGet.take > this.quantityProducts
+          ? (this.dataGet.take = this.quantityProducts)
+          : (this.dataGet.take = this.dataGet.take);
       },
       error: (err) => {
         this.eventSubjectError.next();
@@ -108,5 +109,10 @@ export class EditCategoryListComponent implements OnInit {
     if (currentPage === 0) currentPage = 1;
 
     this.changePagination(currentPage);
+  };
+
+  public exportToCSV = () => {
+    const tableRows = document.querySelectorAll('tr');
+    console.log(tableRows);
   };
 }

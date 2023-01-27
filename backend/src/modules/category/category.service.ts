@@ -99,11 +99,44 @@ export class CategoryService {
 
     let allCategories;
     if (params.text) {
-      const categoriesByText = await this.prismaService.category.findMany({
-        where: {
-          user_id: {
-            in: employees.map((e) => e.id),
+      let categoriesByText;
+      //Caso o usuário tenha funcionários cadastrados e tenha passado o parametro (texto).
+      if (employees.length) {
+        categoriesByText = await this.prismaService.category.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
+              },
+            },
+
+            AND: {
+              name: {
+                contains: params.text,
+              },
+            },
           },
+          take: Number(params.take),
+          skip: Number(params.skip),
+
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            PhotoCategory: {
+              select: {
+                filename: true,
+                url: true,
+              },
+            },
+          },
+        });
+      }
+      //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado o parametro de (texto);
+      categoriesByText = await this.prismaService.category.findMany({
+        where: {
+          user_id: req.user.id,
 
           AND: {
             name: {
@@ -111,7 +144,6 @@ export class CategoryService {
             },
           },
         },
-
         take: Number(params.take),
         skip: Number(params.skip),
 
@@ -142,11 +174,37 @@ export class CategoryService {
     });
 
     if (params.skip && params.take) {
+      //Caso o usuário tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
+      if (employees.length) {
+        allCategories = await this.prismaService.category.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
+              },
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            PhotoCategory: {
+              select: {
+                filename: true,
+                url: true,
+              },
+            },
+          },
+
+          take: Number(params.take),
+          skip: Number(params.skip),
+        });
+      }
+      //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
       allCategories = await this.prismaService.category.findMany({
         where: {
-          user_id: {
-            in: employees.map((e) => e.id),
-          },
+          user_id: req.user.id,
         },
         select: {
           id: true,
@@ -169,11 +227,34 @@ export class CategoryService {
         count: countProducts._count.user_id,
       };
     } else {
+      //Caso o usuário tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
+      if (employees.length) {
+        allCategories = await this.prismaService.category.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
+              },
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            PhotoCategory: {
+              select: {
+                filename: true,
+                url: true,
+              },
+            },
+          },
+        });
+      }
+      //Caso o usuário NÃO  tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
       allCategories = await this.prismaService.category.findMany({
         where: {
-          user_id: {
-            in: employees.map((e) => e.id),
-          },
+          user_id: req.user.id,
         },
         select: {
           id: true,

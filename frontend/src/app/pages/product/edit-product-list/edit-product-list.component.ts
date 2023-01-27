@@ -46,6 +46,7 @@ export class EditProductListComponent implements OnInit {
         this.allProducts = res.products;
         this.quantityProducts = res.count;
         this.pagination(res.count);
+        this.dataGet.take > this.quantityProducts ? this.dataGet.take = this.quantityProducts : this.dataGet.take = this.dataGet.take;
       },
 
       error: (err) => {

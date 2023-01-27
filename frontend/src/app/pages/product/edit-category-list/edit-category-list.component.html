@@ -21,6 +21,7 @@
   <article class="containerTable">
     <div class="titleContainer">
       <h1>Lista de Categorias</h1>
+      <button (click)="exportToCSV()">Exportar para CSV</button>
     </div>
     <div class="table">
       <div>
@@ -32,7 +33,8 @@
               <option value="25">25</option>
               <option value="50">50</option>
               <option value="100">100</option>
-              <option disabled
+              <option
+                disabled
                 value="{{ dataGet.take }}"
                 *ngIf="dataGet.take >= quantityProducts"
               >
