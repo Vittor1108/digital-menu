@@ -46,7 +46,6 @@ export class EditCategoryListComponent implements OnInit {
         this.allCategories = res.categories;
         this.pagination(res.count);
         this.quantityProducts = res.count;
-        console.log(res);
         this.dataGet.take > this.quantityProducts
           ? (this.dataGet.take = this.quantityProducts)
           : (this.dataGet.take = this.dataGet.take);
@@ -113,6 +112,19 @@ export class EditCategoryListComponent implements OnInit {
 
   public exportToCSV = () => {
     const tableRows = document.querySelectorAll('tr');
-    console.log(tableRows);
+    const button = document.querySelector('button > a');
+    const CSVString = Array.from(tableRows)
+      .map((row) =>
+        Array.from(row.cells)
+          .map((cell) => cell.textContent)
+          .join(',')
+      )
+      .join('\n');
+
+    button?.setAttribute(
+      'href',
+      `data:text/csvcharset=utf-8,${encodeURIComponent(CSVString)}`
+    );
+    button?.setAttribute('download', 'categorias.csv');
   };
 }
