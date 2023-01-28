@@ -13,6 +13,29 @@ section {
     text-transform: uppercase;
     color: black;
     padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      padding: 0.4rem;
+      background-color: red;
+      border-radius: 3px;
+      color: white;
+      border: 1px solid red;
+      outline: 0;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      a {
+        color: white;
+        text-decoration: none;
+      }
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
   }
 
   .table {
@@ -44,18 +67,6 @@ section {
           }
           &:nth-child(2) {
             text-align: right;
-            position: relative;
-            i{
-              position: absolute;
-              top: 8px;
-              right: 15px;
-              cursor: pointer;
-              transition: all .3s;
-              padding: 5px;
-              &:hover{
-                color: $primary-red;
-              }
-            }
           }
         }
 
@@ -116,19 +127,19 @@ section {
               .actions {
                 a {
                   text-decoration: none;
-                  padding: .3rem 12px;
+                  padding: 0.3rem 12px;
                   color: white;
                   border-radius: 3px;
-                  transition: all .3s;
+                  transition: all 0.3s;
                   cursor: pointer;
-                  &:hover{
-                    opacity: .5;
+                  &:hover {
+                    opacity: 0.5;
                   }
                   &:nth-child(1) {
                     margin-right: 10px;
                     background-color: #333;
                   }
-                  &:nth-child(2){
+                  &:nth-child(2) {
                     background-color: $primary-red;
                   }
                 }

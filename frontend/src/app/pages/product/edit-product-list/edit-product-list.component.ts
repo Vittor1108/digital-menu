@@ -46,7 +46,9 @@ export class EditProductListComponent implements OnInit {
         this.allProducts = res.products;
         this.quantityProducts = res.count;
         this.pagination(res.count);
-        this.dataGet.take > this.quantityProducts ? this.dataGet.take = this.quantityProducts : this.dataGet.take = this.dataGet.take;
+        this.dataGet.take > this.quantityProducts
+          ? (this.dataGet.take = this.quantityProducts)
+          : (this.dataGet.take = this.dataGet.take);
       },
 
       error: (err) => {
@@ -109,5 +111,23 @@ export class EditProductListComponent implements OnInit {
       this.dataGet.skip = 0;
     }
     this.getAllProducts();
+  };
+
+  public exportToCSV = () => {
+    const tableRows = document.querySelectorAll('tr');
+    const button = document.querySelector('button > a');
+    const CSVString = Array.from(tableRows)
+      .map((row) =>
+        Array.from(row.cells)
+          .map((cell) => cell.textContent)
+          .join(',')
+      )
+      .join('\n');
+
+    button?.setAttribute(
+      'href',
+      `data:text/csvcharset=utf-8,${encodeURIComponent(CSVString)}`
+    );
+    button?.setAttribute('download', 'produtos.csv');
   };
 }
