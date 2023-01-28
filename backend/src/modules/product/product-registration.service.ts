@@ -198,6 +198,7 @@ export class ProductRegistrationService {
           skip: Number(params.skip),
 
           select: {
+            id: true,
             name: true,
             price: true,
             description: true,
@@ -237,9 +238,30 @@ export class ProductRegistrationService {
         take: Number(params.take),
         skip: Number(params.skip),
 
-        include: {
-          Product_Category: true,
-          ProductPhoto: true,
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          description: true,
+          ProductPhoto: {
+            select: {
+              id: true,
+              url: true,
+              filename: true,
+              originalname: true,
+            },
+          },
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
+            },
+          },
         },
       });
 
@@ -269,6 +291,7 @@ export class ProductRegistrationService {
             },
           },
           select: {
+            id: true,
             name: true,
             price: true,
             description: true,
@@ -302,6 +325,7 @@ export class ProductRegistrationService {
           user_id: req.user.id,
         },
         select: {
+          id: true,
           name: true,
           price: true,
           description: true,
@@ -347,6 +371,7 @@ export class ProductRegistrationService {
             },
           },
           select: {
+            id: true,
             name: true,
             price: true,
             description: true,
@@ -378,6 +403,7 @@ export class ProductRegistrationService {
           user_id: req.user.id,
         },
         select: {
+          id: true,
           name: true,
           price: true,
           description: true,
