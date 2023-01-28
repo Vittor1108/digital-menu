@@ -3,6 +3,7 @@ import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
+import { PaginationCategroyDto } from '../category/dto/pagination-category';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
 import { PaginationProductRegistrationDto } from './dto/pagination-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
@@ -165,11 +166,87 @@ export class ProductRegistrationService {
 
   public findAll = async (
     req: IReq,
-    params: PaginationProductRegistrationDto,
+    params: PaginationCategroyDto,
   ): Promise<allProducts> => {
-    let allProducts;
+    const employees = await this.prismaService.employee.findMany({
+      where: {
+        user_id: req.user.id,
+      },
+    });
 
-    const amouthProducts = await this.prismaService.product.aggregate({
+    let allProducts;
+    if (params.text) {
+      let categoriesByText;
+      //Caso o usuário tenha funcionários cadastrados e tenha passado o parametro (texto).
+      if (employees.length) {
+        categoriesByText = await this.prismaService.product.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
+              },
+            },
+
+            AND: {
+              name: {
+                contains: params.text,
+              },
+            },
+          },
+          take: Number(params.take),
+          skip: Number(params.skip),
+
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            Product_Category: true,
+            ProductPhoto: {
+              select: {
+                filename: true,
+                originalname: true,
+                id: true,
+                url: true,
+              },
+            },
+          },
+        });
+      }
+      //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado o parametro de (texto);
+      categoriesByText = await this.prismaService.product.findMany({
+        where: {
+          user_id: req.user.id,
+
+          AND: {
+            name: {
+              contains: params.text,
+            },
+          },
+        },
+        take: Number(params.take),
+        skip: Number(params.skip),
+
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          Product_Category: true,
+          ProductPhoto: {
+            select: {
+              filename: true,
+              originalname: true,
+              id: true,
+              url: true,
+            },
+          },
+        },
+      });
+
+      return { products: categoriesByText, count: 0 };
+    }
+
+    const countProducts = await this.prismaService.category.aggregate({
       where: {
         user_id: req.user.id,
       },
@@ -179,46 +256,37 @@ export class ProductRegistrationService {
       },
     });
 
-    if (params.text) {
-      allProducts = await this.prismaService.product.findMany({
-        where: {
-          name: {
-            contains: params.text,
-          },
-        },
-
-        select: {
-          id: true,
-          name: true,
-          price: true,
-          description: true,
-          Product_Category: {
-            select: {
-              category_id: true,
-              category: {
-                select: {
-                  name: true,
-                },
+    if (params.skip && params.take) {
+      //Caso o usuário tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
+      if (employees.length) {
+        allProducts = await this.prismaService.product.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
               },
-              product_id: false,
             },
           },
-          ProductPhoto: {
-            select: {
-              url: true,
-              filename: true,
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            Product_Category: true,
+            ProductPhoto: {
+              select: {
+                filename: true,
+                originalname: true,
+                id: true,
+                url: true,
+              },
             },
           },
-        },
-      });
-
-      return {
-        products: allProducts,
-        count: 0,
-      };
-    }
-
-    if (params.take && params.skip) {
+          take: Number(params.take),
+          skip: Number(params.skip),
+        });
+      }
+      //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
       allProducts = await this.prismaService.product.findMany({
         where: {
           user_id: req.user.id,
@@ -226,23 +294,14 @@ export class ProductRegistrationService {
         select: {
           id: true,
           name: true,
-          price: true,
           description: true,
-          Product_Category: {
-            select: {
-              category_id: true,
-              category: {
-                select: {
-                  name: true,
-                },
-              },
-              product_id: false,
-            },
-          },
+          Product_Category: true,
           ProductPhoto: {
             select: {
-              url: true,
               filename: true,
+              originalname: true,
+              id: true,
+              url: true,
             },
           },
         },
@@ -250,7 +309,40 @@ export class ProductRegistrationService {
         take: Number(params.take),
         skip: Number(params.skip),
       });
+
+      return {
+        products: allProducts,
+        count: countProducts._count.user_id,
+      };
     } else {
+      //Caso o usuário tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
+      if (employees.length) {
+        allProducts = await this.prismaService.product.findMany({
+          where: {
+            user_id: req.user.id,
+            OR: {
+              user_id: {
+                in: employees.map((e) => e.id),
+              },
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            Product_Category: true,
+            ProductPhoto: {
+              select: {
+                filename: true,
+                originalname: true,
+                id: true,
+                url: true,
+              },
+            },
+          },
+        });
+      }
+      //Caso o usuário NÃO  tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
       allProducts = await this.prismaService.product.findMany({
         where: {
           user_id: req.user.id,
@@ -258,33 +350,24 @@ export class ProductRegistrationService {
         select: {
           id: true,
           name: true,
-          price: true,
           description: true,
-          Product_Category: {
-            select: {
-              category_id: true,
-              category: {
-                select: {
-                  name: true,
-                },
-              },
-              product_id: false,
-            },
-          },
+          Product_Category: true,
           ProductPhoto: {
             select: {
-              url: true,
               filename: true,
+              originalname: true,
+              id: true,
+              url: true,
             },
           },
         },
       });
-    }
 
-    return {
-      products: allProducts,
-      count: amouthProducts._count.user_id,
-    };
+      return {
+        products: allProducts,
+        count: countProducts._count.user_id,
+      };
+    }
   };
 
   public findOne = async (id: number): Promise<ProductRegistration> => {
