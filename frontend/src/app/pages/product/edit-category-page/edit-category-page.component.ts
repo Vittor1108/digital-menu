@@ -39,16 +39,13 @@ export class EditCategoryPageComponent implements OnInit {
     private readonly categoryService: CategoriesService,
     private readonly activeRoute: ActivatedRoute,
     private readonly categoryImageService: PhotoCategoryService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['', [Validators.required]],
     });
-
     this.getCategoryId();
   }
 
@@ -182,5 +179,4 @@ export class EditCategoryPageComponent implements OnInit {
       e.classList.remove('imageSelected');
     });
   };
-
 }

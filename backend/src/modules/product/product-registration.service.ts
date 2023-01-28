@@ -198,16 +198,26 @@ export class ProductRegistrationService {
           skip: Number(params.skip),
 
           select: {
-            id: true,
             name: true,
+            price: true,
             description: true,
-            Product_Category: true,
             ProductPhoto: {
               select: {
-                filename: true,
-                originalname: true,
                 id: true,
                 url: true,
+                filename: true,
+                originalname: true,
+              },
+            },
+            Product_Category: {
+              select: {
+                category_id: true,
+                category: {
+                  select: {
+                    name: true,
+                  },
+                },
+                product_id: false,
               },
             },
           },
@@ -227,26 +237,16 @@ export class ProductRegistrationService {
         take: Number(params.take),
         skip: Number(params.skip),
 
-        select: {
-          id: true,
-          name: true,
-          description: true,
+        include: {
           Product_Category: true,
-          ProductPhoto: {
-            select: {
-              filename: true,
-              originalname: true,
-              id: true,
-              url: true,
-            },
-          },
+          ProductPhoto: true,
         },
       });
 
       return { products: categoriesByText, count: 0 };
     }
 
-    const countProducts = await this.prismaService.category.aggregate({
+    const countProducts = await this.prismaService.product.aggregate({
       where: {
         user_id: req.user.id,
       },
@@ -269,16 +269,26 @@ export class ProductRegistrationService {
             },
           },
           select: {
-            id: true,
             name: true,
+            price: true,
             description: true,
-            Product_Category: true,
             ProductPhoto: {
               select: {
-                filename: true,
-                originalname: true,
                 id: true,
                 url: true,
+                filename: true,
+                originalname: true,
+              },
+            },
+            Product_Category: {
+              select: {
+                category_id: true,
+                category: {
+                  select: {
+                    name: true,
+                  },
+                },
+                product_id: false,
               },
             },
           },
@@ -292,16 +302,26 @@ export class ProductRegistrationService {
           user_id: req.user.id,
         },
         select: {
-          id: true,
           name: true,
+          price: true,
           description: true,
-          Product_Category: true,
           ProductPhoto: {
             select: {
-              filename: true,
-              originalname: true,
               id: true,
               url: true,
+              filename: true,
+              originalname: true,
+            },
+          },
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
             },
           },
         },
@@ -327,16 +347,26 @@ export class ProductRegistrationService {
             },
           },
           select: {
-            id: true,
             name: true,
+            price: true,
             description: true,
-            Product_Category: true,
             ProductPhoto: {
               select: {
-                filename: true,
-                originalname: true,
                 id: true,
                 url: true,
+                filename: true,
+                originalname: true,
+              },
+            },
+            Product_Category: {
+              select: {
+                category_id: true,
+                category: {
+                  select: {
+                    name: true,
+                  },
+                },
+                product_id: false,
               },
             },
           },
@@ -348,16 +378,26 @@ export class ProductRegistrationService {
           user_id: req.user.id,
         },
         select: {
-          id: true,
           name: true,
+          price: true,
           description: true,
-          Product_Category: true,
           ProductPhoto: {
             select: {
-              filename: true,
-              originalname: true,
               id: true,
               url: true,
+              filename: true,
+              originalname: true,
+            },
+          },
+          Product_Category: {
+            select: {
+              category_id: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              product_id: false,
             },
           },
         },

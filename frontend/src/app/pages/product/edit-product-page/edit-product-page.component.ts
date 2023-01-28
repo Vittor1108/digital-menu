@@ -82,6 +82,7 @@ export class EditProductPageComponent implements OnInit {
           res.ProductPhoto,
           addImage
         );
+        console.log(res);
       },
 
       error: (err) => {
@@ -182,7 +183,6 @@ export class EditProductPageComponent implements OnInit {
     //   next: (res) => {
     //     this.allCategories = res;
     //   },
-
     //   error: (err) => {
     //     window.scroll(0, 0);
     //     this.eventSubjectError.next();
