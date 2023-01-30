@@ -66,6 +66,34 @@
             </li>
           </ul>
         </li>
+        <li
+          class="treeMenu"
+          (click)="showAccordion(1)"
+          *ngIf="authorizationScreens('materia-prima') || !isAnEmployee"
+        >
+          <a [ngClass]="{ activeRouteAccordion: verifyRoute('raw-material') }">
+            <span>
+              <i class="fa-solid fa-truck-fast"></i>
+              Matéria Prima
+            </span>
+          </a>
+          <ul class="accordion">
+            <li>
+              <a
+                routerLink="raw-material"
+                routerLinkActive="activeRouteAccordion"
+                >Adicionar Matérias</a
+              >
+            </li>
+            <li>
+              <a
+                routerLink="list-employees"
+                routerLinkActive="activeRouteAccordion"
+                >Editar Matérias</a
+              >
+            </li>
+          </ul>
+        </li>
         <li *ngIf="authorizationScreens('pedidos') || !isAnEmployee">
           <a href="#">
             <span>
@@ -78,7 +106,7 @@
           class="treeMenu"
           *ngIf="authorizationScreens('personalziar_cardapio') || !isAnEmployee"
         >
-          <a (click)="showAccordion(1)">
+          <a (click)="showAccordion(2)">
             <span>
               <i class="fa-solid fa-list-check"></i>
               Personalizar Cárdapio
@@ -93,7 +121,7 @@
           class="treeMenu"
           *ngIf="authorizationScreens('faturas') || !isAnEmployee"
         >
-          <a (click)="showAccordion(2)">
+          <a (click)="showAccordion(3)">
             <span>
               <i class="fas fa-file-invoice fs-16"></i>
               Faturas
@@ -106,7 +134,7 @@
         </li>
         <li
           class="treeMenu"
-          (click)="showAccordion(3)"
+          (click)="showAccordion(4)"
           *ngIf="authorizationScreens('funcionarios') || !isAnEmployee"
         >
           <a [ngClass]="{ activeRouteAccordion: verifyRoute('employees') }">

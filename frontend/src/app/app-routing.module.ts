@@ -17,6 +17,7 @@ import { EditCategoryListComponent } from './pages/product/edit-category-list/ed
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
 import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
 import { EditProductPageComponent } from './pages/product/edit-product-page/edit-product-page.component';
+import { RawMaterialComponent } from './pages/raw-material/raw-material.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,10 @@ const routes: Routes = [
         path: 'edit-employee/:id',
         component: EditEmployeeComponent,
       },
+      {
+        path: 'raw-material',
+        component: RawMaterialComponent,
+      }
     ],
   },
 ];

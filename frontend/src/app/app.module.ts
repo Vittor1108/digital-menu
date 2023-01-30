@@ -33,6 +33,7 @@ import { CatalogComponent } from './pages/product/catalog/catalog.component';
 import { EmployeesComponent } from './pages/employees/employees.component';
 import { ListEmployeesComponent } from './pages/employees/list-employees/list-employees.component';
 import { EditEmployeeComponent } from './pages/employees/edit-employee/edit-employee.component';
+import { RawMaterialComponent } from './pages/raw-material/raw-material.component';
 
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
@@ -62,6 +63,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     EmployeesComponent,
     ListEmployeesComponent,
     EditEmployeeComponent,
+    RawMaterialComponent,
   ],
   imports: [
     BrowserModule,
