@@ -12,6 +12,7 @@ import { ResetPasswordModule } from './modules/reset-password/reset-password.mod
 import { UserModule } from './modules/user/user.module';
 import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.module';
 import { ScreensModule } from './modules/screens/screens.module';
+import { RawMaterialModule } from './modules/raw-material/raw-material.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ScreensModule } from './modules/screens/screens.module';
     HomeAuthModule,
     PhotoEmployeesModule,
     ScreensModule,
+    RawMaterialModule,
   ],
   controllers: [],
   providers: [],

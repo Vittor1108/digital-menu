@@ -16,7 +16,9 @@ export const HelpMessager = {
   product: 'This product does not belong to the User Id sent',
   product_not_exits: 'This id product does not exitis',
   product_doNot_user: 'This product does not belong to the User Id sent',
-  employees_exists: 'Login já cadastrado!',
+  employees_exists: 'Login já cadastrado',
   employees_not_exists: 'Funcionar não existe',
   employee_has_photo: 'Funcionario já possuiu uma foto',
+  rawMaterialExists: 'Matéria Prima com este nome já cadastrada',
+  rawMaterialNotExists: 'Matéria Prima com este ID não encontrada',
 };

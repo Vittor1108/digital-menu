@@ -141,8 +141,8 @@ model Screens {
 model RawMaterial {
   id Int @id @default(autoincrement())
   name String
-  quantidade Float
+  quantity Float
   price Float
-
-  @@map("raw-material")
+  user_id Int
+  @@map("raw_material")
 }
