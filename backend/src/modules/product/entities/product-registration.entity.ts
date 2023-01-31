@@ -3,6 +3,7 @@ export class ProductRegistration {
   name: string;
   description: string;
   price: number;
+  avargePrice?: number;
   user_id?: number;
   Product_Category?: Array<Product_Category>;
   Product_Photo?: Array<ProductPhoto>;

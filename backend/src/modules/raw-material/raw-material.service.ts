@@ -35,7 +35,7 @@ export class RawMaterialService {
       data: {
         name: data.name,
         averagePrice: Number(data.price),
-        quantityGg: Number(data.price),
+        quantityGg: Number(data.quantity),
         averagePriceGg: this.calcPriceGg(data.price, data.quantity),
         user_id: req.user.id,
       },

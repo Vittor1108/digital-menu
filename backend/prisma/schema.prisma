@@ -69,6 +69,7 @@ model Product {
   name             String
   description      String
   price            Float
+  avargePrice      Float?
   user_id          Int
   Product_Category Product_Category[]
   ProductPhoto     ProductPhoto[]
@@ -105,13 +106,13 @@ model ProductPhoto {
 }
 
 model RawMaterial {
-  id               Int       @id @default(autoincrement())
-  name             String
-  quantityGg         Float
-  averagePrice     Float
+  id             Int       @id @default(autoincrement())
+  name           String
+  quantityGg     Float
+  averagePrice   Float
   averagePriceGg Float
-  user_id          Int
-  products         Product[]
+  user_id        Int
+  products       Product[]
 
   @@map("raw_material")
 }

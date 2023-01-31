@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { raw } from '@prisma/client/runtime';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
 import { removeFile } from 'src/utils/file-upload.utils';
 import { PaginationCategroyDto } from '../category/dto/pagination-category';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
-import { PaginationProductRegistrationDto } from './dto/pagination-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import {
   allProducts,
@@ -92,6 +90,7 @@ export class ProductRegistrationService {
         price: createProductRegistrationDto.price,
         user_id: req.user.id,
         description: createProductRegistrationDto.description,
+        avargePrice: createProductRegistrationDto.avargePrice,
         ProductMaterial: {
           connect: rawMaterialId,
         },
@@ -107,6 +106,7 @@ export class ProductRegistrationService {
         name: true,
         price: true,
         description: true,
+        avargePrice: true,
       },
     });
     return product;
@@ -189,6 +189,7 @@ export class ProductRegistrationService {
         name: updateProductRegistrationDto.name,
         description: updateProductRegistrationDto.description,
         price: updateProductRegistrationDto.price,
+        avargePrice: updateProductRegistrationDto.avargePrice,
         Product_Category: {
           connectOrCreate: updateProductRegistrationDto.categories_id.map(
             (category) => {
@@ -218,6 +219,7 @@ export class ProductRegistrationService {
         name: true,
         price: true,
         description: true,
+        avargePrice: true,
         ProductPhoto: {
           select: {
             id: true,
@@ -282,6 +284,7 @@ export class ProductRegistrationService {
             name: true,
             price: true,
             description: true,
+            avargePrice: true,
             ProductPhoto: {
               select: {
                 id: true,
@@ -324,6 +327,7 @@ export class ProductRegistrationService {
           name: true,
           price: true,
           description: true,
+          avargePrice: true,
           ProductPhoto: {
             select: {
               id: true,
@@ -377,6 +381,7 @@ export class ProductRegistrationService {
             name: true,
             price: true,
             description: true,
+            avargePrice: true,
             ProductPhoto: {
               select: {
                 id: true,
@@ -412,6 +417,7 @@ export class ProductRegistrationService {
           name: true,
           price: true,
           description: true,
+          avargePrice: true,
           ProductPhoto: {
             select: {
               id: true,
@@ -459,6 +465,7 @@ export class ProductRegistrationService {
             name: true,
             price: true,
             description: true,
+            avargePrice: true,
             ProductPhoto: {
               select: {
                 id: true,
@@ -492,6 +499,7 @@ export class ProductRegistrationService {
           name: true,
           price: true,
           description: true,
+          avargePrice: true,
           ProductPhoto: {
             select: {
               id: true,
@@ -531,6 +539,7 @@ export class ProductRegistrationService {
         name: true,
         price: true,
         description: true,
+        avargePrice: true,
         ProductPhoto: {
           select: {
             id: true,
