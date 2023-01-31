@@ -8,7 +8,7 @@ export interface ICreateRawMaterial {
 export interface IRawMaterial {
   id?: number;
   averagePrice: number;
-  avaregePriceGg: number;
+  averagePriceGg: number;
   name: string;
   quantityGg: number;
   user_id?: number;

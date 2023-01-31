@@ -7,6 +7,7 @@ import {
   IRawMaterial,
 } from 'src/app/interfaces/IRawMaterial-interface';
 import { Observable } from 'rxjs';
+import { IDataGetCategories } from 'src/app/interfaces/ICategories-interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,5 +28,25 @@ export class RawMaterialService {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
       }
     );
+  };
+
+  public getAllRawMaterial = (
+    dataGet: IDataGetCategories
+  ): Observable<{
+    count: number;
+    rawMaterial: IRawMaterial[];
+  }> => {
+    return this.httpService.get<{ count: number; rawMaterial: IRawMaterial[] }>(
+      `${urlApi}/raw-material/take=${dataGet.take}/skip=${dataGet.skip}/text=${dataGet.text}`,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
+  };
+
+  public deleteRawMaterial = (id: number): Observable<boolean> => {
+    return this.httpService.delete<boolean>(`${urlApi}/raw-material/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
   };
 }

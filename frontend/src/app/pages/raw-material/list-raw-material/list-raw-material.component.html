@@ -1,0 +1,111 @@
+<section>
+  <div class="path">
+    <ul>
+      <li><i class="fa-solid fa-house"></i>Home/</li>
+      <li>Produtos/</li>
+      <li>Editar Categoria</li>
+    </ul>
+  </div>
+  <div class="snack">
+    <app-snack-sucess
+      [messageSucess]="messageSucess"
+      [title]="titleSucess"
+      [events]="eventSubjectSucess.asObservable()"
+    ></app-snack-sucess>
+    <app-snack-error
+      [messageError]="messageError"
+      [title]="titleError"
+      [events]="eventSubjectError.asObservable()"
+    ></app-snack-error>
+  </div>
+  <article class="containerTable">
+    <div class="titleContainer">
+      <h1>Lista de Categorias</h1>
+      <button (click)="exportToCSV()"><a>Exportar para CSV</a></button>
+    </div>
+    <div class="table">
+      <div>
+        <div class="filterContainer">
+          <div>
+            <span>Listar</span>
+            <select [(ngModel)]="dataGet.take" (change)="getAllRawMaterial()">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option
+                disabled
+                value="{{ dataGet.take }}"
+                *ngIf="dataGet.take >= quantityProducts"
+              >
+                {{ dataGet.take }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              [(ngModel)]="dataGet.text"
+            />
+          </div>
+        </div>
+        <div class="containerTable">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>QTD (gramas)</th>
+                <th>Preço médio pago</th>
+                <th>Preço médio das gramas</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rawMaterial of allRawMaterial">
+                <td>{{ rawMaterial.id }}</td>
+                <td class="tdImage">
+                  <!-- <img
+                    src="{{ rawMaterial.PhotorawMaterial[0].url }}"
+                    alt=""
+                    *ngIf="rawMaterial..length > 0"
+                  /> -->
+                  {{ rawMaterial.name }}
+                </td>
+                <td>{{ rawMaterial.quantityGg }} Grama(s)</td>
+                <td>R${{ rawMaterial.averagePrice.toFixed(2) }}</td>
+                <td>R${{ rawMaterial.averagePriceGg.toFixed(2) }}</td>
+                <td class="actions">
+                  <a
+                    routerLink="/home/updated-rawMaterial-product/{{
+                      rawMaterial.id
+                    }}"
+                    >Editar</a
+                  >
+                  <a (click)="deleteCategory(rawMaterial.id!)">Excluir</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="infoTable">
+          <p>
+            Exibindo {{ dataGet.take }} de {{ quantityProducts }} categorias
+          </p>
+          <div>
+            <button (click)="buttonPage(false)">Voltar</button>
+            <p
+              *ngFor="let page of [].constructor(numberPages); let i = index"
+              (click)="changePagination(i + 1)"
+              [ngClass]="{ pageSelected: i + 1 === currentPage }"
+            >
+              {{ i + 1 }}
+            </p>
+            <button (click)="buttonPage(true)">Avançar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
