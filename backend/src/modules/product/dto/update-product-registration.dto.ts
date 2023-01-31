@@ -12,4 +12,7 @@ export class UpdateProductRegistrationDto {
 
   @IsArray()
   categories_id: Array<number>;
+
+  @IsArray()
+  rawMaterial_id: Array<number>;
 }

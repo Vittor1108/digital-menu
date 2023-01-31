@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { raw } from '@prisma/client/runtime';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
@@ -60,12 +61,40 @@ export class ProductRegistrationService {
       );
     }
 
+    const rawMaterial = await this.prismaService.rawMaterial.findMany({
+      where: {
+        id: {
+          in: createProductRegistrationDto.rawMaterial_id,
+        },
+      },
+    });
+
+    if (
+      rawMaterial.length < createProductRegistrationDto.rawMaterial_id.length
+    ) {
+      throw new HttpException(
+        HelpMessager.rawMaterialNotExists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const rawMaterialId = createProductRegistrationDto.rawMaterial_id.map(
+      (e) => {
+        return {
+          id: e,
+        };
+      },
+    );
+
     const product = await this.prismaService.product.create({
       data: {
         name: createProductRegistrationDto.name.toLocaleLowerCase(),
         price: createProductRegistrationDto.price,
         user_id: req.user.id,
         description: createProductRegistrationDto.description,
+        ProductMaterial: {
+          connect: rawMaterialId,
+        },
         Product_Category: {
           createMany: {
             data: categories_id,
@@ -108,6 +137,31 @@ export class ProductRegistrationService {
       );
     }
 
+    const rawMaterial = await this.prismaService.rawMaterial.findMany({
+      where: {
+        id: {
+          in: updateProductRegistrationDto.rawMaterial_id,
+        },
+      },
+    });
+
+    if (
+      rawMaterial.length < updateProductRegistrationDto.rawMaterial_id.length
+    ) {
+      throw new HttpException(
+        HelpMessager.rawMaterialNotExists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const rawMaterialId = updateProductRegistrationDto.rawMaterial_id.map(
+      (e) => {
+        return {
+          id: e,
+        };
+      },
+    );
+
     await this.prismaService.product.update({
       where: {
         id,
@@ -119,10 +173,10 @@ export class ProductRegistrationService {
             product_id: id,
           },
         },
-      },
 
-      select: {
-        Product_Category: true,
+        ProductMaterial: {
+          set: [],
+        },
       },
     });
 
@@ -153,11 +207,37 @@ export class ProductRegistrationService {
             },
           ),
         },
+
+        ProductMaterial: {
+          connect: rawMaterialId,
+        },
       },
 
-      include: {
-        Product_Category: true,
-        ProductPhoto: true,
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+        ProductPhoto: {
+          select: {
+            id: true,
+            url: true,
+            filename: true,
+            originalname: true,
+          },
+        },
+        Product_Category: {
+          select: {
+            category_id: true,
+            category: {
+              select: {
+                name: true,
+              },
+            },
+            product_id: false,
+          },
+        },
+        ProductMaterial: true,
       },
     });
 
@@ -221,6 +301,7 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
+            ProductMaterial: true,
           },
         });
       }
@@ -262,6 +343,7 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
+          ProductMaterial: true,
         },
       });
 
@@ -314,6 +396,7 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
+            ProductMaterial: true,
           },
           take: Number(params.take),
           skip: Number(params.skip),
@@ -348,6 +431,7 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
+          ProductMaterial: true,
         },
 
         take: Number(params.take),
@@ -394,6 +478,7 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
+            ProductMaterial: true,
           },
         });
       }
@@ -426,6 +511,7 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
+          ProductMaterial: true,
         },
       });
 
@@ -464,6 +550,7 @@ export class ProductRegistrationService {
             product_id: false,
           },
         },
+        ProductMaterial: true,
       },
     });
 

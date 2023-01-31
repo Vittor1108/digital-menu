@@ -16,4 +16,7 @@ export class CreateProductRegistrationDto {
   @IsArray()
   @IsNotEmpty()
   categories_id: Array<number>;
+
+  @IsArray()
+  rawMaterial_id: Array<number>;
 }

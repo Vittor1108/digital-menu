@@ -34,8 +34,9 @@ export class RawMaterialService {
     const rawMaterial = await this.prismaService.rawMaterial.create({
       data: {
         name: data.name,
-        price: Number(data.price),
-        quantity: Number(data.price),
+        averagePrice: Number(data.price),
+        quantityGg: Number(data.price),
+        averagePriceGg: this.calcPriceGg(data.price, data.quantity),
         user_id: req.user.id,
       },
     });
@@ -72,6 +73,10 @@ export class RawMaterialService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const newAveragePriceGg =
+      (rawMaterial.averagePriceGg +
+        this.calcPriceGg(data.price, data.quantity)) /
+      2;
 
     const newRawMaterial = await this.prismaService.rawMaterial.update({
       where: {
@@ -80,8 +85,9 @@ export class RawMaterialService {
 
       data: {
         name: data.name,
-        price: Number((rawMaterial.price + data.price) / 2),
-        quantity: Number(rawMaterial.quantity + data.quantity),
+        averagePrice: Number(data.price),
+        quantityGg: Number(data.price),
+        averagePriceGg: newAveragePriceGg,
       },
     });
 
@@ -222,5 +228,9 @@ export class RawMaterialService {
         count: countProducts._count.user_id,
       };
     }
+  };
+
+  private calcPriceGg = (price: number, qtd: number): number => {
+    return (price * 100) / qtd;
   };
 }
