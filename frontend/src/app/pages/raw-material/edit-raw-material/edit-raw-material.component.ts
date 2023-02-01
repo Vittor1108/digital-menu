@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RawMaterialComponent } from '../raw-material.component';
 import { FormBuilder } from '@angular/forms';
-import { RawMaterialService } from 'src/app/service/raw-material/raw-material.service';
 import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-edit-raw-material',
@@ -30,15 +29,13 @@ export class EditRawMaterialComponent
   };
 
   private getInfoRawMaterial = (): void => {
-    console.log(this.listMeasure);
     this.rawMaterialService.getRawMaterialById(this.rawMaterialId).subscribe({
       next: (res) => {
-        console.log(res);
         this.form.setValue({
           name: res.name,
           price: res.averagePrice,
           qtd: res.quantityGg,
-          measure: this.listMeasure[1],
+          measure: this.listMeasure,
         });
       },
 
@@ -46,5 +43,19 @@ export class EditRawMaterialComponent
         console.log(err);
       },
     });
+  };
+
+  public override onSubmit = () => {
+    this.rawMaterialService
+      .update(this.rawMaterialId, this.form.value)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+
+        error: (err) => {
+          console.log(err);
+        },
+      });
   };
 }

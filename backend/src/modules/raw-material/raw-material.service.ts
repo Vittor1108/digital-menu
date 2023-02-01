@@ -87,7 +87,7 @@ export class RawMaterialService {
       data: {
         name: data.name,
         averagePrice: Number(data.price),
-        quantityGg: Number(data.price),
+        quantityGg: Number(data.quantity) + Number(rawMaterial.quantityGg),
         averagePriceGg: newAveragePriceGg,
         measureRegister: data.measureRegister,
       },

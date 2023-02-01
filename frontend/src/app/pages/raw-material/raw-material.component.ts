@@ -1,5 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Subject } from 'rxjs';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
@@ -31,12 +32,13 @@ export class RawMaterialComponent implements OnInit {
   public placeHolderInputFile: string = 'Seleciona uma foto';
   public dropdownSettings: IDropdownSettings = {};
   public allCategories: IGetAllCategories[] = [];
-  public rawMaterialService: RawMaterialService;
   public listMeasure = [
     { id: 1, name: 'quilo(s)' },
     { id: 2, name: 'grama(s)' },
     { id: 3, name: 'miligrama(s)' },
   ];
+  protected readonly rawMaterialService: RawMaterialService;
+
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
   constructor(private readonly formBuilder: FormBuilder) {
@@ -93,13 +95,13 @@ export class RawMaterialComponent implements OnInit {
         this.eventSubjectSucess.next();
         window.scroll(0, 0);
       },
-
       error: (err) => {
         this.eventSubjectError.next();
         this.messageError = err.error.message;
         window.scroll(0, 0);
       },
     });
+    console.log(this.form.value);
   };
 
   private convertQtd = (qtd: number, measure: number): number => {

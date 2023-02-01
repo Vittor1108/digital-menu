@@ -57,4 +57,22 @@ export class RawMaterialService {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };
+
+  public update = (
+    id: number,
+    data: ICreateRawMaterial
+  ): Observable<IRawMaterial> => {
+    return this.httpService.put<IRawMaterial>(
+      `${urlApi}/raw-material/${id}`,
+      {
+        name: data.name,
+        quantity: data.qtd,
+        price: data.price,
+        measureRegister: data.measure[0].id,
+      },
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+      }
+    );
+  };
 }

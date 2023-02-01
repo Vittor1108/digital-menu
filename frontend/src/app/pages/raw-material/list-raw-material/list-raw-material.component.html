@@ -58,7 +58,7 @@
                 <th>Nome</th>
                 <th>QTD (gramas)</th>
                 <th>Preço médio pago</th>
-                <th>Preço médio das gramas</th>
+                <th>Preço médio de 100G</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -74,13 +74,24 @@
                   {{ rawMaterial.name }}
                 </td>
                 <td>{{ rawMaterial.quantityGg }} Grama(s)</td>
-                <td>R${{ rawMaterial.averagePrice.toFixed(2) }}</td>
-                <td>R${{ rawMaterial.averagePriceGg.toFixed(2) }}</td>
+                <td>
+                  {{
+                    rawMaterial.averagePrice.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL"
+                    })
+                  }}
+                </td>
+                <td>
+                  {{
+                    rawMaterial.averagePriceGg.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL"
+                    })
+                  }}
+                </td>
                 <td class="actions">
-                  <a
-                    routerLink="/home/edit-raw-material/{{
-                      rawMaterial.id
-                    }}"
+                  <a routerLink="/home/edit-raw-material/{{ rawMaterial.id }}"
                     >Editar</a
                   >
                   <a (click)="deleteCategory(rawMaterial.id!)">Excluir</a>

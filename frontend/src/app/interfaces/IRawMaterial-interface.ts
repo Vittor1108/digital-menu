@@ -12,4 +12,5 @@ export interface IRawMaterial {
   name: string;
   quantityGg: number;
   user_id?: number;
+  measureRegister: number;
 }

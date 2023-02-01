@@ -49,7 +49,6 @@ export class ListRawMaterialComponent implements OnInit {
         this.dataGet.take > this.quantityProducts
           ? (this.dataGet.take = this.quantityProducts)
           : (this.dataGet.take = this.dataGet.take);
-        console.log(res.rawMaterial[0]);
       },
       error: (err) => {
         this.eventSubjectError.next();
