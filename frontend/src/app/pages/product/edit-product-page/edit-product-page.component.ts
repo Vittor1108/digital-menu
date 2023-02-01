@@ -82,7 +82,6 @@ export class EditProductPageComponent implements OnInit {
           res.ProductPhoto,
           addImage
         );
-        console.log(res);
       },
 
       error: (err) => {

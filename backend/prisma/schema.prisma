@@ -106,13 +106,14 @@ model ProductPhoto {
 }
 
 model RawMaterial {
-  id             Int       @id @default(autoincrement())
-  name           String
-  quantityGg     Float
-  averagePrice   Float
-  averagePriceGg Float
-  user_id        Int
-  products       Product[]
+  id              Int       @id @default(autoincrement())
+  name            String
+  quantityGg      Float
+  averagePrice    Float
+  averagePriceGg  Float
+  measureRegister Int
+  user_id         Int
+  products        Product[]
 
   @@map("raw_material")
 }

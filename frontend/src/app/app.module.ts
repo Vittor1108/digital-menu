@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -35,7 +35,8 @@ import { ListEmployeesComponent } from './pages/employees/list-employees/list-em
 import { EditEmployeeComponent } from './pages/employees/edit-employee/edit-employee.component';
 import { RawMaterialComponent } from './pages/raw-material/raw-material.component';
 import { ListRawMaterialComponent } from './pages/raw-material/list-raw-material/list-raw-material.component';
-
+import { EditRawMaterialComponent } from './pages/raw-material/edit-raw-material/edit-raw-material.component';
+import { LocatorService } from './service/locator/locator.service';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -66,6 +67,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     EditEmployeeComponent,
     RawMaterialComponent,
     ListRawMaterialComponent,
+    EditRawMaterialComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,4 +92,8 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private injector: Injector){
+    LocatorService.injector = this.injector;
+  }
+}

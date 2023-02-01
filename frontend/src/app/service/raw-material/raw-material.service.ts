@@ -17,12 +17,14 @@ export class RawMaterialService {
   constructor(private readonly httpService: HttpClient) {}
 
   public create = (data: ICreateRawMaterial): Observable<IRawMaterial> => {
+    console.log(data);
     return this.httpService.post<IRawMaterial>(
       `${urlApi}/raw-material`,
       {
         name: data.name,
         quantity: data.qtd,
         price: data.price,
+        measureRegister: data.measure[0].id,
       },
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
@@ -46,6 +48,12 @@ export class RawMaterialService {
 
   public deleteRawMaterial = (id: number): Observable<boolean> => {
     return this.httpService.delete<boolean>(`${urlApi}/raw-material/${id}`, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
+    });
+  };
+
+  public getRawMaterialById = (id: number): Observable<IRawMaterial> => {
+    return this.httpService.get<IRawMaterial>(`${urlApi}/raw-material/${id}`, {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
     });
   };

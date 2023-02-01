@@ -17,6 +17,7 @@ import { EditCategoryListComponent } from './pages/product/edit-category-list/ed
 import { EditCategoryPageComponent } from './pages/product/edit-category-page/edit-category-page.component';
 import { EditProductListComponent } from './pages/product/edit-product-list/edit-product-list.component';
 import { EditProductPageComponent } from './pages/product/edit-product-page/edit-product-page.component';
+import { EditRawMaterialComponent } from './pages/raw-material/edit-raw-material/edit-raw-material.component';
 import { ListRawMaterialComponent } from './pages/raw-material/list-raw-material/list-raw-material.component';
 import { RawMaterialComponent } from './pages/raw-material/raw-material.component';
 
@@ -93,8 +94,12 @@ const routes: Routes = [
         component: RawMaterialComponent,
       },
       {
-        path: 'edit-raw-material',
-        component: ListRawMaterialComponent
+        path: 'edit-raw-material/:id',
+        component: EditRawMaterialComponent,
+      },
+      {
+        path: 'list-raw-material',
+        component: ListRawMaterialComponent,
       },
     ],
   },

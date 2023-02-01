@@ -38,6 +38,7 @@ export class RawMaterialService {
         quantityGg: Number(data.quantity),
         averagePriceGg: this.calcPriceGg(data.price, data.quantity),
         user_id: req.user.id,
+        measureRegister: data.measureRegister,
       },
     });
 
@@ -88,6 +89,7 @@ export class RawMaterialService {
         averagePrice: Number(data.price),
         quantityGg: Number(data.price),
         averagePriceGg: newAveragePriceGg,
+        measureRegister: data.measureRegister,
       },
     });
 

@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Subject } from 'rxjs';
 import { IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
+import { LocatorService } from 'src/app/service/locator/locator.service';
 import { PhotoProductService } from 'src/app/service/photo-product/photo-product.service';
 import { RawMaterialService } from 'src/app/service/raw-material/raw-material.service';
+import { EditRawMaterialComponent } from './edit-raw-material/edit-raw-material.component';
 
 @Component({
   selector: 'app-raw-material',
@@ -25,16 +27,21 @@ export class RawMaterialComponent implements OnInit {
   public eventSubjectAtention: Subject<void> = new Subject<void>();
   public filesThumbProduct: Array<string> = [];
   public form: FormGroup;
+  public titlePage: string = 'Adicionar Matéria';
   public placeHolderInputFile: string = 'Seleciona uma foto';
   public dropdownSettings: IDropdownSettings = {};
   public allCategories: IGetAllCategories[] = [];
+  public rawMaterialService: RawMaterialService;
+  public listMeasure = [
+    { id: 1, name: 'quilo(s)' },
+    { id: 2, name: 'grama(s)' },
+    { id: 3, name: 'miligrama(s)' },
+  ];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly productPhotoService: PhotoProductService,
-    private readonly rawMaterialService: RawMaterialService
-  ) {}
+  constructor(private readonly formBuilder: FormBuilder) {
+    this.rawMaterialService = LocatorService.injector.get(RawMaterialService);
+  }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -109,22 +116,6 @@ export class RawMaterialComponent implements OnInit {
         break;
     }
     return number ? number : 0;
-  };
-
-  private createProductImage = (idProduct: number): void => {
-    this.productPhotoService.createImage(idProduct, this.files).subscribe({
-      next: (res) => {
-        window.scroll(0, 0);
-        this.eventSubjectSucess.next();
-        this.form.reset();
-        this.removeFiles();
-      },
-
-      error: (err) => {
-        window.scroll(0, 0);
-        this.eventSubjectAtention.next();
-      },
-    });
   };
 
   public addImage = (): void => {

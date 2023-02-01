@@ -4,4 +4,5 @@ export class RawMaterial {
   quantityGg: number;
   averagePrice: number;
   averagePriceGg: number;
+  measureRegister: number;
 }

@@ -3,7 +3,7 @@
     <ul>
       <li><i class="fa-solid fa-house"></i>Home/</li>
       <li>Matéria Prima/</li>
-      <li>Adicionar Matéria</li>
+      <li>{{ titlePage }}</li>
     </ul>
   </div>
   <div class="snack">
@@ -25,7 +25,7 @@
   </div>
   <form class="infoProduct" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="dataProduct">
-      <h1>Adicionar Matéria</h1>
+      <h1>{{ titlePage }}</h1>
       <div>
         <label for="">Nome da Matéria</label>
         <input type="text" placeholder="Arroz 5Kg" formControlName="name" />
@@ -78,11 +78,7 @@
           <label for="">Selecione a Medida</label>
           <ng-multiselect-dropdown
             [settings]="dropdownSettings"
-            [data]="[
-              { id: 1, name: 'quilo(s)' },
-              { id: 2, name: 'grama(s)' },
-              { id: 3, name: 'miligrama(s)' },
-            ]"
+            [data]="listMeasure"
             formControlName="measure"
             placeholder="Selecione"
           >
@@ -142,12 +138,7 @@
         />
       </div>
       <div class="buttons">
-        <button
-          type="submit"
-
-        >
-          Salvar
-        </button>
+        <button type="submit">Salvar</button>
         <button type="button" (click)="removeFiles()">Deletar Imagem</button>
       </div>
     </div>

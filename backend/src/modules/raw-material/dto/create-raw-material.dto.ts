@@ -12,4 +12,8 @@ export class CreateRawMaterialDto {
   @IsNumber()
   @IsNotEmpty()
   price: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  measureRegister: number;
 }
