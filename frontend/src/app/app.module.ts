@@ -37,6 +37,7 @@ import { RawMaterialComponent } from './pages/raw-material/raw-material.componen
 import { ListRawMaterialComponent } from './pages/raw-material/list-raw-material/list-raw-material.component';
 import { EditRawMaterialComponent } from './pages/raw-material/edit-raw-material/edit-raw-material.component';
 import { LocatorService } from './service/locator/locator.service';
+import { DefaultTableComponent } from './components/default-table/default-table.component';
 const RXJS_Services = [HTTPListener, HTTPStatus];
 export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
 
@@ -68,6 +69,7 @@ export const options: Partial<null | IConfig> | (() => Partial<IConfig>) = null;
     RawMaterialComponent,
     ListRawMaterialComponent,
     EditRawMaterialComponent,
+    DefaultTableComponent,
   ],
   imports: [
     BrowserModule,

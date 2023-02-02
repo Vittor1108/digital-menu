@@ -17,7 +17,6 @@ export class RawMaterialService {
   constructor(private readonly httpService: HttpClient) {}
 
   public create = (data: ICreateRawMaterial): Observable<IRawMaterial> => {
-    console.log(data);
     return this.httpService.post<IRawMaterial>(
       `${urlApi}/raw-material`,
       {

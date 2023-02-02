@@ -101,7 +101,6 @@ export class RawMaterialComponent implements OnInit {
         window.scroll(0, 0);
       },
     });
-    console.log(this.form.value);
   };
 
   private convertQtd = (qtd: number, measure: number): number => {
