@@ -19,89 +19,9 @@
     ></app-snack-error>
   </div>
   <article class="containerTable">
-    <div class="titleContainer">
-      <h1>Lista de Categorias</h1>
-      <button (click)="exportToCSV()"><a>Exportar para CSV</a></button>
-    </div>
-    <div class="table">
-      <div>
-        <div class="filterContainer">
-          <div>
-            <span>Listar</span>
-            <select [(ngModel)]="dataGet.take" (change)="getAllCategories()">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option
-                disabled
-                value="{{ dataGet.take }}"
-                *ngIf="dataGet.take >= quantityProducts"
-              >
-                {{ dataGet.take }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Pesquisar"
-              [(ngModel)]="dataGet.text"
-            />
-          </div>
-        </div>
-        <div class="containerTable">
-          <table>
-            <thead>
-              <tr>
-                <th>ID da Categoria</th>
-                <th>Nome da Categoria</th>
-                <th>QTD de Produtos Relacionados</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let category of allCategories">
-                <td>{{ category.id }}</td>
-                <td class="tdImage">
-                  <img
-                    src="{{ category.PhotoCategory[0].url }}"
-                    alt=""
-                    *ngIf="category.PhotoCategory.length > 0"
-                  />
-                  {{ category.name }}
-                </td>
-                <td>20</td>
-                <td class="actions">
-                  <a
-                    routerLink="/home/updated-category-product/{{
-                      category.id
-                    }}"
-                    >Editar</a
-                  >
-                  <a (click)="deleteCategory(category.id)">Excluir</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="infoTable">
-          <p>
-            Exibindo {{ dataGet.take }} de {{ quantityProducts }} categorias
-          </p>
-          <div>
-            <button (click)="buttonPage(false)">Voltar</button>
-            <p
-              *ngFor="let page of [].constructor(numberPages); let i = index"
-              (click)="changePagination(i + 1)"
-              [ngClass]="{ pageSelected: i + 1 === currentPage }"
-            >
-              {{ i + 1 }}
-            </p>
-            <button (click)="buttonPage(true)">Avançar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-default-table
+      *ngIf="loading"
+      [infoTable]="infoTable"
+    ></app-default-table>
   </article>
 </section>

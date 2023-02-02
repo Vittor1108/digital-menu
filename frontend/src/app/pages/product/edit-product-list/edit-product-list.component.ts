@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/service/product/product.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteCategoryComponent } from 'src/app/components/dialog-delete-category/dialog-delete-category.component';
 import { Subject } from 'rxjs';
+import { IDefaultTable } from 'src/app/interfaces/IDefault-table-interface';
 @Component({
   selector: 'app-edit-product-list',
   templateUrl: './edit-product-list.component.html',
@@ -18,6 +19,17 @@ export class EditProductListComponent implements OnInit {
   @Output() public messageError: string =
     'Não foi possível excluir o Produto. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
+  @Output() public infoTable: IDefaultTable = {
+    title: 'Listar Produtos',
+    data: [],
+    columns: ['ID', 'Nome'],
+    keyNames: [{ name: 'id' }, { name: 'name', hasPhoto: true }],
+    routerLink: '/home/updated-category-product/',
+    deleteAction: Function,
+    itemQuantity: 0,
+    changeAction: Function,
+  };
+  public loading: boolean = false;
   public eventSubjectError: Subject<void> = new Subject<void>();
   public eventSubjectSucess: Subject<void> = new Subject<void>();
   public allProducts: IGettAllProducsts[] = [];
@@ -39,16 +51,13 @@ export class EditProductListComponent implements OnInit {
   }
 
   public getAllProducts = (): void => {
-    if (this.dataGet.take > this.quantityProducts)
-      this.dataGet.take = this.quantityProducts;
     this.productService.getAllProducts(this.dataGet).subscribe({
       next: (res) => {
-        this.allProducts = res.products;
-        this.quantityProducts = res.count;
-        this.pagination(res.count);
-        this.dataGet.take > this.quantityProducts
-          ? (this.dataGet.take = this.quantityProducts)
-          : (this.dataGet.take = this.dataGet.take);
+        this.infoTable.data = res.products;
+        this.infoTable.itemQuantity = res.count;
+        (this.infoTable.deleteAction = this.deleteProduct),
+          (this.infoTable.changeAction = this.getAllProducts),
+          (this.loading = true);
       },
 
       error: (err) => {
@@ -60,74 +69,16 @@ export class EditProductListComponent implements OnInit {
   };
 
   public deleteProduct = (idProduct: number): void => {
-    const dialogRef = this.dialog.open(DialogDeleteCategoryComponent);
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.productService.deleteProduct(idProduct).subscribe({
-          next: (res) => {
-            this.getAllProducts();
-            window.scroll(0, 0);
-            this.eventSubjectSucess.next();
-          },
+    this.productService.deleteProduct(idProduct).subscribe({
+      next: (res) => {
+        this.getAllProducts();
+        window.scroll(0, 0);
+        this.eventSubjectSucess.next();
+      },
 
-          error: (err) => {
-            this.eventSubjectError.next();
-          },
-        });
-      }
+      error: (err) => {
+        this.eventSubjectError.next();
+      },
     });
-  };
-
-  public pagination = (amountRequest: number): void => {
-    this.numberPages = Math.ceil(amountRequest / Number(this.dataGet.take));
-  };
-
-  public buttonPage = (nextOrPrevius: boolean): void => {
-    if (this.currentPage === this.numberPages) return;
-    let currentPage = nextOrPrevius
-      ? this.currentPage + 1
-      : this.currentPage - 1;
-
-    if (currentPage === 0) currentPage = 1;
-
-    this.changePagination(currentPage);
-  };
-
-  public changePagination = (numberPage: number): void => {
-    if (numberPage > this.currentPage) {
-      this.currentPage = numberPage;
-      this.dataGet.skip = Number(this.dataGet.take) * (numberPage - 1);
-    }
-
-    if (numberPage < this.currentPage) {
-      this.dataGet.skip =
-        (this.currentPage - numberPage) * Number(this.dataGet.take);
-      this.dataGet;
-      this.currentPage = numberPage;
-    }
-
-    if (numberPage === 1) {
-      this.currentPage = numberPage;
-      this.dataGet.skip = 0;
-    }
-    this.getAllProducts();
-  };
-
-  public exportToCSV = () => {
-    const tableRows = document.querySelectorAll('tr');
-    const button = document.querySelector('button > a');
-    const CSVString = Array.from(tableRows)
-      .map((row) =>
-        Array.from(row.cells)
-          .map((cell) => cell.textContent)
-          .join(',')
-      )
-      .join('\n');
-
-    button?.setAttribute(
-      'href',
-      `data:text/csvcharset=utf-8,${encodeURIComponent(CSVString)}`
-    );
-    button?.setAttribute('download', 'produtos.csv');
   };
 }

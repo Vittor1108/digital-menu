@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IDataGetCategories } from 'src/app/interfaces/ICategories-interface';
+import {
+  IDefaultTable,
+  IKeyNames,
+} from 'src/app/interfaces/IDefault-table-interface';
 import { DialogDeleteCategoryComponent } from '../dialog-delete-category/dialog-delete-category.component';
 
 @Component({
@@ -9,7 +13,7 @@ import { DialogDeleteCategoryComponent } from '../dialog-delete-category/dialog-
   styleUrls: ['./default-table.component.scss'],
 })
 export class DefaultTableComponent implements OnInit {
-  @Input() infoTable: any = [];
+  @Input() infoTable: IDefaultTable;
   public numberPages: number;
   public dataGet: IDataGetCategories = {
     take: 10,
@@ -34,15 +38,25 @@ export class DefaultTableComponent implements OnInit {
     });
   };
 
+  public checkValues = (object: IKeyNames, value: number): any => {
+    if (object.isPrice) {
+      return value.toLocaleString('pt-br', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+    }
+    return value.toString();
+  };
+
   public changeAction = () => {
-    this.dataGet.take > this.infoTable.itemQuantity
-      ? (this.dataGet.take = this.infoTable.itemQuantity)
-      : (this.dataGet.take = this.dataGet.take);
     this.infoTable.changeAction(this.dataGet);
-    this.pagination(this.infoTable.itemQuantity)
+    this.pagination(this.infoTable.itemQuantity);
   };
 
   public pagination = (amountRequest: number): void => {
+    this.dataGet.take > this.infoTable.itemQuantity
+      ? (this.dataGet.take = this.infoTable.itemQuantity)
+      : (this.dataGet.take = this.dataGet.take);
     this.numberPages = Math.ceil(amountRequest / Number(this.dataGet.take));
   };
 

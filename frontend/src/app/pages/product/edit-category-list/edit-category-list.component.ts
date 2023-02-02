@@ -7,6 +7,7 @@ import { CategoriesService } from 'src/app/service/categories/categories.service
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { DialogDeleteCategoryComponent } from 'src/app/components/dialog-delete-category/dialog-delete-category.component';
+import { IDefaultTable } from 'src/app/interfaces/IDefault-table-interface';
 
 @Component({
   selector: 'app-edit-category',
@@ -20,6 +21,16 @@ export class EditCategoryListComponent implements OnInit {
     'Não foi possível excluir a categoria. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
   @Output() public titleAtention: string = 'Atenção!';
+  @Output() public infoTable: IDefaultTable = {
+    title: 'Lista Categoria',
+    data: [],
+    columns: ['ID', 'Nome'],
+    keyNames: [{ name: 'id' }, { name: 'name', hasPhoto: true }],
+    routerLink: '/home/updated-category-product/',
+    deleteAction: Function,
+    itemQuantity: 0,
+    changeAction: Function,
+  };
   public eventSubjectError: Subject<void> = new Subject<void>();
   public eventSubjectSucess: Subject<void> = new Subject<void>();
   public dataGet: IDataGetCategories = {
@@ -27,10 +38,7 @@ export class EditCategoryListComponent implements OnInit {
     skip: 0,
     text: '',
   };
-  public quantityProducts: number;
-  public allCategories: IGetAllCategories[];
-  public numberPages: number;
-  public currentPage: number = 1;
+  public loading: boolean = false;
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly dialog: MatDialog
@@ -43,12 +51,10 @@ export class EditCategoryListComponent implements OnInit {
   public getAllCategories = (): void => {
     this.categoriesService.getAllCategoires(this.dataGet).subscribe({
       next: (res) => {
-        this.allCategories = res.categories;
-        this.pagination(res.count);
-        this.quantityProducts = res.count;
-        this.dataGet.take > this.quantityProducts
-          ? (this.dataGet.take = this.quantityProducts)
-          : (this.dataGet.take = this.dataGet.take);
+        this.infoTable.data = res.categories;
+        this.infoTable.deleteAction = this.deleteCategory;
+        this.infoTable.itemQuantity = res.count;
+        this.loading = true;
       },
       error: (err) => {
         this.eventSubjectError.next();
@@ -73,58 +79,5 @@ export class EditCategoryListComponent implements OnInit {
         });
       }
     });
-  };
-
-  public pagination = (amountRequest: number): void => {
-    this.numberPages = Math.ceil(amountRequest / Number(this.dataGet.take));
-  };
-
-  public changePagination = (numberPage: number): void => {
-    if (numberPage > this.currentPage) {
-      this.currentPage = numberPage;
-      this.dataGet.skip = Number(this.dataGet.take) * (numberPage - 1);
-    }
-
-    if (numberPage < this.currentPage) {
-      this.dataGet.skip =
-        (this.currentPage - numberPage) * Number(this.dataGet.take);
-      this.dataGet;
-      this.currentPage = numberPage;
-    }
-
-    if (numberPage === 1) {
-      this.currentPage = numberPage;
-      this.dataGet.skip = 0;
-    }
-    this.getAllCategories();
-  };
-
-  public buttonPage = (nextOrPrevius: boolean): void => {
-    if (this.currentPage === this.numberPages) return;
-    let currentPage = nextOrPrevius
-      ? this.currentPage + 1
-      : this.currentPage - 1;
-
-    if (currentPage === 0) currentPage = 1;
-
-    this.changePagination(currentPage);
-  };
-
-  public exportToCSV = () => {
-    const tableRows = document.querySelectorAll('tr');
-    const button = document.querySelector('button > a');
-    const CSVString = Array.from(tableRows)
-      .map((row) =>
-        Array.from(row.cells)
-          .map((cell) => cell.textContent)
-          .join(',')
-      )
-      .join('\n');
-
-    button?.setAttribute(
-      'href',
-      `data:text/csvcharset=utf-8,${encodeURIComponent(CSVString)}`
-    );
-    button?.setAttribute('download', 'categorias.csv');
   };
 }

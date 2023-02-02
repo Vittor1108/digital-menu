@@ -18,7 +18,7 @@ export class EditRawMaterialComponent
   override ngOnInit(): void {
     super.ngOnInit();
     this.getParamRoute();
-    this.titlePage = 'Editar Matéria';
+    this.titlePage = 'Listar Matéria';
     this.getInfoRawMaterial();
   }
 

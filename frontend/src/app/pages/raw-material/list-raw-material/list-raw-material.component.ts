@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { IDataGetCategories } from 'src/app/interfaces/ICategories-interface';
+import { IDefaultTable } from 'src/app/interfaces/IDefault-table-interface';
 import { IRawMaterial } from 'src/app/interfaces/IRawMaterial-interface';
 import { RawMaterialService } from 'src/app/service/raw-material/raw-material.service';
 
@@ -18,9 +19,16 @@ export class ListRawMaterialComponent implements OnInit {
     'Não foi possível excluir a Matéria Prima. Tente Novamente.';
   @Output() public titleError: string = 'Tente Novamente!';
   @Output() public titleAtention: string = 'Atenção!';
-  @Output() public infoTable: any = {
+  @Output() public infoTable: IDefaultTable = {
+    title: 'Listar Matéria Prima',
     data: [],
-    columns: ['ID', 'Nome', 'Preço médio pago', 'Preço médio de 100G', 'Ações'],
+    columns: ['ID', 'Nome', 'Preço médio pago', 'Preço médio de 100G'],
+    keyNames: [
+      { name: 'id' },
+      { name: 'name' },
+      { name: 'averagePrice', isPrice: true },
+      { name: 'averagePriceGg', isPrice: true },
+    ],
     routerLink: '/home/edit-raw-material/',
     deleteAction: Function,
     itemQuantity: 0,

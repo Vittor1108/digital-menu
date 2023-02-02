@@ -1,5 +1,5 @@
 <div class="titleContainer">
-  <h1>Lista de Categorias</h1>
+  <h1>{{infoTable.title}}</h1>
   <button (click)="exportToCSV()"><a>Exportar para CSV</a></button>
 </div>
 <div class="table">
@@ -7,7 +7,7 @@
     <div class="filterContainer">
       <div>
         <span>Listar</span>
-        <select  [(ngModel)]="dataGet.take" (change)="changeAction()">
+        <select [(ngModel)]="dataGet.take" (change)="changeAction()">
           <option value="10">10</option>
           <option value="25">25</option>
           <option value="50">50</option>
@@ -30,31 +30,17 @@
         <thead>
           <tr>
             <th *ngFor="let column of infoTable.columns">{{ column }}</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let field of infoTable.data">
-            <td>{{ field.id }}</td>
-            <td>{{ field.name }}</td>
-            <td>
-              {{
-                field.averagePrice.toLocaleString("pt-br", {
-                  style: "currency",
-                  currency: "BRL"
-                })
-              }}
-            </td>
-            <td>
-              {{
-                field.averagePriceGg.toLocaleString("pt-br", {
-                  style: "currency",
-                  currency: "BRL"
-                })
-              }}
+            <td *ngFor="let keyName of infoTable.keyNames">
+              {{ checkValues(keyName, field[keyName.name]) }}
             </td>
             <td class="actions">
-              <a [routerLink]="[infoTable.routerLink + field.id]">Editar</a>
-              <a (click)="deleteRegister(field.id)">Excluir</a>
+              <a [routerLink]="[field.routerLink + field.id]">Editar</a>
+              <a (click)="deleteRegister(field.id)">Remover</a>
             </td>
           </tr>
         </tbody>
