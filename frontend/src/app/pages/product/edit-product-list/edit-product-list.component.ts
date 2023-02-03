@@ -24,7 +24,7 @@ export class EditProductListComponent implements OnInit {
     data: [],
     columns: ['ID', 'Nome'],
     keyNames: [{ name: 'id' }, { name: 'name', hasPhoto: true }],
-    routerLink: '/home/updated-category-product/',
+    routerLink: '/home/updated-product/',
     deleteAction: Function,
     itemQuantity: 0,
     changeAction: Function,

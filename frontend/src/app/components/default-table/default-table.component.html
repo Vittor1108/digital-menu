@@ -39,7 +39,7 @@
               {{ checkValues(keyName, field[keyName.name]) }}
             </td>
             <td class="actions">
-              <a [routerLink]="[field.routerLink + field.id]">Editar</a>
+              <a routerLink="{{infoTable.routerLink + field.id}}">Editar</a>
               <a (click)="deleteRegister(field.id)">Remover</a>
             </td>
           </tr>

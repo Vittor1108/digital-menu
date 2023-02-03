@@ -1,17 +1,21 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IDataGetCategories, IGetAllCategories } from 'src/app/interfaces/ICategories-interface';
+import {
+  IDataGetCategories,
+  IGetAllCategories,
+} from 'src/app/interfaces/ICategories-interface';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ICategorySelect } from 'src/app/interfaces/IProduct-interface';
 import { ProductService } from 'src/app/service/product/product.service';
 import { PhotoProductService } from 'src/app/service/photo-product/photo-product.service';
 import { Subject } from 'rxjs';
+import { LocatorService } from 'src/app/service/locator/locator.service';
 
 @Component({
   selector: 'app-add-product',
-  templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.scss'],
+  templateUrl: '../shared/add-product.component.html',
+  styleUrls: ['../shared/add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
   @Output() public titleSucess: string = 'Produto Adicionado';
@@ -32,12 +36,15 @@ export class AddProductComponent implements OnInit {
   public allCategories: IGetAllCategories[] = [];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly categoriesService: CategoriesService,
-    private readonly productService: ProductService,
-    private readonly productPhotoService: PhotoProductService
-  ) {}
+  protected readonly categoriesService: CategoriesService;
+  protected readonly productService: ProductService;
+  protected readonly productPhotoService: PhotoProductService;
+
+  constructor(private readonly formBuilder: FormBuilder) {
+    this.categoriesService = LocatorService.injector.get(CategoriesService);
+    this.productService = LocatorService.injector.get(ProductService);
+    this.productPhotoService = LocatorService.injector.get(PhotoProductService);
+  }
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -115,10 +122,10 @@ export class AddProductComponent implements OnInit {
 
   private getAllCategories = (): void => {
     const dataGet: IDataGetCategories = {
-      skip: "",
-      take: "",
-      text: "",
-    }
+      skip: '',
+      take: '',
+      text: '',
+    };
     this.categoriesService.getAllCategoires(dataGet).subscribe({
       next: (res) => {
         this.allCategories = res.categories;

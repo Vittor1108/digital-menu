@@ -23,6 +23,7 @@ export class DefaultTableComponent implements OnInit {
   public currentPage: number = 1;
   ngOnInit(): void {
     this.pagination(this.infoTable.itemQuantity);
+    console.log(this.infoTable.data[0].id);
   }
 
   constructor(private readonly dialog: MatDialog) {}
