@@ -40,7 +40,7 @@ export class EditProductPageComponent
           category: this.formatCategories(res.Product_Category),
           description: res.description,
         });
-        this.setProductPhoto(res.ProductPhoto);
+        this.setProductPhoto(res.ProductPhoto)
       },
 
       error: (err) => {
