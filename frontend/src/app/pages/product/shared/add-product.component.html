@@ -125,7 +125,8 @@
         </div>
         <div *ngIf="calcProfit">
           <div
-            *ngFor="let qtd of [].constructor(qtdRawMaterial); let i = index"
+            *ngFor="let item of getRawMaterial.controls; let i = index"
+            [formGroup]="getFormGroup(i)"
           >
             <p>Matéria Prima {{ i + 1 }}</p>
             <div>
@@ -133,7 +134,7 @@
                 [settings]="dropdownSettings"
                 [data]="allRawMaterials"
                 placeholder="Matéria Prima..."
-                formControlName="testeMateria"
+                formControlName="name"
               >
               </ng-multiselect-dropdown>
             </div>
@@ -145,7 +146,7 @@
                 [decimalMarker]="','"
                 [dropSpecialCharacters]="true"
                 placeholder="Quantidade"
-                formControlName="testeQtd"
+                formControlName="quantity"
               />
             </div>
             <div>
@@ -153,17 +154,22 @@
                 [settings]="dropdownSettings"
                 [data]="listMeasure"
                 placeholder="Medida"
-                formControlName="testeMedida"
+                formControlName="measure"
               >
               </ng-multiselect-dropdown>
             </div>
-            <span (click)="addNewRawMaterial()">+</span>
+            <span
+              (click)="addRawMaterial()"
+              *ngIf="i === getRawMaterial.controls.length - 1"
+              >+</span
+            >
+            <span *ngIf="i !== getRawMaterial.controls.length - 1" (click)="removeRawMaterial(i)">-</span>
           </div>
         </div>
       </div>
     </div>
     <div class="previewProduct">
-      <h2>Categoria</h2>
+      <h2>Produto</h2>
       <div class="slider" *ngIf="filesThumbProduct.length > 0">
         <ul>
           <li
@@ -197,12 +203,7 @@
         />
       </div>
       <div class="buttons">
-        <button
-          type="submit"
-          [disabled]="!form.valid || filesThumbProduct.length === 0"
-        >
-          Salvar
-        </button>
+        <button type="submit">Salvar</button>
         <button type="button" (click)="removeFiles()">Deletar Imagens</button>
       </div>
     </div>

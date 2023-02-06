@@ -1,5 +1,11 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  Form,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   IDataGetCategories,
   IGetAllCategories,
@@ -69,13 +75,11 @@ export class AddProductComponent implements OnInit {
       category: ['', [Validators.required]],
       price: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      testeMateria: [''],
-      testeQtd: [''],
-      testeMedida: [''],
+      rawMaterials: this.formBuilder.array([]),
     });
 
     this.dropdownSettings = {
-      singleSelection: false,
+      singleSelection: true,
       idField: 'id',
       textField: 'name',
       itemsShowLimit: 3,
@@ -86,6 +90,39 @@ export class AddProductComponent implements OnInit {
 
     this.getAllRawMaterials();
   }
+
+  get getRawMaterial(): FormArray {
+    return this.form.get('rawMaterials') as FormArray;
+  }
+
+  public addRawMaterial = (): void => {
+    const newControl: FormGroup = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      quantity: ['', [Validators.required]],
+      measure: ['', [Validators.required]],
+    });
+
+    this.getRawMaterial.push(newControl);
+  };
+
+  public changeProfit = (): void => {
+    this.calcProfit = !this.calcProfit;
+    if (!this.calcProfit) {
+      const formControls = <FormArray>this.form.controls['rawMaterials'];
+      formControls.controls = [];
+      return;
+    }
+    this.addRawMaterial();
+  };
+
+  public removeRawMaterial = (index: number): void => {
+    const formControls = <FormArray>this.form.controls['rawMaterials'];
+    formControls.removeAt(index);
+  };
+
+  public getFormGroup = (index: number): FormGroup => {
+    return this.getRawMaterial.controls[index] as FormGroup;
+  };
 
   public changeImage = (image: number): void => {
     const thumbImages = document.querySelectorAll<HTMLElement>('.thumb img');
@@ -200,14 +237,5 @@ export class AddProductComponent implements OnInit {
     const inputFile =
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
-  };
-
-  public changeProfit = (): void => {
-    this.calcProfit = !this.calcProfit;
-    this.calcProfit ? (this.qtdRawMaterial = 1) : (this.qtdRawMaterial = 0);
-  };
-
-  public addNewRawMaterial = (): void => {
-    this.qtdRawMaterial++;
   };
 }
