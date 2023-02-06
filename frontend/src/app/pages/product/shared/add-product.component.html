@@ -8,20 +8,20 @@
   </div>
   <div class="snack">
     <app-snack-sucess
-        [messageSucess]="messageSucess"
-        [title]="titleSucess"
-        [events]="eventSubjectSucess.asObservable()"
-      ></app-snack-sucess>
-      <app-snack-error
-        [messageError]="messageError"
-        [title]="titleError"
-        [events]="eventSubjectError.asObservable()"
-      ></app-snack-error>
-      <app-snack-atetion
-        [messageAtention]="messageAtention"
-        [title]="titleAtention"
-        [events]="eventSubjectAtention.asObservable()"
-      ></app-snack-atetion>
+      [messageSucess]="messageSucess"
+      [title]="titleSucess"
+      [events]="eventSubjectSucess.asObservable()"
+    ></app-snack-sucess>
+    <app-snack-error
+      [messageError]="messageError"
+      [title]="titleError"
+      [events]="eventSubjectError.asObservable()"
+    ></app-snack-error>
+    <app-snack-atetion
+      [messageAtention]="messageAtention"
+      [title]="titleAtention"
+      [events]="eventSubjectAtention.asObservable()"
+    ></app-snack-atetion>
   </div>
   <form class="infoProduct" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="dataProduct">
@@ -102,6 +102,63 @@
             disabled
           />
           <button type="button" (click)="addImage()">Selecionar</button>
+        </div>
+      </div>
+      <div class="calcLucro">
+        <div>
+          <p>Cálculo de Lucro?</p>
+          <input
+            type="radio"
+            name="calcLucro"
+            class="checbox"
+            (change)="changeProfit()"
+          />
+          <label for="">Sim</label>
+          <input
+            type="radio"
+            name="calcLucro"
+            class="checbox"
+            checked
+            (change)="changeProfit()"
+          />
+          <label for="">Não</label>
+        </div>
+        <div *ngIf="calcProfit">
+          <div
+            *ngFor="let qtd of [].constructor(qtdRawMaterial); let i = index"
+          >
+            <p>Matéria Prima {{ i + 1 }}</p>
+            <div>
+              <ng-multiselect-dropdown
+                [settings]="dropdownSettings"
+                [data]="allRawMaterials"
+                placeholder="Matéria Prima..."
+                formControlName="testeMateria"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+            <div>
+              <input
+                type="text"
+                mask="separator.2"
+                [thousandSeparator]="'.'"
+                [decimalMarker]="','"
+                [dropSpecialCharacters]="true"
+                placeholder="Quantidade"
+                formControlName="testeQtd"
+              />
+            </div>
+            <div>
+              <ng-multiselect-dropdown
+                [settings]="dropdownSettings"
+                [data]="listMeasure"
+                placeholder="Medida"
+                formControlName="testeMedida"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+            <span (click)="addNewRawMaterial()">+</span>
+          </div>
         </div>
       </div>
     </div>

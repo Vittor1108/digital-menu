@@ -1,7 +1,6 @@
 @import "../.../../../../../assets/scss/variables.scss";
 @import "../.../../../../../assets/scss/generalStyles.scss";
 
-
 .infoProduct {
   display: flex;
   align-items: center;
@@ -193,6 +192,58 @@
       }
     }
   }
+
+  .calcLucro {
+    > div {
+      p {
+        font-size: 14px;
+        margin-right: 10px;
+      }
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+
+      > input {
+        width: auto;
+        &:nth-of-type(2) {
+          margin-left: 10px;
+        }
+      }
+
+      label {
+        margin-bottom: 0;
+        margin-left: 5px;
+      }
+
+      &:nth-child(2) {
+        max-height: 230px;
+        overflow-y: auto;
+
+
+        > div {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          width: 100%;
+          > p {
+            width: 100%;
+            margin: 10px auto;
+          }
+
+          > div {
+            width: 29%;
+            margin-right: 2%;
+          }
+          span {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0.3rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 .removeImage {
@@ -203,4 +254,20 @@
 .imageSelected {
   opacity: 1 !important;
   transform: scale(0.9);
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

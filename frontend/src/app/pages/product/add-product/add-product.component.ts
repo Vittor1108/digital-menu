@@ -11,6 +11,8 @@ import { ProductService } from 'src/app/service/product/product.service';
 import { PhotoProductService } from 'src/app/service/photo-product/photo-product.service';
 import { Subject } from 'rxjs';
 import { LocatorService } from 'src/app/service/locator/locator.service';
+import { IRawMaterial } from 'src/app/interfaces/IRawMaterial-interface';
+import { RawMaterialService } from 'src/app/service/raw-material/raw-material.service';
 
 @Component({
   selector: 'app-add-product',
@@ -32,18 +34,32 @@ export class AddProductComponent implements OnInit {
   public filesThumbProduct: Array<string> = [];
   public form: FormGroup;
   public placeHolderInputFile: string = 'Seleciona uma foto';
+  public listMeasure = [
+    { id: 1, name: 'quilo(s)' },
+    { id: 2, name: 'grama(s)' },
+    { id: 3, name: 'miligrama(s)' },
+  ];
+  public allRawMaterials: IRawMaterial[] = [];
+  public calcProfit: boolean = false;
+  public qtdRawMaterial: number = 0;
   public dropdownSettings: IDropdownSettings = {};
   public allCategories: IGetAllCategories[] = [];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
+  public dataGet: IDataGetCategories = {
+    take: '',
+    skip: '',
+    text: '',
+  };
   protected readonly categoriesService: CategoriesService;
   protected readonly productService: ProductService;
   protected readonly productPhotoService: PhotoProductService;
-
+  protected readonly rawMaterialService: RawMaterialService;
   constructor(private readonly formBuilder: FormBuilder) {
     this.categoriesService = LocatorService.injector.get(CategoriesService);
     this.productService = LocatorService.injector.get(ProductService);
     this.productPhotoService = LocatorService.injector.get(PhotoProductService);
+    this.rawMaterialService = LocatorService.injector.get(RawMaterialService);
   }
 
   ngOnInit(): void {
@@ -53,6 +69,9 @@ export class AddProductComponent implements OnInit {
       category: ['', [Validators.required]],
       price: ['', [Validators.required]],
       description: ['', [Validators.required]],
+      testeMateria: [''],
+      testeQtd: [''],
+      testeMedida: [''],
     });
 
     this.dropdownSettings = {
@@ -64,6 +83,8 @@ export class AddProductComponent implements OnInit {
       enableCheckAll: false,
       searchPlaceholderText: 'Categoria...',
     };
+
+    this.getAllRawMaterials();
   }
 
   public changeImage = (image: number): void => {
@@ -87,21 +108,22 @@ export class AddProductComponent implements OnInit {
   };
 
   public onSubmit = (): void => {
-    const categories = this.form.value.category.map(
-      (category: ICategorySelect) => category.id
-    );
-    this.form.value.category = categories;
-    this.productService.createProduct(this.form.value).subscribe({
-      next: (res) => {
-        this.createProductImage(res.id);
-      },
+    console.log(this.form.value);
+    // const categories = this.form.value.category.map(
+    //   (category: ICategorySelect) => category.id
+    // );
+    // this.form.value.category = categories;
+    // this.productService.createProduct(this.form.value).subscribe({
+    //   next: (res) => {
+    //     this.createProductImage(res.id);
+    //   },
 
-      error: (err) => {
-        window.scroll(0, 0);
-        this.eventSubjectError.next();
-        this.messageError = err.error.message;
-      },
-    });
+    //   error: (err) => {
+    //     window.scroll(0, 0);
+    //     this.eventSubjectError.next();
+    //     this.messageError = err.error.message;
+    //   },
+    // });
   };
 
   private createProductImage = (idProduct: number): void => {
@@ -116,6 +138,18 @@ export class AddProductComponent implements OnInit {
       error: (err) => {
         window.scroll(0, 0);
         this.eventSubjectAtention.next();
+      },
+    });
+  };
+
+  private getAllRawMaterials = (): void => {
+    this.rawMaterialService.getAllRawMaterial(this.dataGet).subscribe({
+      next: (res) => {
+        this.allRawMaterials = res.rawMaterial;
+      },
+
+      error: (err) => {
+        console.log(err);
       },
     });
   };
@@ -166,5 +200,14 @@ export class AddProductComponent implements OnInit {
     const inputFile =
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
+  };
+
+  public changeProfit = (): void => {
+    this.calcProfit = !this.calcProfit;
+    this.calcProfit ? (this.qtdRawMaterial = 1) : (this.qtdRawMaterial = 0);
+  };
+
+  public addNewRawMaterial = (): void => {
+    this.qtdRawMaterial++;
   };
 }

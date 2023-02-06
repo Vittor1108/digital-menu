@@ -34,3 +34,43 @@ html{
   scroll-behavior: smooth;
 }
 // Default theme
+
+
+.checbox {
+  width: auto;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  &::after {
+    content: "";
+    display: block;
+    width: 3px;
+    height: 6px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2.5px;
+    left: 6px;
+    display: none;
+  }
+
+  &::before {
+    content: "";
+    color: black;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: -1px;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+  &:checked {
+    &::before {
+      background-color: red;
+    }
+    &::after {
+      display: block;
+    }
+  }
+}
