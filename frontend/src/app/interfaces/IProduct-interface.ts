@@ -6,6 +6,8 @@ export interface ICreateProduct {
   category: Array<number>;
   price: number;
   description: string;
+  rawMaterial_id: Array<number>;
+  avargePrice: number;
 }
 
 export interface ICategorySelect {

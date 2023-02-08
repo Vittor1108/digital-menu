@@ -50,13 +50,14 @@ export class AddProductComponent implements OnInit {
   public qtdRawMaterial: number = 0;
   public dropdownSettings: IDropdownSettings = {};
   public allCategories: IGetAllCategories[] = [];
-  private listNameFiles: Array<string> = [];
-  private files: Array<File> = [];
   public dataGet: IDataGetCategories = {
     take: '',
     skip: '',
     text: '',
   };
+  private listNameFiles: Array<string> = [];
+  private files: Array<File> = [];
+  private avargePriceProduct: number = 0;
   protected readonly categoriesService: CategoriesService;
   protected readonly productService: ProductService;
   protected readonly productPhotoService: PhotoProductService;
@@ -75,7 +76,7 @@ export class AddProductComponent implements OnInit {
       category: ['', [Validators.required]],
       price: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      rawMaterials: this.formBuilder.array([]),
+      rawMaterial_id: this.formBuilder.array([]),
     });
 
     this.dropdownSettings = {
@@ -92,12 +93,12 @@ export class AddProductComponent implements OnInit {
   }
 
   get getRawMaterial(): FormArray {
-    return this.form.get('rawMaterials') as FormArray;
+    return this.form.get('rawMaterial_id') as FormArray;
   }
 
   public addRawMaterial = (): void => {
     const newControl: FormGroup = this.formBuilder.group({
-      name: ['', [Validators.required]],
+      rawMaterial: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
       measure: ['', [Validators.required]],
     });
@@ -108,15 +109,17 @@ export class AddProductComponent implements OnInit {
   public changeProfit = (): void => {
     this.calcProfit = !this.calcProfit;
     if (!this.calcProfit) {
-      const formControls = <FormArray>this.form.controls['rawMaterials'];
+      const formControls = <FormArray>this.form.controls['rawMaterial_id'];
       formControls.controls = [];
+      this.form.value.rawMaterial_id = [];
+      this.form.value.avargePrice = null;
       return;
     }
     this.addRawMaterial();
   };
 
   public removeRawMaterial = (index: number): void => {
-    const formControls = <FormArray>this.form.controls['rawMaterials'];
+    const formControls = <FormArray>this.form.controls['rawMaterial_id'];
     formControls.removeAt(index);
   };
 
@@ -145,22 +148,78 @@ export class AddProductComponent implements OnInit {
   };
 
   public onSubmit = (): void => {
-    console.log(this.form.value);
-    // const categories = this.form.value.category.map(
-    //   (category: ICategorySelect) => category.id
-    // );
-    // this.form.value.category = categories;
-    // this.productService.createProduct(this.form.value).subscribe({
-    //   next: (res) => {
-    //     this.createProductImage(res.id);
-    //   },
+    const categories = this.form.value.category.map(
+      (category: ICategorySelect) => category.id
+    );
 
-    //   error: (err) => {
-    //     window.scroll(0, 0);
-    //     this.eventSubjectError.next();
-    //     this.messageError = err.error.message;
-    //   },
-    // });
+    this.form.value.category = categories;
+
+    if (this.calcProfit) {
+      const rawMaterialsId = this.form.value.rawMaterial_id.map(
+        (e: IRegisterRawMaterialProduct) => e.rawMaterial[0].id
+      );
+      this.getAvargePriceProduct();
+      this.form.value.rawMaterial_id = rawMaterialsId;
+      return;
+    }
+
+    this.createProduct();
+    console.log('Não realizar calck');
+  };
+
+  private createProduct = (): void => {
+    this.productService.createProduct(this.form.value).subscribe({
+      next: (res) => {
+        this.createProductImage(res.id);
+      },
+
+      error: (err) => {
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.messageError = err.error.message;
+      },
+    });
+  };
+
+  private getAvargePriceProduct = (): void => {
+    this.reformArray(this.form.value.rawMaterial_id).forEach((e) => {
+      this.rawMaterialService.getRawMaterialById(e.rawMaterialId).subscribe({
+        next: (res) => {
+          const averagePrice = (e.quantity! * res.averagePriceGg) / 100;
+          this.avargePriceProduct += averagePrice;
+          this.form.value.avargePrice = this.avargePriceProduct;
+          this.createProduct();
+        },
+
+        error: (err) => {
+          window.scroll(0, 0);
+          this.eventSubjectError.next();
+          this.messageError = err.error.message;
+        },
+      });
+    });
+  };
+
+  private reformArray = (rawMaterials: IRegisterRawMaterialProduct[]) => {
+    const reformArray = rawMaterials.map((e) => {
+      let quantityGg;
+      switch (e.measure[0].id) {
+        case 1:
+          quantityGg = e.quantity * 1000;
+          break;
+        case 2:
+          quantityGg = e.quantity;
+          break;
+        case 3:
+          quantityGg = e.quantity / 1000;
+          break;
+      }
+      return {
+        quantity: quantityGg,
+        rawMaterialId: e.rawMaterial[0].id,
+      };
+    });
+    return reformArray;
   };
 
   private createProductImage = (idProduct: number): void => {
@@ -170,6 +229,10 @@ export class AddProductComponent implements OnInit {
         this.eventSubjectSucess.next();
         this.form.reset();
         this.removeFiles();
+
+        if(this.calcProfit){
+          this.changeProfit();
+        }
       },
 
       error: (err) => {
@@ -238,4 +301,10 @@ export class AddProductComponent implements OnInit {
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
   };
+}
+
+interface IRegisterRawMaterialProduct {
+  measure: Array<{ id: number; name: string }>;
+  rawMaterial: Array<{ id: number; name: string }>;
+  quantity: number;
 }

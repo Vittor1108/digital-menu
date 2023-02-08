@@ -31,6 +31,8 @@ export class ProductService {
         price: dataProduct.price,
         categories_id: dataProduct.category,
         description: dataProduct.description,
+        rawMaterial_id: dataProduct.rawMaterial_id,
+        avargePrice: Number(dataProduct.avargePrice.toFixed(2))
       },
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
