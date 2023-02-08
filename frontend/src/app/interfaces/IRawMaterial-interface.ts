@@ -14,3 +14,9 @@ export interface IRawMaterial {
   user_id?: number;
   measureRegister: number;
 }
+
+export interface IRegisterRawMaterialProduct {
+  measure: Array<{ id: number; name: string }>;
+  rawMaterial: Array<{ id: number; name: string }>;
+  quantity: number;
+}

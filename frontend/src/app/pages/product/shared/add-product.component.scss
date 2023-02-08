@@ -217,10 +217,6 @@
       }
 
       &:nth-child(2) {
-        max-height: 230px;
-        overflow-y: auto;
-
-
         > div {
           display: flex;
           flex-wrap: wrap;

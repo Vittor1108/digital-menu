@@ -72,8 +72,8 @@
         <textarea
           name=""
           id=""
-          cols="30"
-          rows="10"
+          cols="3"
+          rows="3"
           (resize)="(false)"
           placeholder="Descrição do produto..."
           formControlName="description"
@@ -136,18 +136,15 @@
                 [data]="allRawMaterials"
                 placeholder="Matéria Prima..."
                 formControlName="rawMaterial"
+                (onSelect)="teste(i)"
               >
               </ng-multiselect-dropdown>
             </div>
             <div>
               <input
                 type="text"
-                mask="separator.2"
-                [thousandSeparator]="'.'"
-                [decimalMarker]="','"
-                [dropSpecialCharacters]="true"
-                placeholder="Quantidade"
-                formControlName="quantity"
+                disabled
+                [value]="rawMaterialsUsed[i]"
               />
             </div>
             <div>

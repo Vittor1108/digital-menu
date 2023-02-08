@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
 import { LocatorService } from 'src/app/service/locator/locator.service';
 import { IRawMaterial } from 'src/app/interfaces/IRawMaterial-interface';
 import { RawMaterialService } from 'src/app/service/raw-material/raw-material.service';
-
+import { IRegisterRawMaterialProduct } from 'src/app/interfaces/IRawMaterial-interface';
 @Component({
   selector: 'app-add-product',
   templateUrl: '../shared/add-product.component.html',
@@ -55,6 +55,7 @@ export class AddProductComponent implements OnInit {
     skip: '',
     text: '',
   };
+  public rawMaterialsUsed: any = [];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
   private avargePriceProduct: number = 0;
@@ -164,7 +165,6 @@ export class AddProductComponent implements OnInit {
     }
 
     this.createProduct();
-    console.log('Não realizar calck');
   };
 
   private createProduct = (): void => {
@@ -188,7 +188,10 @@ export class AddProductComponent implements OnInit {
           const averagePrice = (e.quantity! * res.averagePriceGg) / 100;
           this.avargePriceProduct += averagePrice;
           this.form.value.avargePrice = this.avargePriceProduct;
-          this.createProduct();
+          res.quantityGg -= e.quantity!;
+          this.rawMaterialsUsed.push(res);
+          console.log(this.rawMaterialsUsed);
+          // this.createProduct();
         },
 
         error: (err) => {
@@ -230,7 +233,7 @@ export class AddProductComponent implements OnInit {
         this.form.reset();
         this.removeFiles();
 
-        if(this.calcProfit){
+        if (this.calcProfit) {
           this.changeProfit();
         }
       },
@@ -301,10 +304,13 @@ export class AddProductComponent implements OnInit {
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
   };
-}
 
-interface IRegisterRawMaterialProduct {
-  measure: Array<{ id: number; name: string }>;
-  rawMaterial: Array<{ id: number; name: string }>;
-  quantity: number;
+  public teste = (index: number) => {
+    const rawMaterialId = this.getRawMaterial.controls[index].value.rawMaterial[0].id;
+    this.rawMaterialService.getRawMaterialById(rawMaterialId).subscribe({
+      next: res => {
+        this.rawMaterialsUsed.push(res.quantityGg);
+      }
+    });
+  };
 }

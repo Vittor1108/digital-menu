@@ -76,7 +76,7 @@ export class RawMaterialService {
     }
     const newAveragePriceGg =
       (rawMaterial.averagePriceGg +
-        this.calcPriceGg(data.price, data.quantity)) /
+        this.calcPriceGg(data.price, Math.abs(data.quantity))) /
       2;
 
     const newRawMaterial = await this.prismaService.rawMaterial.update({
@@ -88,7 +88,9 @@ export class RawMaterialService {
         name: data.name,
         averagePrice: Number(data.price),
         quantityGg: Number(data.quantity) + Number(rawMaterial.quantityGg),
-        averagePriceGg: newAveragePriceGg,
+        averagePriceGg: data.isAddedProduct
+          ? rawMaterial.averagePriceGg
+          : newAveragePriceGg,
         measureRegister: data.measureRegister,
       },
     });
