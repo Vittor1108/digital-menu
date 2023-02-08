@@ -111,6 +111,7 @@
             type="radio"
             name="calcLucro"
             class="checbox"
+            [checked]="calcProfit"
             (change)="changeProfit()"
           />
           <label for="">Sim</label>
@@ -118,7 +119,7 @@
             type="radio"
             name="calcLucro"
             class="checbox"
-            checked
+            [checked]="!calcProfit"
             (change)="changeProfit()"
           />
           <label for="">Não</label>
