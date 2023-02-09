@@ -305,12 +305,44 @@ export class AddProductComponent implements OnInit {
     inputFile!.value = '';
   };
 
-  public teste = (index: number) => {
-    const rawMaterialId = this.getRawMaterial.controls[index].value.rawMaterial[0].id;
+  public changeMeasureRmSelected = (index: number): void => {
+    const rawMaterialId =
+      this.getRawMaterial.controls[index].value.rawMaterial[0].id;
     this.rawMaterialService.getRawMaterialById(rawMaterialId).subscribe({
-      next: res => {
-        this.rawMaterialsUsed.push(res.quantityGg);
-      }
+      next: (res) => {
+        switch (res.measureRegister) {
+          case 1:
+            this.rawMaterialsUsed[index]
+              ? (this.rawMaterialsUsed[index] = `${res.quantityGg / 1000} kg`)
+              : this.rawMaterialsUsed.push(`${res.quantityGg / 1000} kg`);
+            break;
+          case 2:
+            this.rawMaterialsUsed[index]
+              ? (this.rawMaterialsUsed[
+                  index
+                ] = `Qtd estoque: ${res.quantityGg} g`)
+              : this.rawMaterialsUsed.push(` ${res.quantityGg} g`);
+            break;
+          case 3:
+            this.rawMaterialsUsed[index]
+              ? (this.rawMaterialsUsed[index] = `${res.quantityGg} mg`)
+              : this.rawMaterialsUsed.push(`${res.quantityGg * 1000} mg`);
+            break;
+        }
+      },
     });
+  };
+
+  public removeQtdStock = (index: number): void => {
+    const qtd = Number(this.rawMaterialsUsed[index].replace(/[^0-9]/g, ''));
+    const measure = this.rawMaterialsUsed[index].replace(/[0-9]/g, '');
+    switch(measure){
+      case 'kg':
+        break;
+      case 'g':
+        break;
+      case 'mg':
+        break;
+    }
   };
 }

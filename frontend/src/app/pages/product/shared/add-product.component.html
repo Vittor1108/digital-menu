@@ -136,7 +136,7 @@
                 [data]="allRawMaterials"
                 placeholder="Matéria Prima..."
                 formControlName="rawMaterial"
-                (onSelect)="teste(i)"
+                (onSelect)="changeMeasureRmSelected(i)"
               >
               </ng-multiselect-dropdown>
             </div>
@@ -144,24 +144,45 @@
               <input
                 type="text"
                 disabled
-                [value]="rawMaterialsUsed[i]"
+                [value]="
+                  rawMaterialsUsed[i]
+                    ? 'Qtd Estoque:' + rawMaterialsUsed[i]
+                    : 'Selecione o Ingrediente...'
+                "
               />
             </div>
-            <div>
-              <ng-multiselect-dropdown
-                [settings]="dropdownSettings"
-                [data]="listMeasure"
-                placeholder="Medida"
-                formControlName="measure"
+            <div class="buttonDiv">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Quantidade do Ingrediente"
+                  [disabled]="!rawMaterialsUsed[i]"
+                />
+              </div>
+              <div>
+                <ng-multiselect-dropdown
+                  [settings]="dropdownSettings"
+                  [data]="listMeasure"
+                  placeholder="Medida"
+                  formControlName="measure"
+                  (onSelect)="removeQtdStock(i)"
+                  [disabled]="!rawMaterialsUsed[i]"
+                >
+                </ng-multiselect-dropdown>
+              </div>
+              <button
+                (click)="addRawMaterial()"
+                *ngIf="i === getRawMaterial.controls.length - 1"
               >
-              </ng-multiselect-dropdown>
+                Adicionar Mais Ingredientes
+              </button>
+              <button
+                *ngIf="i !== getRawMaterial.controls.length - 1"
+                (click)="removeRawMaterial(i)"
+              >
+                Remover Ingrediente
+              </button>
             </div>
-            <span
-              (click)="addRawMaterial()"
-              *ngIf="i === getRawMaterial.controls.length - 1"
-              >+</span
-            >
-            <span *ngIf="i !== getRawMaterial.controls.length - 1" (click)="removeRawMaterial(i)">-</span>
           </div>
         </div>
       </div>
