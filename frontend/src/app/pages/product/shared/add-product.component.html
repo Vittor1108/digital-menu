@@ -136,6 +136,7 @@
                 [data]="allRawMaterials"
                 placeholder="Ingrediente.."
                 formControlName="rawMaterial"
+                (onSelect)="teste(i)"
               >
               </ng-multiselect-dropdown>
             </div>
@@ -159,6 +160,7 @@
               <button
                 (click)="addRawMaterial()"
                 *ngIf="i === getRawMaterial.controls.length - 1"
+                [disabled]="checkValueRwUsed(i)"
               >
                 Adicionar Mais Ingredientes
               </button>

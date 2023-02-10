@@ -301,4 +301,24 @@ export class AddProductComponent implements OnInit {
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
   };
+
+  public checkValueRwUsed = (index: number): boolean => {
+    const controlForm = this.form.controls['rawMaterial_id'].value[index];
+    if (
+      !controlForm.rawMaterial ||
+      !controlForm.quantity ||
+      !controlForm.measure
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  public teste = (index: number) => {
+    const rwSelected =
+      this.form.controls['rawMaterial_id'].value[index].rawMaterial[0].id;
+    this.allRawMaterials = this.allRawMaterials.filter(
+      (e) => e.id !== rwSelected
+    );
+  };
 }
