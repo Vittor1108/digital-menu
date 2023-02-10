@@ -134,42 +134,28 @@
               <ng-multiselect-dropdown
                 [settings]="dropdownSettings"
                 [data]="allRawMaterials"
-                placeholder="Matéria Prima..."
+                placeholder="Ingrediente.."
                 formControlName="rawMaterial"
-                (onSelect)="changeMeasureRmSelected(i)"
               >
               </ng-multiselect-dropdown>
             </div>
             <div>
               <input
                 type="text"
-                disabled
-                [value]="
-                  rawMaterialsUsed[i]
-                    ? 'Qtd Estoque:' + rawMaterialsUsed[i]
-                    : 'Selecione o Ingrediente...'
-                "
+                placeholder="Qtd Ingrediente"
+                formControlName="quantity"
               />
             </div>
+            <div>
+              <ng-multiselect-dropdown
+                [settings]="dropdownSettings"
+                [data]="listMeasure"
+                placeholder="Medida"
+                formControlName="measure"
+              >
+              </ng-multiselect-dropdown>
+            </div>
             <div class="buttonDiv">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Quantidade do Ingrediente"
-                  [disabled]="!rawMaterialsUsed[i]"
-                />
-              </div>
-              <div>
-                <ng-multiselect-dropdown
-                  [settings]="dropdownSettings"
-                  [data]="listMeasure"
-                  placeholder="Medida"
-                  formControlName="measure"
-                  (onSelect)="removeQtdStock(i)"
-                  [disabled]="!rawMaterialsUsed[i]"
-                >
-                </ng-multiselect-dropdown>
-              </div>
               <button
                 (click)="addRawMaterial()"
                 *ngIf="i === getRawMaterial.controls.length - 1"

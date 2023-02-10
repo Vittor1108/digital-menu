@@ -229,8 +229,8 @@
           }
 
           > div {
-            width: 48%;
-            margin-right: 2%;
+            width: 32%;
+            margin-right: 1%;
             margin-bottom: 10px;
           }
           span {
@@ -241,15 +241,9 @@
 
           .buttonDiv {
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
 
             > div {
               flex: 1;
-              &:nth-child(1) {
-                margin-right: 2%;
-              }
             }
 
             button {

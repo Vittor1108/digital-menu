@@ -55,7 +55,6 @@ export class AddProductComponent implements OnInit {
     skip: '',
     text: '',
   };
-  public rawMaterialsUsed: any = [];
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
   private avargePriceProduct: number = 0;
@@ -189,8 +188,6 @@ export class AddProductComponent implements OnInit {
           this.avargePriceProduct += averagePrice;
           this.form.value.avargePrice = this.avargePriceProduct;
           res.quantityGg -= e.quantity!;
-          this.rawMaterialsUsed.push(res);
-          console.log(this.rawMaterialsUsed);
           // this.createProduct();
         },
 
@@ -303,46 +300,5 @@ export class AddProductComponent implements OnInit {
     const inputFile =
       document.querySelector<HTMLInputElement>('input[type=file]');
     inputFile!.value = '';
-  };
-
-  public changeMeasureRmSelected = (index: number): void => {
-    const rawMaterialId =
-      this.getRawMaterial.controls[index].value.rawMaterial[0].id;
-    this.rawMaterialService.getRawMaterialById(rawMaterialId).subscribe({
-      next: (res) => {
-        switch (res.measureRegister) {
-          case 1:
-            this.rawMaterialsUsed[index]
-              ? (this.rawMaterialsUsed[index] = `${res.quantityGg / 1000} kg`)
-              : this.rawMaterialsUsed.push(`${res.quantityGg / 1000} kg`);
-            break;
-          case 2:
-            this.rawMaterialsUsed[index]
-              ? (this.rawMaterialsUsed[
-                  index
-                ] = `Qtd estoque: ${res.quantityGg} g`)
-              : this.rawMaterialsUsed.push(` ${res.quantityGg} g`);
-            break;
-          case 3:
-            this.rawMaterialsUsed[index]
-              ? (this.rawMaterialsUsed[index] = `${res.quantityGg} mg`)
-              : this.rawMaterialsUsed.push(`${res.quantityGg * 1000} mg`);
-            break;
-        }
-      },
-    });
-  };
-
-  public removeQtdStock = (index: number): void => {
-    const qtd = Number(this.rawMaterialsUsed[index].replace(/[^0-9]/g, ''));
-    const measure = this.rawMaterialsUsed[index].replace(/[0-9]/g, '');
-    switch(measure){
-      case 'kg':
-        break;
-      case 'g':
-        break;
-      case 'mg':
-        break;
-    }
   };
 }
