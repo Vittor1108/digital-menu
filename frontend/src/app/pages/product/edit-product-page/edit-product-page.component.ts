@@ -39,8 +39,9 @@ export class EditProductPageComponent
           price: res.price,
           category: this.formatCategories(res.Product_Category),
           description: res.description,
+          rawMaterial_id: '',
         });
-        this.setProductPhoto(res.ProductPhoto)
+        this.setProductPhoto(res.ProductPhoto);
       },
 
       error: (err) => {
@@ -58,7 +59,5 @@ export class EditProductPageComponent
     });
   };
 
-  private setProductPhoto = (photos: IPhotocategory[]) => {
-    console.log(photos);
-  };
+  private setProductPhoto = (photos: IPhotocategory[]) => {};
 }

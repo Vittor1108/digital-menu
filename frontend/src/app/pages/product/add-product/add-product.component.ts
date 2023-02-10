@@ -167,17 +167,18 @@ export class AddProductComponent implements OnInit {
   };
 
   private createProduct = (): void => {
-    this.productService.createProduct(this.form.value).subscribe({
-      next: (res) => {
-        this.createProductImage(res.id);
-      },
+    console.log(this.form.value);
+    // this.productService.createProduct(this.form.value).subscribe({
+    //   next: (res) => {
+    //     this.createProductImage(res.id);
+    //   },
 
-      error: (err) => {
-        window.scroll(0, 0);
-        this.eventSubjectError.next();
-        this.messageError = err.error.message;
-      },
-    });
+    //   error: (err) => {
+    //     window.scroll(0, 0);
+    //     this.eventSubjectError.next();
+    //     this.messageError = err.error.message;
+    //   },
+    // });
   };
 
   private getAvargePriceProduct = (): void => {
@@ -188,7 +189,7 @@ export class AddProductComponent implements OnInit {
           this.avargePriceProduct += averagePrice;
           this.form.value.avargePrice = this.avargePriceProduct;
           res.quantityGg -= e.quantity!;
-          // this.createProduct();
+          this.createProduct();
         },
 
         error: (err) => {

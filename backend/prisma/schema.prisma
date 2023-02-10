@@ -92,19 +92,6 @@ model Product_Category {
   @@map("products_categories")
 }
 
-model ProductPhoto {
-  id           Int      @id @default(autoincrement())
-  product_id   Int
-  product      Product  @relation(fields: [product_id], references: [id])
-  filename     String
-  originalname String
-  url          String
-  created_at   DateTime @default(now())
-  updeated_at  DateTime @default(now()) @updatedAt
-
-  @@map("photo_products")
-}
-
 model RawMaterial {
   id              Int       @id @default(autoincrement())
   name            String
@@ -116,6 +103,19 @@ model RawMaterial {
   products        Product[]
 
   @@map("raw_material")
+}
+
+model ProductPhoto {
+  id           Int      @id @default(autoincrement())
+  product_id   Int
+  product      Product  @relation(fields: [product_id], references: [id])
+  filename     String
+  originalname String
+  url          String
+  created_at   DateTime @default(now())
+  updeated_at  DateTime @default(now()) @updatedAt
+
+  @@map("photo_products")
 }
 
 model Employee {
