@@ -34,7 +34,7 @@ export class EmployeesService {
     const hashPassword = await bcrypt.hashPassword(data.password);
     const screeens = data.screens.map((id) => {
       return {
-        id: id,
+        id,
       };
     });
 

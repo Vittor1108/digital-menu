@@ -76,7 +76,7 @@ export class AddProductComponent implements OnInit {
       category: ['', [Validators.required]],
       price: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      rawMaterial_id: this.formBuilder.array([]),
+      ingredients: this.formBuilder.array([]),
     });
 
     this.dropdownSettings = {
@@ -93,7 +93,7 @@ export class AddProductComponent implements OnInit {
   }
 
   get getRawMaterial(): FormArray {
-    return this.form.get('rawMaterial_id') as FormArray;
+    return this.form.get('ingredients') as FormArray;
   }
 
   public addRawMaterial = (): void => {
@@ -109,9 +109,9 @@ export class AddProductComponent implements OnInit {
   public changeProfit = (): void => {
     this.calcProfit = !this.calcProfit;
     if (!this.calcProfit) {
-      const formControls = <FormArray>this.form.controls['rawMaterial_id'];
+      const formControls = <FormArray>this.form.controls['ingredients'];
       formControls.controls = [];
-      this.form.value.rawMaterial_id = [];
+      this.form.value.ingredients = [];
       this.form.value.avargePrice = null;
       return;
     }
@@ -119,7 +119,7 @@ export class AddProductComponent implements OnInit {
   };
 
   public removeRawMaterial = (index: number): void => {
-    const formControls = <FormArray>this.form.controls['rawMaterial_id'];
+    const formControls = <FormArray>this.form.controls['ingredients'];
     formControls.removeAt(index);
   };
 
@@ -155,34 +155,57 @@ export class AddProductComponent implements OnInit {
     this.form.value.category = categories;
 
     if (this.calcProfit) {
-      const rawMaterialsId = this.form.value.rawMaterial_id.map(
+      const rawMaterialsId = this.form.value.ingredients.map(
         (e: IRegisterRawMaterialProduct) => e.rawMaterial[0].id
       );
       this.getAvargePriceProduct();
-      this.form.value.rawMaterial_id = rawMaterialsId;
-      return;
+      this.form.value.ingredients = rawMaterialsId;
+    } else {
+      this.createProduct();
     }
-
-    this.createProduct();
   };
 
   private createProduct = (): void => {
-    console.log(this.form.value);
-    // this.productService.createProduct(this.form.value).subscribe({
-    //   next: (res) => {
-    //     this.createProductImage(res.id);
-    //   },
+    this.form.value.ingredients = this.changeArrayIngredients();
+    this.productService.createProduct(this.form.value).subscribe({
+      next: (res) => {
+        this.createProductImage(res.id);
+      },
 
-    //   error: (err) => {
-    //     window.scroll(0, 0);
-    //     this.eventSubjectError.next();
-    //     this.messageError = err.error.message;
-    //   },
-    // });
+      error: (err) => {
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.messageError = err.error.message;
+      },
+    });
+  };
+
+  private changeArrayIngredients = () => {
+    const ingredients = this.form.controls['ingredients'].value;
+    return ingredients.map((e: any) => {
+      let qtd: number = 0;
+      switch (e.measure[0].id) {
+        case 1:
+          qtd = e.quantity * 1000;
+          break;
+        case 2:
+          qtd = Number(e.quantity);
+          break;
+        case 3:
+          qtd = e.quantity / 1000;
+          break;
+        default:
+      }
+
+      return {
+        rawMaterialId: e.rawMaterial[0].id,
+        qtd,
+      };
+    });
   };
 
   private getAvargePriceProduct = (): void => {
-    this.reformArray(this.form.value.rawMaterial_id).forEach((e) => {
+    this.reformArray(this.form.value.ingredients).forEach((e) => {
       this.rawMaterialService.getRawMaterialById(e.rawMaterialId).subscribe({
         next: (res) => {
           const averagePrice = (e.quantity! * res.averagePriceGg) / 100;
@@ -304,7 +327,7 @@ export class AddProductComponent implements OnInit {
   };
 
   public checkValueRwUsed = (index: number): boolean => {
-    const controlForm = this.form.controls['rawMaterial_id'].value[index];
+    const controlForm = this.form.controls['ingredients'].value[index];
     if (
       !controlForm.rawMaterial ||
       !controlForm.quantity ||
@@ -317,7 +340,7 @@ export class AddProductComponent implements OnInit {
 
   public teste = (index: number) => {
     const rwSelected =
-      this.form.controls['rawMaterial_id'].value[index].rawMaterial[0].id;
+      this.form.controls['ingredients'].value[index].rawMaterial[0].id;
     this.allRawMaterials = this.allRawMaterials.filter(
       (e) => e.id !== rwSelected
     );

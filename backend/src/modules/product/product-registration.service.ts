@@ -59,6 +59,8 @@ export class ProductRegistrationService {
       );
     }
 
+    console.log(createProductRegistrationDto);
+
     const ingredientsId = createProductRegistrationDto.ingredients.map(
       (e) => e.rawMaterialId,
     );
