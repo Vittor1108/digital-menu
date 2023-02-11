@@ -23,10 +23,11 @@ export class CreateProductRegistrationDto {
   @IsNotEmpty()
   categories_id: Array<number>;
 
-  @IsArray()
-  rawMaterial_id: Array<number>;
-
   @IsOptional()
   @IsNumber()
   avargePrice: number;
+
+  @IsOptional()
+  @IsArray()
+  ingredients: Array<{ qtd: number; rawMaterialId: number }>;
 }

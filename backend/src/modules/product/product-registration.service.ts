@@ -59,30 +59,24 @@ export class ProductRegistrationService {
       );
     }
 
-    const rawMaterial = await this.prismaService.rawMaterial.findMany({
+    const ingredientsId = createProductRegistrationDto.ingredients.map(
+      (e) => e.rawMaterialId,
+    );
+
+    const findAllMaterials = await this.prismaService.rawMaterial.findMany({
       where: {
         id: {
-          in: createProductRegistrationDto.rawMaterial_id,
+          in: ingredientsId,
         },
       },
     });
 
-    if (
-      rawMaterial.length < createProductRegistrationDto.rawMaterial_id.length
-    ) {
+    if (findAllMaterials.length < ingredientsId.length) {
       throw new HttpException(
         HelpMessager.rawMaterialNotExists,
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    const rawMaterialId = createProductRegistrationDto.rawMaterial_id.map(
-      (e) => {
-        return {
-          id: e,
-        };
-      },
-    );
 
     const product = await this.prismaService.product.create({
       data: {
@@ -91,8 +85,10 @@ export class ProductRegistrationService {
         user_id: req.user.id,
         description: createProductRegistrationDto.description,
         avargePrice: createProductRegistrationDto.avargePrice,
-        ProductMaterial: {
-          connect: rawMaterialId,
+        ProductIngredient: {
+          createMany: {
+            data: createProductRegistrationDto.ingredients.map((e) => e),
+          },
         },
         Product_Category: {
           createMany: {
@@ -107,6 +103,20 @@ export class ProductRegistrationService {
         price: true,
         description: true,
         avargePrice: true,
+        ProductIngredient: {
+          select: {
+            RawMaterial: {
+              select: {
+                id: true,
+                name: true,
+                measureRegister: true,
+                averagePriceGg: true,
+                averagePrice: true,
+              },
+            },
+            qtd: true,
+          },
+        },
       },
     });
     return product;
@@ -137,31 +147,6 @@ export class ProductRegistrationService {
       );
     }
 
-    const rawMaterial = await this.prismaService.rawMaterial.findMany({
-      where: {
-        id: {
-          in: updateProductRegistrationDto.rawMaterial_id,
-        },
-      },
-    });
-
-    if (
-      rawMaterial.length < updateProductRegistrationDto.rawMaterial_id.length
-    ) {
-      throw new HttpException(
-        HelpMessager.rawMaterialNotExists,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const rawMaterialId = updateProductRegistrationDto.rawMaterial_id.map(
-      (e) => {
-        return {
-          id: e,
-        };
-      },
-    );
-
     await this.prismaService.product.update({
       where: {
         id,
@@ -173,12 +158,32 @@ export class ProductRegistrationService {
             product_id: id,
           },
         },
-
-        ProductMaterial: {
-          set: [],
+        ProductIngredient: {
+          deleteMany: {
+            productId: id,
+          },
         },
       },
     });
+
+    const ingredientsId = updateProductRegistrationDto.ingredients.map(
+      (e) => e.rawMaterialId,
+    );
+
+    const allIngredients = await this.prismaService.rawMaterial.findMany({
+      where: {
+        id: {
+          in: ingredientsId,
+        },
+      },
+    });
+
+    if (ingredientsId.length < allIngredients.length) {
+      throw new HttpException(
+        HelpMessager.rawMaterialNotExists,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const newProduct = await this.prismaService.product.update({
       where: {
@@ -208,9 +213,10 @@ export class ProductRegistrationService {
             },
           ),
         },
-
-        ProductMaterial: {
-          connect: rawMaterialId,
+        ProductIngredient: {
+          createMany: {
+            data: updateProductRegistrationDto.ingredients.map((e) => e),
+          },
         },
       },
 
@@ -239,7 +245,20 @@ export class ProductRegistrationService {
             product_id: false,
           },
         },
-        ProductMaterial: true,
+        ProductIngredient: {
+          select: {
+            RawMaterial: {
+              select: {
+                id: true,
+                name: true,
+                measureRegister: true,
+                averagePriceGg: true,
+                averagePrice: true,
+              },
+            },
+            qtd: true,
+          },
+        },
       },
     });
 
@@ -304,7 +323,20 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
-            ProductMaterial: true,
+            ProductIngredient: {
+              select: {
+                RawMaterial: {
+                  select: {
+                    id: true,
+                    name: true,
+                    measureRegister: true,
+                    averagePriceGg: true,
+                    averagePrice: true,
+                  },
+                },
+                qtd: true,
+              },
+            },
           },
         });
       }
@@ -347,7 +379,20 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
-          ProductMaterial: true,
+          ProductIngredient: {
+            select: {
+              RawMaterial: {
+                select: {
+                  id: true,
+                  name: true,
+                  measureRegister: true,
+                  averagePriceGg: true,
+                  averagePrice: true,
+                },
+              },
+              qtd: true,
+            },
+          },
         },
       });
 
@@ -401,7 +446,20 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
-            ProductMaterial: true,
+            ProductIngredient: {
+              select: {
+                RawMaterial: {
+                  select: {
+                    id: true,
+                    name: true,
+                    measureRegister: true,
+                    averagePriceGg: true,
+                    averagePrice: true,
+                  },
+                },
+                qtd: true,
+              },
+            },
           },
           take: Number(params.take),
           skip: Number(params.skip),
@@ -437,7 +495,20 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
-          ProductMaterial: true,
+          ProductIngredient: {
+            select: {
+              RawMaterial: {
+                select: {
+                  id: true,
+                  name: true,
+                  measureRegister: true,
+                  averagePriceGg: true,
+                  averagePrice: true,
+                },
+              },
+              qtd: true,
+            },
+          },
         },
 
         take: Number(params.take),
@@ -485,7 +556,20 @@ export class ProductRegistrationService {
                 product_id: false,
               },
             },
-            ProductMaterial: true,
+            ProductIngredient: {
+              select: {
+                RawMaterial: {
+                  select: {
+                    id: true,
+                    name: true,
+                    measureRegister: true,
+                    averagePriceGg: true,
+                    averagePrice: true,
+                  },
+                },
+                qtd: true,
+              },
+            },
           },
         });
       }
@@ -519,7 +603,20 @@ export class ProductRegistrationService {
               product_id: false,
             },
           },
-          ProductMaterial: true,
+          ProductIngredient: {
+            select: {
+              RawMaterial: {
+                select: {
+                  id: true,
+                  name: true,
+                  measureRegister: true,
+                  averagePriceGg: true,
+                  averagePrice: true,
+                },
+              },
+              qtd: true,
+            },
+          },
         },
       });
 
@@ -559,7 +656,20 @@ export class ProductRegistrationService {
             product_id: false,
           },
         },
-        ProductMaterial: true,
+        ProductIngredient: {
+          select: {
+            RawMaterial: {
+              select: {
+                id: true,
+                name: true,
+                measureRegister: true,
+                averagePriceGg: true,
+                averagePrice: true,
+              },
+            },
+            qtd: true,
+          },
+        },
       },
     });
 
