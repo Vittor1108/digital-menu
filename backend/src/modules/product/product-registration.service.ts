@@ -59,8 +59,6 @@ export class ProductRegistrationService {
       );
     }
 
-    console.log(createProductRegistrationDto);
-
     const ingredientsId = createProductRegistrationDto.ingredients.map(
       (e) => e.rawMaterialId,
     );
@@ -719,6 +717,12 @@ export class ProductRegistrationService {
     await this.prismaService.productPhoto.deleteMany({
       where: {
         product_id: id,
+      },
+    });
+
+    await this.prismaService.productIngredient.deleteMany({
+      where: {
+        productId: id,
       },
     });
 

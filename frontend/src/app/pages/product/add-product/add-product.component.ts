@@ -205,14 +205,18 @@ export class AddProductComponent implements OnInit {
   };
 
   private getAvargePriceProduct = (): void => {
-    this.reformArray(this.form.value.ingredients).forEach((e) => {
+    const list = this.reformArray(this.form.value.ingredients);
+    list.forEach((e, index) => {
       this.rawMaterialService.getRawMaterialById(e.rawMaterialId).subscribe({
         next: (res) => {
           const averagePrice = (e.quantity! * res.averagePriceGg) / 100;
           this.avargePriceProduct += averagePrice;
           this.form.value.avargePrice = this.avargePriceProduct;
           res.quantityGg -= e.quantity!;
-          this.createProduct();
+
+          if (index === list.length - 1) {
+            this.createProduct();
+          }
         },
 
         error: (err) => {
@@ -338,7 +342,7 @@ export class AddProductComponent implements OnInit {
     return false;
   };
 
-  public teste = (index: number) => {
+  public removeOnSelectRw = (index: number) => {
     const rwSelected =
       this.form.controls['ingredients'].value[index].rawMaterial[0].id;
     this.allRawMaterials = this.allRawMaterials.filter(
