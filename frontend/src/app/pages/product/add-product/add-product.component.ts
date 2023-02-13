@@ -342,11 +342,16 @@ export class AddProductComponent implements OnInit {
     return false;
   };
 
-  public removeOnSelectRw = (index: number) => {
+  public removeOrSelectRw = (index: number) => {
     const rwSelected =
       this.form.controls['ingredients'].value[index].rawMaterial[0].id;
     this.allRawMaterials = this.allRawMaterials.filter(
       (e) => e.id !== rwSelected
     );
+  };
+
+  public teste = (index: any) => {
+    const rwRemove = this.form.controls['ingredients'].value[index];
+    console.log(rwRemove);
   };
 }
