@@ -277,7 +277,10 @@ export class AddProductComponent implements OnInit {
       },
 
       error: (err) => {
-        console.log(err);
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.messageError =
+          'Não foi possível buscar os ingredientes cadastrados. Tente Novamente.';
       },
     });
   };
@@ -342,7 +345,8 @@ export class AddProductComponent implements OnInit {
     return false;
   };
 
-  public removeOrSelectRw = (index: number) => {
+  public onSelectRw = (index: number) => {
+    if (this.allRawMaterials.length === 1) return;
     const rwSelected =
       this.form.controls['ingredients'].value[index].rawMaterial[0].id;
     this.allRawMaterials = this.allRawMaterials.filter(
@@ -350,8 +354,20 @@ export class AddProductComponent implements OnInit {
     );
   };
 
-  public teste = (index: any) => {
-    const rwRemove = this.form.controls['ingredients'].value[index];
-    console.log(rwRemove);
+  public onRemoveRw = (event: any): void => {
+    if (this.allRawMaterials.length === 1) return;
+
+    this.rawMaterialService.getRawMaterialById(event.id).subscribe({
+      next: (res) => {
+        this.allRawMaterials = [...this.allRawMaterials, res];
+      },
+
+      error: (err) => {
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.messageError =
+          'Não foi possível buscar os ingredientes cadastrados. Tente Novamente.';
+      },
+    });
   };
 }
