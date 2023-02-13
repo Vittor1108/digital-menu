@@ -136,8 +136,8 @@
                 [data]="allRawMaterials"
                 placeholder="Ingrediente.."
                 formControlName="rawMaterial"
-
-                (onDeSelect)="teste(i)"
+                (onSelect)="onSelectRw(i)"
+                (onDeSelect)="onRemoveRw($event)"
               >
               </ng-multiselect-dropdown>
             </div>
