@@ -2,10 +2,10 @@ export class User {
   id?: number;
   email: string;
   password: string;
-  cpf_cnpj: string;
+  cpfCnpj: string;
   tokenActiveAccount: string;
   activeAccount: boolean;
   tokenForgotPassword?: string;
-  created_at?: Date;
-  updeated_at?: Date;
+  createdAt?: Date;
+  updeatedAt?: Date;
 }

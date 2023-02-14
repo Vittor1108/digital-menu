@@ -6,7 +6,7 @@ export class HomeAuthService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public findUser = async (req: IReq) => {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.establishment.findUnique({
       where: {
         email: req.user.email,
       },

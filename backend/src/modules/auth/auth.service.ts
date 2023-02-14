@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Employee } from 'src/modules/employees/entities/employee.entity';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import bcrypt from 'src/utils/bcrypt';
@@ -15,20 +14,14 @@ export class AuthService {
   public validateUser = async (
     email: string,
     password: string,
-  ): Promise<User | Employee> => {
-    const user = await this.prismaService.user.findUnique({
+  ): Promise<User> => {
+    const user = await this.prismaService.establishment.findUnique({
       where: {
         email,
       },
     });
 
-    const employee = await this.prismaService.employee.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!user && !employee) {
+    if (!user) {
       return null;
     }
 
@@ -36,14 +29,7 @@ export class AuthService {
       return null;
     }
 
-    if (
-      employee &&
-      !(await bcrypt.comparePassword(password, employee.password))
-    ) {
-      return null;
-    }
-
-    return user ? user : employee;
+    return user;
   };
 
   public login = async (req: IReq) => {

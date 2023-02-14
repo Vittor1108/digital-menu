@@ -274,79 +274,72 @@ export class ProductRegistrationService {
     req: IReq,
     params: PaginationCategroyDto,
   ): Promise<allProducts> => {
-    const employees = await this.prismaService.employee.findMany({
-      where: {
-        user_id: req.user.id,
-      },
-    });
-
     let allProducts;
     if (params.text) {
-      let categoriesByText;
       //Caso o usuário tenha funcionários cadastrados e tenha passado o parametro (texto).
-      if (employees.length) {
-        categoriesByText = await this.prismaService.product.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
+      // if (employees.length) {
+      //   categoriesByText = await this.prismaService.product.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
 
-            AND: {
-              name: {
-                contains: params.text,
-              },
-            },
-          },
-          take: Number(params.take),
-          skip: Number(params.skip),
+      //       AND: {
+      //         name: {
+      //           contains: params.text,
+      //         },
+      //       },
+      //     },
+      //     take: Number(params.take),
+      //     skip: Number(params.skip),
 
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            avargePrice: true,
-            ProductPhoto: {
-              select: {
-                id: true,
-                url: true,
-                filename: true,
-                originalname: true,
-              },
-            },
-            Product_Category: {
-              select: {
-                category_id: true,
-                category: {
-                  select: {
-                    name: true,
-                  },
-                },
-                product_id: false,
-              },
-            },
-            ProductIngredient: {
-              select: {
-                RawMaterial: {
-                  select: {
-                    id: true,
-                    name: true,
-                    measureRegister: true,
-                    averagePriceGg: true,
-                    averagePrice: true,
-                  },
-                },
-                qtd: true,
-              },
-            },
-          },
-        });
-      }
+      //     select: {
+      //       id: true,
+      //       name: true,
+      //       price: true,
+      //       description: true,
+      //       avargePrice: true,
+      //       ProductPhoto: {
+      //         select: {
+      //           id: true,
+      //           url: true,
+      //           filename: true,
+      //           originalname: true,
+      //         },
+      //       },
+      //       Product_Category: {
+      //         select: {
+      //           category_id: true,
+      //           category: {
+      //             select: {
+      //               name: true,
+      //             },
+      //           },
+      //           product_id: false,
+      //         },
+      //       },
+      //       ProductIngredient: {
+      //         select: {
+      //           RawMaterial: {
+      //             select: {
+      //               id: true,
+      //               name: true,
+      //               measureRegister: true,
+      //               averagePriceGg: true,
+      //               averagePrice: true,
+      //             },
+      //           },
+      //           qtd: true,
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
       //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado o parametro de (texto);
-      categoriesByText = await this.prismaService.product.findMany({
+      const categoriesByText = await this.prismaService.product.findMany({
         where: {
           user_id: req.user.id,
 
@@ -416,60 +409,60 @@ export class ProductRegistrationService {
 
     if (params.skip && params.take) {
       //Caso o usuário tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
-      if (employees.length) {
-        allProducts = await this.prismaService.product.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
-          },
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            avargePrice: true,
-            ProductPhoto: {
-              select: {
-                id: true,
-                url: true,
-                filename: true,
-                originalname: true,
-              },
-            },
-            Product_Category: {
-              select: {
-                category_id: true,
-                category: {
-                  select: {
-                    name: true,
-                  },
-                },
-                product_id: false,
-              },
-            },
-            ProductIngredient: {
-              select: {
-                RawMaterial: {
-                  select: {
-                    id: true,
-                    name: true,
-                    measureRegister: true,
-                    averagePriceGg: true,
-                    averagePrice: true,
-                  },
-                },
-                qtd: true,
-              },
-            },
-          },
-          take: Number(params.take),
-          skip: Number(params.skip),
-        });
-      }
+      // if (employees.length) {
+      //   allProducts = await this.prismaService.product.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
+      //     },
+      //     select: {
+      //       id: true,
+      //       name: true,
+      //       price: true,
+      //       description: true,
+      //       avargePrice: true,
+      //       ProductPhoto: {
+      //         select: {
+      //           id: true,
+      //           url: true,
+      //           filename: true,
+      //           originalname: true,
+      //         },
+      //       },
+      //       Product_Category: {
+      //         select: {
+      //           category_id: true,
+      //           category: {
+      //             select: {
+      //               name: true,
+      //             },
+      //           },
+      //           product_id: false,
+      //         },
+      //       },
+      //       ProductIngredient: {
+      //         select: {
+      //           RawMaterial: {
+      //             select: {
+      //               id: true,
+      //               name: true,
+      //               measureRegister: true,
+      //               averagePriceGg: true,
+      //               averagePrice: true,
+      //             },
+      //           },
+      //           qtd: true,
+      //         },
+      //       },
+      //     },
+      //     take: Number(params.take),
+      //     skip: Number(params.skip),
+      //   });
+      // }
       //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
       allProducts = await this.prismaService.product.findMany({
         where: {
@@ -526,58 +519,58 @@ export class ProductRegistrationService {
       };
     } else {
       //Caso o usuário tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
-      if (employees.length) {
-        allProducts = await this.prismaService.product.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
-          },
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            description: true,
-            avargePrice: true,
-            ProductPhoto: {
-              select: {
-                id: true,
-                url: true,
-                filename: true,
-                originalname: true,
-              },
-            },
-            Product_Category: {
-              select: {
-                category_id: true,
-                category: {
-                  select: {
-                    name: true,
-                  },
-                },
-                product_id: false,
-              },
-            },
-            ProductIngredient: {
-              select: {
-                RawMaterial: {
-                  select: {
-                    id: true,
-                    name: true,
-                    measureRegister: true,
-                    averagePriceGg: true,
-                    averagePrice: true,
-                  },
-                },
-                qtd: true,
-              },
-            },
-          },
-        });
-      }
+      // if (employees.length) {
+      //   allProducts = await this.prismaService.product.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
+      //     },
+      //     select: {
+      //       id: true,
+      //       name: true,
+      //       price: true,
+      //       description: true,
+      //       avargePrice: true,
+      //       ProductPhoto: {
+      //         select: {
+      //           id: true,
+      //           url: true,
+      //           filename: true,
+      //           originalname: true,
+      //         },
+      //       },
+      //       Product_Category: {
+      //         select: {
+      //           category_id: true,
+      //           category: {
+      //             select: {
+      //               name: true,
+      //             },
+      //           },
+      //           product_id: false,
+      //         },
+      //       },
+      //       ProductIngredient: {
+      //         select: {
+      //           RawMaterial: {
+      //             select: {
+      //               id: true,
+      //               name: true,
+      //               measureRegister: true,
+      //               averagePriceGg: true,
+      //               averagePrice: true,
+      //             },
+      //           },
+      //           qtd: true,
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
       //Caso o usuário NÃO  tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
       allProducts = await this.prismaService.product.findMany({
         where: {

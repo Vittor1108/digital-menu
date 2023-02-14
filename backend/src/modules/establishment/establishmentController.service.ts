@@ -14,22 +14,23 @@ import { transport } from '../../utils/mailer';
 import * as cpf_cnpj from 'cpf_cnpj';
 
 @Injectable()
-export class UserService {
+export class EstablishmentControllerService {
   constructor(private readonly prismaService: PrismaService) {}
   public create = async (data: CreateUserDto): Promise<User> => {
-    const { password, cpf_cnpj } = data;
+    const { password, cpfCnpj } = data;
 
-    const userEmailExists = await this.prismaService.user.findUnique({
+    const userEmailExists = await this.prismaService.establishment.findUnique({
       where: {
         email: data.email,
       },
     });
 
-    const userCpfOrCnpjExists = await this.prismaService.user.findUnique({
-      where: {
-        cpf_cnpj: data.cpf_cnpj,
-      },
-    });
+    const userCpfOrCnpjExists =
+      await this.prismaService.establishment.findUnique({
+        where: {
+          cpfCnpj: data.cpfCnpj,
+        },
+      });
 
     if (userEmailExists) {
       throw new HttpException(HelpMessager.email_exits, HttpStatus.BAD_REQUEST);
@@ -69,10 +70,10 @@ export class UserService {
         );
       }
     });
-    const user = await this.prismaService.user.create({
+    const user = await this.prismaService.establishment.create({
       data: {
         email: data.email,
-        cpf_cnpj: data.cpf_cnpj,
+        cpfCnpj: data.cpfCnpj,
         password: hashPassword,
         tokenActiveAccount: token,
       },

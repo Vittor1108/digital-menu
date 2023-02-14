@@ -2,7 +2,7 @@ export class ActiveAccount {
   id?: number;
   email: string;
   password: string;
-  cpf_cnpj: string;
+  cpfCnpj: string;
   tokenActiveAccount: string;
   activeAccount: boolean;
   tokenForgotPassword?: string;

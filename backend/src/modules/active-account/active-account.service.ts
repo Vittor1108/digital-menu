@@ -9,7 +9,7 @@ export class ActiveAccountService {
   public checkTokenActiveAccount = async (
     tokenActiveAccount: string,
   ): Promise<boolean> => {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.establishment.findUnique({
       where: {
         tokenActiveAccount,
       },
@@ -22,7 +22,7 @@ export class ActiveAccountService {
       );
     }
 
-    await this.prismaService.user.update({
+    await this.prismaService.establishment.update({
       where: {
         tokenActiveAccount,
       },

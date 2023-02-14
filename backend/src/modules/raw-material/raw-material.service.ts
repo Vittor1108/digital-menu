@@ -118,38 +118,32 @@ export class RawMaterialService {
   };
 
   public findAll = async (req: IReq, params: PaginationCategroyDto) => {
-    const employees = await this.prismaService.employee.findMany({
-      where: {
-        user_id: req.user.id,
-      },
-    });
-
     let allRawMaterial;
     if (params.text) {
-      let rawMaterialByText;
+      // let rawMaterialByText;
       //Caso o usuário tenha funcionários cadastrados e tenha passado o parametro (texto).
-      if (employees.length) {
-        rawMaterialByText = await this.prismaService.rawMaterial.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
+      // if (employees.length) {
+      //   rawMaterialByText = await this.prismaService.rawMaterial.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
 
-            AND: {
-              name: {
-                contains: params.text,
-              },
-            },
-          },
-          take: Number(params.take),
-          skip: Number(params.skip),
-        });
-      }
+      //       AND: {
+      //         name: {
+      //           contains: params.text,
+      //         },
+      //       },
+      //     },
+      //     take: Number(params.take),
+      //     skip: Number(params.skip),
+      //   });
+      // }
       //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado o parametro de (texto);
-      rawMaterialByText = await this.prismaService.rawMaterial.findMany({
+      const rawMaterialByText = await this.prismaService.rawMaterial.findMany({
         where: {
           user_id: req.user.id,
 
@@ -178,20 +172,20 @@ export class RawMaterialService {
 
     if (params.skip && params.take) {
       //Caso o usuário tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
-      if (employees.length) {
-        allRawMaterial = await this.prismaService.rawMaterial.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
-          },
-          take: Number(params.take),
-          skip: Number(params.skip),
-        });
-      }
+      // if (employees.length) {
+      //   allRawMaterial = await this.prismaService.rawMaterial.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
+      //     },
+      //     take: Number(params.take),
+      //     skip: Number(params.skip),
+      //   });
+      // }
       //Caso o usuário NÃO tenha funcionários cadastrados e tenha passado dois parametros (take, skip).
       allRawMaterial = await this.prismaService.rawMaterial.findMany({
         where: {
@@ -208,18 +202,18 @@ export class RawMaterialService {
       };
     } else {
       //Caso o usuário tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
-      if (employees.length) {
-        allRawMaterial = await this.prismaService.rawMaterial.findMany({
-          where: {
-            user_id: req.user.id,
-            OR: {
-              user_id: {
-                in: employees.map((e) => e.id),
-              },
-            },
-          },
-        });
-      }
+      // if (employees.length) {
+      //   allRawMaterial = await this.prismaService.rawMaterial.findMany({
+      //     where: {
+      //       user_id: req.user.id,
+      //       OR: {
+      //         user_id: {
+      //           in: employees.map((e) => e.id),
+      //         },
+      //       },
+      //     },
+      //   });
+      // }
       //Caso o usuário NÃO  tenha funcionários cadastrados e NÃO tenha passado nenhum parametro (texto, take, skip).
       allRawMaterial = await this.prismaService.rawMaterial.findMany({
         where: {

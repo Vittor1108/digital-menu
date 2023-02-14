@@ -24,7 +24,7 @@ export class AuthService {
     return this.http.post<IReturnCreateUser>(`${this.apiUrlCreateUser}`, {
       email: data.email,
       password: data.password,
-      cpf_cnpj: data.cpfCnpj,
+      cpfCnpj: data.cpfCnpj,
     });
   };
 

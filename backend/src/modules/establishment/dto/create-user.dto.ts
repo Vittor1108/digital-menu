@@ -20,5 +20,5 @@ export class CreateUserDto extends User {
 
   @IsString()
   @IsNotEmpty()
-  cpf_cnpj: string;
+  cpfCnpj: string;
 }

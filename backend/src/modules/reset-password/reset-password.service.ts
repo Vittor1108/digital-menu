@@ -12,7 +12,7 @@ export class ResetPasswordService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public fogortPassword = async (data: ForgotPasswrodDto): Promise<boolean> => {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.establishment.findUnique({
       where: {
         email: data.email,
       },
@@ -45,7 +45,7 @@ export class ResetPasswordService {
       }
     });
 
-    await this.prismaService.user.update({
+    await this.prismaService.establishment.update({
       where: {
         email: data.email,
       },
@@ -61,7 +61,7 @@ export class ResetPasswordService {
     token: string,
     data: ResetPassworDto,
   ): Promise<boolean> => {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.establishment.findUnique({
       where: {
         tokenForgotPassword: token,
       },
@@ -76,7 +76,7 @@ export class ResetPasswordService {
 
     const newPassword = await bcrypt.hashPassword(data.password);
 
-    await this.prismaService.user.update({
+    await this.prismaService.establishment.update({
       where: {
         tokenForgotPassword: token,
       },
@@ -89,7 +89,7 @@ export class ResetPasswordService {
   };
 
   public verifyToken = async (token: string) => {
-    const tokenExists = await this.prismaService.user.findUnique({
+    const tokenExists = await this.prismaService.establishment.findUnique({
       where: {
         tokenForgotPassword: token,
       },

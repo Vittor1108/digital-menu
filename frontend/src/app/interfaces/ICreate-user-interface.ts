@@ -12,7 +12,7 @@ export interface IReturnCreateUser{
   id: number,
   email: string;
   password: string;
-  cpf_cnpj: string;
+  cpfCnpj: string;
   tokenActiveAccount: string;
   tokenForgotPassword: string;
   activeAccount: string;
