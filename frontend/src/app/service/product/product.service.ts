@@ -70,15 +70,20 @@ export class ProductService {
     idProduct: number,
     dataProduct: ICreateProduct,
     categories: number[]
-  ): Observable<IGettAllProducsts> => {
-    return this.httpSerivce.put<IGettAllProducsts>(
+  ): Observable<ICreateProduct> => {
+    return this.httpSerivce.put<ICreateProduct>(
       `${this.apiProduct}/${idProduct}`,
       {
         name: dataProduct.name,
         description: dataProduct.description,
         categories_id: categories,
         price: dataProduct.price,
-        ingredients: dataProduct.ingredients,
+        ingredients: dataProduct.ingredients!.map((e) => {
+          return {
+            rawMaterialId: e.rawMaterial[0].id,
+            qtd: e.quantity,
+          };
+        }),
       },
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),

@@ -215,7 +215,12 @@ export class ProductRegistrationService {
         },
         ProductIngredient: {
           createMany: {
-            data: updateProductRegistrationDto.ingredients.map((e) => e),
+            data: updateProductRegistrationDto.ingredients.map((e) => {
+              return {
+                rawMaterialId: e.rawMaterialId,
+                qtd: e.qtd,
+              };
+            }),
           },
         },
       },

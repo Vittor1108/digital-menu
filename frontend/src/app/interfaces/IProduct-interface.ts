@@ -8,7 +8,13 @@ export interface ICreateProduct {
   description: string;
   rawMaterial_id: Array<number>;
   avargePrice: number;
-  ingredients?: Array<{ qtd: number; rawMaterialId: number }>;
+  ingredients?: IIngredients[];
+}
+
+export interface IIngredients {
+  measure: Array<{ id: number; name: string }>;
+  quantity: number;
+  rawMaterial: IRawMaterial[];
 }
 
 export interface ICategorySelect {
