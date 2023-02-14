@@ -30,6 +30,20 @@ export interface IGettAllProducsts {
   price: number;
   ProductPhoto: IPhotocategory[];
   Product_Category: IProductCategory[];
+  ProductIngredient: IProductIngrediente[];
+}
+
+export interface IProductIngrediente {
+  RawMaterial: IRawMaterial;
+  qtd: number;
+}
+
+export interface IRawMaterial {
+  averagePrice: number;
+  averagePriceGg: number;
+  id: number;
+  measureRegister: number;
+  name: string;
 }
 
 export interface IProductCategory {

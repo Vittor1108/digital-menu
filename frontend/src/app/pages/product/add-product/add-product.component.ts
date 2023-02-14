@@ -55,6 +55,7 @@ export class AddProductComponent implements OnInit {
     skip: '',
     text: '',
   };
+  public titlePage: string = 'Adicionar Produto';
   private listNameFiles: Array<string> = [];
   private files: Array<File> = [];
   private avargePriceProduct: number = 0;

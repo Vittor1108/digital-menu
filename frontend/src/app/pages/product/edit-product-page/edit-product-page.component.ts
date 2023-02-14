@@ -22,6 +22,7 @@ export class EditProductPageComponent
     super.ngOnInit();
     this.getParamRoute();
     this.getInfoProduct();
+    this.titlePage = 'Editar Produto';
   }
 
   private getParamRoute = (): void => {
@@ -33,24 +34,42 @@ export class EditProductPageComponent
   private getInfoProduct = () => {
     this.productService.findOne(this.productId).subscribe({
       next: (res) => {
-        console.log(res);
+        if (res.ProductIngredient.length) this.calcProfit = true;
+
         this.form.setValue({
           name: res.name,
-          price: res.price,
           category: this.formatCategories(res.Product_Category),
+          price: res.price,
           description: res.description,
-          rawMaterial_id: '',
+          ingredients: [],
         });
+
+        res.ProductIngredient.forEach((element, index) => {
+          this.addRawMaterial();
+          this.getRawMaterial.controls[index].setValue({
+            rawMaterial: [element.RawMaterial],
+            measure: this.listMeasure.filter(
+              (e) => e.id === element.RawMaterial.measureRegister
+            ),
+            quantity: element.qtd,
+          });
+        });
+
         this.setProductPhoto(res.ProductPhoto);
       },
 
       error: (err) => {
-        console.log(err);
+        window.scroll(0, 0);
+        this.eventSubjectError.next();
+        this.messageError =
+          'Não foi possível puxar os dados do produto. Tente Novamente.';
       },
     });
   };
 
-  private formatCategories = (categories: IProductCategory[]) => {
+  private formatCategories = (
+    categories: IProductCategory[]
+  ): Array<{ id: number; name: string }> => {
     return categories.map((category) => {
       return {
         id: category.category_id,
@@ -59,5 +78,13 @@ export class EditProductPageComponent
     });
   };
 
-  private setProductPhoto = (photos: IPhotocategory[]) => {};
+  private setProductPhoto = (photos: IPhotocategory[]) => {
+    const listNameFiles: string[] = [];
+    photos.forEach((e) => {
+      this.filesThumbProduct.push(e.url);
+      listNameFiles.push(e.originalname!);
+    });
+
+    this.placeHolderInputFile = listNameFiles.join(', ');
+  };
 }

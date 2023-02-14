@@ -25,7 +25,7 @@
   </div>
   <form class="infoProduct" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="dataProduct">
-      <h1>Adicionar Produto</h1>
+      <h1>{{ titlePage }}</h1>
       <div>
         <label for="">Nome do Produto</label>
         <input type="text" placeholder="Pizza" formControlName="name" />
