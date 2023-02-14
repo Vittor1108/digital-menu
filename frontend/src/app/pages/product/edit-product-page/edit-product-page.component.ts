@@ -87,4 +87,27 @@ export class EditProductPageComponent
 
     this.placeHolderInputFile = listNameFiles.join(', ');
   };
+
+  public override onSubmit = (): void => {
+    const categories = this.form.value.category.map(
+      (e: { id: number; name: string }) => e.id
+    );
+    this.productService
+      .updatedProduct(this.productId, this.form.value, categories)
+      .subscribe({
+        next: (res) => {
+          window.scroll(0, 0);
+          this.eventSubjectSucess.next();
+          this.titleSucess = 'Produto Atualizado.';
+          this.messageSucess = 'Produto Atualizado com sucesso';
+        },
+
+        error: (err) => {
+          window.scroll(0, 0);
+          this.eventSubjectError.next();
+          this.titleError = 'Tente Novamente.';
+          this.messageAtention = err.error.message;
+        },
+      });
+  };
 }

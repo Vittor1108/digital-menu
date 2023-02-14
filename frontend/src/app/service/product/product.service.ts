@@ -78,6 +78,7 @@ export class ProductService {
         description: dataProduct.description,
         categories_id: categories,
         price: dataProduct.price,
+        ingredients: dataProduct.ingredients,
       },
       {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token),
