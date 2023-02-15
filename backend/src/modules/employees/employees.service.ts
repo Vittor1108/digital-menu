@@ -210,7 +210,7 @@ export class EmployeesService {
         },
       });
     }
-
+    //Paginação
     if (pagination.skip && pagination.take) {
       return await this.prismaService.employee.findMany({
         where: {
@@ -221,7 +221,7 @@ export class EmployeesService {
         take: Number(pagination.take),
       });
     }
-
+    //Todos
     return await this.prismaService.employee.findMany({
       where: {
         establishmentId: req.user.establishmentId,

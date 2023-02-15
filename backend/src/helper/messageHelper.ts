@@ -11,7 +11,7 @@ export const HelpMessager = {
   email_exits: 'Email já cadastrado',
   category_exits: 'Já existe uma categoria com este nome.',
   category_doNot_user: 'This category does not belong to the User Id sent',
-  category_not_exits: 'This id category does not exitis',
+  category_not_exits: 'Categoria com o ID informado não encontrado.',
   product_exits: 'Name this product already exitis',
   product: 'This product does not belong to the User Id sent',
   product_not_exits: 'This id product does not exitis',
