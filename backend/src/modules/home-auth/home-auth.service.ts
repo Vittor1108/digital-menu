@@ -14,7 +14,7 @@ export class HomeAuthService {
 
     const employee = await this.prismaService.employee.findFirst({
       where: {
-        email: req.user.email,
+        login: req.user.email,
       },
 
       include: {

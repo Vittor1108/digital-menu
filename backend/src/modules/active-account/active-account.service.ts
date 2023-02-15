@@ -28,7 +28,6 @@ export class ActiveAccountService {
       },
       data: {
         activeAccount: true,
-        updeated_at: new Date(),
       },
     });
 

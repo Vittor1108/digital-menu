@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { User } from '../entities/user.entity';
 
-export class CreateUserDto extends User {
+export class EstablishmentDto extends User {
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -17,6 +17,10 @@ export class CreateUserDto extends User {
   @MaxLength(20)
   @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
   @IsString()
   @IsNotEmpty()

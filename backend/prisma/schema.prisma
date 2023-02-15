@@ -13,6 +13,7 @@ datasource db {
 model Establishment {
   id                  Int      @id @default(autoincrement())
   email               String   @unique
+  name                String
   password            String
   cpfCnpj             String   @unique
   tokenActiveAccount  String   @unique
@@ -114,16 +115,16 @@ model ProductPhoto {
 }
 
 model Employee {
-  id               Int             @id @default(autoincrement())
-  name             String
-  email            String          @unique
-  password         String
-  screeens         Screens[]
-  activeAccount    Boolean         @default(true)
-  establishmentId  Int
-  admission_date   DateTime        @default(now())
-  resignation_date DateTime?
-  EmployeePhoto    EmployeePhoto[]
+  id              Int             @id @default(autoincrement())
+  name            String
+  login           String          @unique
+  password        String
+  screeens        Screens[]
+  activeAccount   Boolean         @default(true)
+  establishmentId Int
+  admissionDate   DateTime        @default(now())
+  resignationDate DateTime?
+  EmployeePhoto   EmployeePhoto[]
 
   @@map("employees")
 }

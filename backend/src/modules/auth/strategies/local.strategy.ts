@@ -17,8 +17,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException(HelpMessager.passoword_or_email_invalid);
     }
 
-    console.log(user);
-
     if (!user.activeAccount) {
       throw new UnauthorizedException(HelpMessager.accout_not_activated);
     }

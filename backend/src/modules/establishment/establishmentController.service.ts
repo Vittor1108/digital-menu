@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import * as crypto from 'crypto';
 //DTO
-import { CreateUserDto } from './dto/create-user.dto';
+import { EstablishmentDto } from './dto/create-establishment.dto';
 //ENTITY
 import { User } from './entities/user.entity';
 //MY IMPORTS
@@ -16,7 +16,7 @@ import * as cpf_cnpj from 'cpf_cnpj';
 @Injectable()
 export class EstablishmentControllerService {
   constructor(private readonly prismaService: PrismaService) {}
-  public create = async (data: CreateUserDto): Promise<User> => {
+  public create = async (data: EstablishmentDto): Promise<User> => {
     const { password, cpfCnpj } = data;
 
     const userEmailExists = await this.prismaService.establishment.findUnique({
@@ -28,7 +28,7 @@ export class EstablishmentControllerService {
     const userCpfOrCnpjExists =
       await this.prismaService.establishment.findUnique({
         where: {
-          cpfCnpj: data.cpfCnpj,
+          cpfCnpj: cpfCnpj,
         },
       });
 
@@ -43,7 +43,7 @@ export class EstablishmentControllerService {
       );
     }
 
-    if (!this.validateCpfOrCnpj(cpf_cnpj)) {
+    if (!this.validateCpfOrCnpj(cpfCnpj)) {
       throw new HttpException(
         HelpMessager.invalidCpfOrCnpj,
         HttpStatus.BAD_REQUEST,
@@ -70,12 +70,14 @@ export class EstablishmentControllerService {
         );
       }
     });
+
     const user = await this.prismaService.establishment.create({
       data: {
         email: data.email,
-        cpfCnpj: data.cpfCnpj,
+        cpfCnpj: data.cpfCnpj.replace(/\D/gim, ''),
         password: hashPassword,
         tokenActiveAccount: token,
+        name: data.name,
       },
     });
     return user;

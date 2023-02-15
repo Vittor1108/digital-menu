@@ -12,16 +12,22 @@ export class AuthService {
   ) {}
 
   public validateUser = async (
-    email: string,
+    login: string,
     password: string,
   ): Promise<User> => {
     const user = await this.prismaService.establishment.findUnique({
       where: {
-        email,
+        email: login,
       },
     });
 
-    if (!user) {
+    const employee = await this.prismaService.employee.findFirst({
+      where: {
+        login,
+      },
+    });
+
+    if (!user && !employee) {
       return null;
     }
 
@@ -33,7 +39,13 @@ export class AuthService {
   };
 
   public login = async (req: IReq) => {
-    const payload = { sub: req.user.id, email: req.user.email };
+    const payload = {
+      sub: req.user.id,
+      email: req.user.email,
+      establishmentId: req.user.establishmentId
+        ? req.user.establishmentId
+        : req.user.id,
+    };
     return {
       token: this.jwtService.sign(payload),
     };
