@@ -11,7 +11,7 @@ export class UpdateProductRegistrationDto {
   description: string;
 
   @IsArray()
-  categories_id: Array<number>;
+  categoriesId: Array<number>;
 
   @IsOptional()
   @IsNumber()

@@ -1,23 +1,19 @@
 import {
-  Body,
   Controller,
-  Delete,
+  UseGuards,
+  Post,
+  Request,
+  Body,
   Get,
   Param,
-  Post,
+  Delete,
   Put,
-  Request,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IReq } from 'src/@types/req';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
-import { PaginationProductRegistrationDto } from './dto/pagination-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
-import {
-  allProducts,
-  ProductRegistration,
-} from './entities/product-registration.entity';
+import { ProductRegistration } from './entities/product-registration.entity';
 import { ProductRegistrationService } from './product-registration.service';
 
 @Controller('product')
@@ -29,34 +25,19 @@ export class ProductRegistrationController {
 
   @Post()
   create(
-    @Body() createProductRegistrationDto: CreateProductRegistrationDto,
     @Request() req: IReq,
+    @Body() createDto: CreateProductRegistrationDto,
   ): Promise<ProductRegistration> {
-    return this.productRegistrationService.create(
-      createProductRegistrationDto,
-      req,
-    );
+    return this.productRegistrationService.create(createDto, req);
   }
 
   @Put(':id')
-  updated(
-    @Body() updateProductRegistrationDto: UpdateProductRegistrationDto,
+  update(
+    @Request() req: IReq,
+    @Body() updateDto: UpdateProductRegistrationDto,
     @Param('id') id: number,
-    @Request() req: IReq,
   ): Promise<ProductRegistration> {
-    return this.productRegistrationService.updated(
-      updateProductRegistrationDto,
-      id,
-      req,
-    );
-  }
-
-  @Get('/take=:take?/skip=:skip?/text=:text?')
-  findAll(
-    @Request() req: IReq,
-    @Param() params: PaginationProductRegistrationDto,
-  ): Promise<allProducts> {
-    return this.productRegistrationService.findAll(req, params);
+    return this.productRegistrationService.update(id, updateDto, req);
   }
 
   @Get(':id')
@@ -65,7 +46,7 @@ export class ProductRegistrationController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number, @Request() req: IReq): Promise<boolean> {
-    return this.productRegistrationService.delete(id, req);
+  delete(@Param('id') id: number): Promise<boolean> {
+    return this.productRegistrationService.delete(id);
   }
 }

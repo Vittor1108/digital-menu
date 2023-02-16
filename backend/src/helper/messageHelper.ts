@@ -22,4 +22,5 @@ export const HelpMessager = {
   rawMaterialExists: 'Matéria Prima com este nome já cadastrada',
   rawMaterialNotExists: 'Matéria Prima com este ID não encontrada',
   establishmentNotExists: 'Establecimento com o ID informado não encontrado',
+  productNameExists: 'Produto com este nome já existe',
 };

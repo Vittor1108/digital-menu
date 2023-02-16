@@ -4,23 +4,14 @@ export class ProductRegistration {
   description: string;
   price: number;
   avargePrice?: number;
-  user_id?: number;
-  Product_Category?: Array<Product_Category>;
-  Product_Photo?: Array<ProductPhoto>;
+  establishmentId?: number;
+  // ProductCategory?: Array<Product_Category>;
+  // ProductPhoto?: Array<string>;
 }
 
-interface Product_Category {
-  category_id: number;
-  category: {
-    name: string;
-  };
-}
-
-interface ProductPhoto {
-  url: string;
-}
-
-export class allProducts {
-  products: ProductRegistration[];
-  count: number;
-}
+// interface Product_Category {
+//   category_id: number;
+//   category: {
+//     name: string;
+//   };
+// }
