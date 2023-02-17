@@ -58,19 +58,19 @@ model Product {
   price             Float
   avargePrice       Float?
   establishmentId   Int
-  ProductCategory  Product_Category[]
+  ProductCategory   Product_Category[]
   ProductPhoto      ProductPhoto[]
   ProductIngredient ProductIngredient[]
-  createdAt        DateTime            @default(now())
-  updeatedAt       DateTime            @default(now()) @updatedAt
+  createdAt         DateTime            @default(now())
+  updeatedAt        DateTime            @default(now()) @updatedAt
 
   @@map("products")
 }
 
 model Product_Category {
   product     Product  @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  productId  Int
-  categoryId Int
+  productId   Int
+  categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   created_at  DateTime @default(now())
   updeated_at DateTime @default(now()) @updatedAt
@@ -83,22 +83,28 @@ model ProductIngredient {
   id            Int         @id @default(autoincrement())
   qtd           Float
   productId     Int
-  rawMaterialId Int
+  ingredientId Int
   Product       Product     @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  RawMaterial   RawMaterial @relation(fields: [rawMaterialId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Ingredients   Ingredients @relation(fields: [ingredientId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
-model RawMaterial {
+model Ingredients {
   id                Int                 @id @default(autoincrement())
   name              String
   quantityGg        Float
   averagePrice      Float
   averagePriceGg    Float
-  measureRegister   Int
-  user_id           Int
+  measureRegister   Measure
+  establishmentId   Int
   ProductIngredient ProductIngredient[]
 
-  @@map("raw_material")
+  @@map("ingredients")
+}
+
+enum Measure {
+  GRAMAS
+  QUILOS
+  MILIGRAMAS
 }
 
 model ProductPhoto {

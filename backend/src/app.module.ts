@@ -10,8 +10,8 @@ import { ResetPasswordModule } from './modules/reset-password/reset-password.mod
 import { EstablishmentModule } from './modules/establishment/EstablishmentController.module';
 import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.module';
 import { ScreensModule } from './modules/screens/screens.module';
-import { RawMaterialModule } from './modules/raw-material/raw-material.module';
 import { EmployeesModule } from './modules/employees/employees.module';
+import { IngredientslModule } from './modules/ingredients/ingredients.module';
 
 @Module({
   imports: [
@@ -26,8 +26,8 @@ import { EmployeesModule } from './modules/employees/employees.module';
     HomeAuthModule,
     PhotoEmployeesModule,
     ScreensModule,
-    RawMaterialModule,
     EmployeesModule,
+    IngredientslModule,
   ],
   controllers: [],
   providers: [],
