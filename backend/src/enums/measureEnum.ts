@@ -1,5 +1,5 @@
-export enum Measure {
-  QUILOS = 'QUILOS',
-  GRAMAS = 'GRAMAS',
-  MILIGRAMAS = 'MILIGRAMAS',
-}
+export const Measure = {
+  GRAMAS: 'GRAMAS',
+  QUILOS: 'QUILOS',
+  MILIGRAMAS: 'MILIGRAMAS',
+};
