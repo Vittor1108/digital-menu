@@ -63,20 +63,18 @@ model Product {
   ProductCategory   Product_Category[]
   ProductPhoto      ProductPhoto[]
   ProductIngredient ProductIngredient[]
-  OrderProduct      CustomerOrder[]
 
   @@map("products")
 }
 
 model CustomerOrder {
-  id              Int       @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   customerName    String
   comments        String?
-  status          Status    @default(RECEIVED)
+  status          Status   @default(RECEIVED)
   establishmentId Int
   orderPrice      Float
-  dateOrder       DateTime  @default(now())
-  OrderProduct    Product[]
+  dateOrder       DateTime @default(now())
 
   @@map("customer_order")
 }
