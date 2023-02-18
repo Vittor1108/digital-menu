@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Measure } from 'src/enums/measureEnum';
+import { Measure } from '@prisma/client';
 
 export class CreateIngredientsDto {
   @IsString()

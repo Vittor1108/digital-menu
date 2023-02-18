@@ -1,4 +1,4 @@
-import { Measure } from 'src/enums/measureEnum';
+import { Measure } from '@prisma/client';
 
 export class Ingredients {
   id?: number;
