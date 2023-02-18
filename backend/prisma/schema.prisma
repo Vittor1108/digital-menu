@@ -58,13 +58,27 @@ model Product {
   price             Float
   avargePrice       Float?
   establishmentId   Int
+  createdAt         DateTime            @default(now())
+  updeatedAt        DateTime            @default(now()) @updatedAt
   ProductCategory   Product_Category[]
   ProductPhoto      ProductPhoto[]
   ProductIngredient ProductIngredient[]
-  createdAt         DateTime            @default(now())
-  updeatedAt        DateTime            @default(now()) @updatedAt
+  OrderProduct      CustomerOrder[]
 
   @@map("products")
+}
+
+model CustomerOrder {
+  id              Int       @id @default(autoincrement())
+  customerName    String
+  comments        String?
+  status          Status    @default(RECEIVED)
+  establishmentId Int
+  orderPrice      Float
+  dateOrder       DateTime  @default(now())
+  OrderProduct    Product[]
+
+  @@map("customer_order")
 }
 
 model Product_Category {
@@ -80,12 +94,12 @@ model Product_Category {
 }
 
 model ProductIngredient {
-  id            Int         @id @default(autoincrement())
-  qtd           Float
-  productId     Int
+  id           Int         @id @default(autoincrement())
+  qtd          Float
+  productId    Int
   ingredientId Int
-  Product       Product     @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  Ingredients   Ingredients @relation(fields: [ingredientId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Product      Product     @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Ingredients  Ingredients @relation(fields: [ingredientId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Ingredients {
@@ -153,4 +167,11 @@ model Screens {
   name     String
   surname  String
   employee Employee[]
+}
+
+enum Status {
+  RECEIVED
+  PREPARATION
+  FINISHED
+  CONCLUDED
 }

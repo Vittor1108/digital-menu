@@ -12,6 +12,7 @@ import { PhotoEmployeesModule } from './modules/photo-employees/photo-employees.
 import { ScreensModule } from './modules/screens/screens.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { IngredientslModule } from './modules/ingredients/ingredients.module';
+import { CustomerOrderModule } from './modules/customer-order/customer-order.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { IngredientslModule } from './modules/ingredients/ingredients.module';
     ScreensModule,
     EmployeesModule,
     IngredientslModule,
+    CustomerOrderModule,
   ],
   controllers: [],
   providers: [],
