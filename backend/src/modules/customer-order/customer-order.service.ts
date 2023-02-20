@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { IReq } from 'src/@types/req';
+import { PrismaService } from 'src/database/PrismaService';
 import { CreateCustomerOrderDto } from './dto/create-customer-order.dto';
-import { UpdateCustomerOrderDto } from './dto/update-customer-order.dto';
 
 @Injectable()
 export class CustomerOrderService {
-  create(createCustomerOrderDto: CreateCustomerOrderDto) {
-    return 'This action adds a new customerOrder';
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
-  findAll() {
-    return `This action returns all customerOrder`;
-  }
+  public create = async (createDto: CreateCustomerOrderDto, req: IReq) => {
+    const products = await this.prismaService.product.findMany({
+      where: {
+        establishmentId: req.user.establishmentId,
+        AND: {
+          id: {
+            in: createDto.orders,
+          },
+        },
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} customerOrder`;
-  }
+    if (products.length < createDto.orders.length) {
+      throw new HttpException(
+        'Produto(s) com o id(s) especificado não existe',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
-  update(id: number, updateCustomerOrderDto: UpdateCustomerOrderDto) {
-    return `This action updates a #${id} customerOrder`;
-  }
+    const orderPrice = products.reduce(
+      (acc, product) => acc + product.price,
+      0,
+    );
 
-  remove(id: number) {
-    return `This action removes a #${id} customerOrder`;
-  }
+    return orderPrice;
+  };
 }

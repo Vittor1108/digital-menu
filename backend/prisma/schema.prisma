@@ -63,20 +63,34 @@ model Product {
   ProductCategory   Product_Category[]
   ProductPhoto      ProductPhoto[]
   ProductIngredient ProductIngredient[]
+  OrderedProduct    OrderedProduct[]
 
   @@map("products")
 }
 
 model CustomerOrder {
-  id              Int      @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   customerName    String
   comments        String?
-  status          Status   @default(RECEIVED)
+  status          Status           @default(RECEIVED)
   establishmentId Int
   orderPrice      Float
-  dateOrder       DateTime @default(now())
+  dateOrder       DateTime         @default(now())
+  OrderedProduct  OrderedProduct[]
 
   @@map("customer_order")
+}
+
+model OrderedProduct {
+  order           CustomerOrder @relation(fields: [customerOrderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  customerOrderId Int
+  productId       Int
+  product         Product       @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updeatedAt      DateTime      @default(now()) @updatedAt
+
+  @@id([productId, customerOrderId])
+  @@map("ordered_product")
 }
 
 model Product_Category {
