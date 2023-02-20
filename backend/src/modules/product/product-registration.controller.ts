@@ -49,4 +49,9 @@ export class ProductRegistrationController {
   delete(@Param('id') id: number): Promise<boolean> {
     return this.productRegistrationService.delete(id);
   }
+
+  @Get('salesAccount/count')
+  salesAccount(@Request() req: IReq) {
+    return this.productRegistrationService.salesAccount(req);
+  }
 }
