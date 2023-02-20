@@ -4,7 +4,7 @@ export class CustomerOrder {
   id?: number;
   customerName: string;
   status: Status;
-  establishmentId: number;
+  establishmentId?: number;
   orderPrice: number;
-  dataOrder: Date;
+  dataOrder?: Date;
 }
