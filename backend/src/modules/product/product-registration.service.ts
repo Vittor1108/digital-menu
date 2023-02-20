@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
@@ -301,5 +296,38 @@ export class ProductRegistrationService {
     });
 
     return true;
+  };
+
+  public salesAccount = async (req: IReq) => {
+    const products = await this.prismaService.product.findMany({
+      where: {
+        establishmentId: req.user.establishmentId,
+      },
+    });
+
+    const productSales = products.map(async (product) => {
+      const productId = await this.prismaService.product.findUnique({
+        where: {
+          id: product.id,
+        },
+      });
+
+      const countSales = await this.prismaService.orderedProduct.count({
+        where: {
+          productId: product.id,
+        },
+      });
+
+      return {
+        productId,
+        countSales,
+      };
+    });
+
+    const teste = [];
+
+    Promise.all(productSales).then((e) => {
+      teste.push(e);
+    });
   };
 }
