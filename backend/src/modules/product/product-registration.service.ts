@@ -298,36 +298,52 @@ export class ProductRegistrationService {
     return true;
   };
 
-  public salesAccount = async (req: IReq) => {
+  public salesAccount = async (
+    req: IReq,
+  ): Promise<Array<{ products: ProductRegistration; countSales: number }>> => {
     const products = await this.prismaService.product.findMany({
       where: {
         establishmentId: req.user.establishmentId,
       },
     });
 
-    const productSales = products.map(async (product) => {
-      const productId = await this.prismaService.product.findUnique({
-        where: {
-          id: product.id,
-        },
-      });
+    let productSales = await Promise.all(
+      products.map(async (product) => {
+        const productId = await this.prismaService.product.findUnique({
+          where: {
+            id: product.id,
+          },
 
-      const countSales = await this.prismaService.orderedProduct.count({
-        where: {
-          productId: product.id,
-        },
-      });
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            avargePrice: true,
+            ProductPhoto: {
+              select: {
+                url: true,
+              },
+            },
+          },
+        });
 
-      return {
-        productId,
-        countSales,
-      };
+        const countSales = await this.prismaService.orderedProduct.count({
+          where: {
+            productId: product.id,
+          },
+        });
+
+        return {
+          products: productId,
+          countSales,
+        };
+      }),
+    );
+
+    productSales = productSales.sort(function (a, b) {
+      return a.countSales < b.countSales ? 1 : -1;
     });
 
-    const teste = [];
-
-    Promise.all(productSales).then((e) => {
-      teste.push(e);
-    });
+    return productSales;
   };
 }
