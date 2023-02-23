@@ -1,21 +1,14 @@
-import React from "react";
+import { BrowserRouter, RouterProvider } from "react-router-dom";
+import { Routes } from "./router";
 import GlobalStyle from "./styles/GlobalStyle";
-import { HeaderComponent } from "./components/Header";
-import { Navigation } from "./components/Nav";
 
-function App() {
-  const [openMenu, setOpenMenu] = React.useState(false);
-
+const App = (): JSX.Element => {
   return (
     <>
-      <HeaderComponent
-        openMenu={() => setOpenMenu(!openMenu)}
-        isOpen={openMenu}
-      />
-      <Navigation isOpen={openMenu} />
       <GlobalStyle />
+      <RouterProvider router={Routes} />
     </>
   );
-}
+};
 
 export default App;

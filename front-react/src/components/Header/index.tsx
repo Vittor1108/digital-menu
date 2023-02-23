@@ -1,12 +1,13 @@
-import React from "react";
+//STYLES
 import { Header } from "./styles";
-
 //Images
 import mailImage from "../../assets/images/mail.png";
 import bellImage from "../../assets/images/bell.png";
 import placeholderUser from "../../assets/images/userPlaceholder.png";
+//Interfaces
+import { IHeader } from "./interfaces/IHeader";
 
-export const HeaderComponent = (props: any) => {
+export const HeaderComponent = (props: IHeader) => {
   return (
     <>
       <Header isOpen={props.isOpen}>

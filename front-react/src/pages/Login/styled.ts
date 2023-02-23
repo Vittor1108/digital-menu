@@ -1,10 +1,26 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import defaultLogin from "../../assets/images/default-login.jpg";
+export const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  section {
+    width: 50%;
+    height: 100vh;
 
-interface Props{
-    isRed: boolean;
-}
+    &:nth-child(1) {
+      background-image: url(${defaultLogin});
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
 
-export const Title = styled.h1<Props>`
-    background-color: red;
-    color: ${props => props.isRed ? 'red' : 'blue'};
-`;   
+    &:nth-child(2) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+`;

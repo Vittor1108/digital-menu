@@ -1,15 +1,17 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
+import { Container } from "./styled";
 
-import { Title } from "./styled";
-
-function Login() {
+const LoginComponent = (): JSX.Element => {
   return (
     <>
-      <Title isRed={false}>Login</Title>
-      <small>Oie</small>
-      <p>Lorem Impsum</p>
+      <Container>
+        <section></section>
+        <section>
+          <Outlet/>
+        </section>
+      </Container>
     </>
   );
-}
+};
 
-export default Login;
+export default LoginComponent;

@@ -1,4 +1,3 @@
-import React from "react";
 //Images
 import imgSystem from "../../assets/images/imgSystem.png";
 //Components Styled
@@ -11,8 +10,10 @@ import { FaClipboardList } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { BsFillBasket2Fill } from "react-icons/bs";
+//INTERFACES
+import { INavigation } from "./interfaces/INavigation";
 
-export const Navigation = (props: any) => {
+export const Navigation = (props: INavigation) => {
   const showAccordion = (numberAccordion: number): void => {
     const treeMenu = document.querySelectorAll(".treeMenu > ul");
 
