@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
-export const Header = styled.header`
+interface IProps {
+  isOpen: boolean;
+}
+
+export const Header = styled.header<IProps>`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  width: calc(100% - 250px);
-  margin-left: 250px;
+  width: ${(props) => (props.isOpen ? "100%" : "calc(100% - 250px)")};
+  margin-left: ${(props) => (props.isOpen ? "0px" : "250px")};
   padding: 15px 0;
+  transition: all 0.3s;
   nav {
     display: flex;
     align-items: center;
@@ -42,7 +47,8 @@ export const Header = styled.header`
       align-items: center;
 
       li {
-        &:nth-child(1), &:nth-child(2) {
+        &:nth-child(1),
+        &:nth-child(2) {
           margin-right: 40px;
         }
       }
@@ -55,6 +61,32 @@ export const Header = styled.header`
       .user {
         max-width: 30px;
       }
+
+      @media screen and (max-width: 1025px) {
+        display: none;
+      }
     }
+
+    .iconMenuProfile {
+      display: none;
+      cursor: pointer;
+      span {
+        border: 1px solid #007bff;
+        height: 2px;
+        display: block;
+        margin-bottom: 5px;
+        transition: all 0.3s;
+        width: 20px;
+      }
+
+      @media screen and (max-width: 1025px) {
+        display: block;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1025px) {
+    width: 100%;
+    margin-left: 0px;
   }
 `;

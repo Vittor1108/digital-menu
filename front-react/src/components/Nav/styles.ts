@@ -2,13 +2,23 @@ import styled from "styled-components";
 //COLORS
 import { colors } from "../../config/colors";
 
-export const NavigationMenu = styled.nav`
+interface IProps {
+  openMenu: boolean;
+}
+
+export const NavigationMenu = styled.nav<IProps>`
   width: 250px;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  transition: transform 0.3s;
+  ${({ openMenu }) =>
+    openMenu &&
+    `
+    transform: translateX(-100%);
+  `}
 
   > ul {
     > li {
@@ -81,6 +91,9 @@ export const NavigationMenu = styled.nav`
     }
   }
 
+  @media screen and (max-width: 1025px) {
+    transform: translateX(-100%);
+  }
   .show {
     transform: rotateX(0) !important;
     max-height: 300px !important;

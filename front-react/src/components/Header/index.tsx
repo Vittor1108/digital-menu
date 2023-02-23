@@ -6,16 +6,12 @@ import mailImage from "../../assets/images/mail.png";
 import bellImage from "../../assets/images/bell.png";
 import placeholderUser from "../../assets/images/userPlaceholder.png";
 
-export const HeaderComponent = () => {
-  const changeMenu = (): void => {
-    console.log("OK");
-  };
-
+export const HeaderComponent = (props: any) => {
   return (
     <>
-      <Header>
+      <Header isOpen={props.isOpen}>
         <nav>
-          <div className="iconMenu" onClick={() => changeMenu()}>
+          <div className="iconMenu" onClick={() => props.openMenu()}>
             <span></span>
             <span></span>
             <span></span>
@@ -36,6 +32,11 @@ export const HeaderComponent = () => {
                 />
               </li>
             </ul>
+          </div>
+          <div className="iconMenuProfile">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </nav>
       </Header>

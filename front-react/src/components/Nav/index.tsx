@@ -12,7 +12,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { FaBriefcase } from "react-icons/fa";
 import { BsFillBasket2Fill } from "react-icons/bs";
 
-export const Navigation = () => {
+export const Navigation = (props: any) => {
   const showAccordion = (numberAccordion: number): void => {
     const treeMenu = document.querySelectorAll(".treeMenu > ul");
 
@@ -30,7 +30,7 @@ export const Navigation = () => {
 
   return (
     <>
-      <NavigationMenu>
+      <NavigationMenu openMenu={props.isOpen}>
         <ul>
           <li>
             <img src={imgSystem} alt="Costic Food" />
