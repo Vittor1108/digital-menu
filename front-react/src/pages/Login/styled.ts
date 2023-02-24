@@ -15,12 +15,20 @@ export const Container = styled.div`
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
+
+      @media screen and (max-width: 1025px) {
+        display: none;
+      }
     }
 
     &:nth-child(2) {
       display: flex;
       align-items: center;
       justify-content: center;
+
+      @media screen and (max-width: 1025px) {
+        width: 85%;
+      }
     }
   }
 `;
