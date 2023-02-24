@@ -11,15 +11,6 @@ export const Form = styled.form`
     margin-bottom: 8px;
   }
 
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid ${colors.borderColorInput};
-    color: ${colors.fontColorInput};
-    border-radius: 3px;
-  }
-
   a {
     color: ${colors.redPrimaryColor};
     font-size: 14px;

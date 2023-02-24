@@ -1,6 +1,7 @@
 import { Container } from "./styled";
 import { Form } from "./styled";
 import { Button } from "../../../components/Button";
+import { Input } from "@chakra-ui/react";
 export const LoginForm = (): JSX.Element => {
   return (
     <Container>
@@ -9,7 +10,13 @@ export const LoginForm = (): JSX.Element => {
       <Form>
         <div>
           <label htmlFor="login">Login</label>
-          <input type="text" placeholder="Login" id="login" />
+          {/* <input type="text" placeholder="Login" id="login" /> */}
+          <Input
+            placeholder="large size"
+            width="100%"
+            isInvalid
+            errorBorderColor="red.300"
+          />
         </div>
         <div>
           <label htmlFor="password">Senha</label>
