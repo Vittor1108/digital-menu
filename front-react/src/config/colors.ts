@@ -7,4 +7,5 @@ export const colors = {
   borderColorInput: "#cde4da",
   fontColorInput: "#495057",
   blueColor: "#007bff",
+  errorColor: "#db3c36",
 };
