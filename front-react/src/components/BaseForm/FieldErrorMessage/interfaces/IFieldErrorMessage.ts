@@ -1,3 +1,3 @@
 export interface IFieldErrorMessage {
-  children: string;
+  children?: string | "";
 }

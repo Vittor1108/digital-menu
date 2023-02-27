@@ -4,16 +4,51 @@ import { Button } from "../../../components/Button";
 import { Input } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FieldErrorMessage } from "../../../components/BaseForm/FieldErrorMessage";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { LoginService } from "../../../services/api/login/LoginService";
+import { ApiException } from "../../../services/api/ApiException";
+import { redirect, useNavigate } from "react-router-dom";
+
 export const LoginForm = (): JSX.Element => {
+  const navigate = useNavigate();
+
+  const schemaForm = yup
+    .object({
+      login: yup.string().required("Login é obrigatório"),
+      password: yup.string().required("Senha é obrigatório"),
+    })
+    .required();
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<{ login: string; password: string }>();
+  } = useForm<{ login: string; password: string; keepPassword: boolean }>({
+    resolver: yupResolver(schemaForm),
+  });
 
-  const onSubmit = (dataUser: { login: string; password: string }) => {
-    console.log(dataUser);
+  const onSubmit = async ({
+    login,
+    password,
+    keepPassword,
+  }: {
+    login: string;
+    password: string;
+    keepPassword: boolean;
+  }) => {
+    LoginService.validateUser(login, password).then((response) => {
+      if (response instanceof ApiException) {
+        console.log("Erro");
+        return;
+      }
+
+      !keepPassword
+        ? sessionStorage.setItem("token", response.token)
+        : localStorage.setItem("token", response.token);
+
+      navigate("/");
+    });
   };
 
   return (
@@ -27,9 +62,10 @@ export const LoginForm = (): JSX.Element => {
             placeholder="Login"
             size="sm"
             type="text"
+            id="login"
             {...register("login", { required: true })}
           />
-          {errors.login && <FieldErrorMessage>Login é obrigatório</FieldErrorMessage>}
+          <FieldErrorMessage>{errors.login?.message}</FieldErrorMessage>
         </div>
         <div>
           <label htmlFor="password">Senha</label>
@@ -37,12 +73,17 @@ export const LoginForm = (): JSX.Element => {
             placeholder="Senha"
             size="sm"
             type="password"
+            id="password"
             {...register("password", { required: true })}
-            // {errors.password && <FieldErrorMessage>Senha é obrigatória</FieldErrorMessage>}
           />
+          <FieldErrorMessage>{errors.password?.message}</FieldErrorMessage>
         </div>
         <div>
-          <input type="checkbox" id="keepPassowrd" />
+          <input
+            type="checkbox"
+            id="keepPassowrd"
+            {...register("keepPassword")}
+          />
           <label htmlFor="keepPassowrd">Manter-se logado?</label>
         </div>
         <div>

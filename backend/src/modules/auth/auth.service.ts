@@ -50,4 +50,9 @@ export class AuthService {
       token: this.jwtService.sign(payload),
     };
   };
+
+  public validateToken = async (req: IReq) => {
+    console.log(req);
+    return 'OK';
+  };
 }
