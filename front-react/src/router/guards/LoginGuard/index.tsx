@@ -1,16 +1,14 @@
-import { HomeComponent } from "../../../pages/Home";
-import { LoginService } from "../../../services/api/login/LoginService";
-import { ILoginGuard } from "./interfaces/ILoginGuard";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+export const LoginGuard = ({ children }: { children: JSX.Element }) => {
+  const navigate = useNavigate();
 
-export const LoginGuard = async ({ children }: ILoginGuard) => {
   const token =
     sessionStorage.getItem("token") || localStorage.getItem("token");
-
-  const teste = await LoginService.validateToken(token!);
-
-  if (teste) {
-    return children;
+  if (!token) {
+    useEffect(() => {
+      navigate("/login");
+    }, []);
   }
-
-  return <HomeComponent />;
+  return children;
 };

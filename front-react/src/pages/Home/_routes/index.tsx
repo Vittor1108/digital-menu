@@ -1,8 +1,9 @@
 import { HomeComponent } from "..";
+import { LoginGuard } from "../../../router/guards/LoginGuard";
 
 export const HomeRoutes = [
   {
-    element: <HomeComponent />,
+    element: <LoginGuard>{<HomeComponent />}</LoginGuard>,
     path: "/",
   },
 ];

@@ -8,10 +8,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoginService } from "../../../services/api/login/LoginService";
 import { ApiException } from "../../../services/api/ApiException";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 export const LoginForm = (): JSX.Element => {
   const navigate = useNavigate();
+  const snackBar = useToast();
 
   const schemaForm = yup
     .object({
@@ -39,7 +41,13 @@ export const LoginForm = (): JSX.Element => {
   }) => {
     LoginService.validateUser(login, password).then((response) => {
       if (response instanceof ApiException) {
-        console.log("Erro");
+        snackBar({
+          title: "Credenciais inválidas",
+          description: "Login ou senha inválidos. Tente novamente.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
         return;
       }
 
