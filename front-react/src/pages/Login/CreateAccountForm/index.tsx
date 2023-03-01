@@ -68,7 +68,7 @@ export const CreateAccountForm = (): JSX.Element => {
   const onCloseModal = (resultModal: boolean): void => {
     setModalOpen(false);
     const navigate = useNavigate();
-    navigate("/login");
+    navigate("/login")
   };
 
   const resetForm = (): void => {
