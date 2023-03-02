@@ -1,27 +1,69 @@
+import { Input, useToast } from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
-import { Container } from "./styled";
-import { Form } from "./styled";
-import { Input } from "@chakra-ui/react";
-import { Button } from "../../../components/Button";
 import { useForm } from "react-hook-form";
+import InputMask from "react-input-mask";
+import * as yup from "yup";
+import { Button } from "../../../components/Button";
+import { ApiException } from "../../../services/api/ApiException";
+import { LoginService } from "../../../services/api/login/LoginService";
 import { IForm } from "./interfaces/IForm";
-
+import { Container, Form } from "./styled";
+import { GenericModal } from "../../../components/GenericModal";
+import mailImage from "../../../assets/images/modal/mail.png";
 export const CreateAccountForm = (): JSX.Element => {
+  const [valueInput, setValueInput] = React.useState("");
+
+  const snackBar = useToast();
+
+  const schemaForm = yup
+    .object({
+      name: yup.string().required("Nome do estabelecimento é obrigatório"),
+      email: yup
+        .string()
+        .email()
+        .required("Email do estabelecimento é obrigatório"),
+      cpfCnpj: yup
+        .string()
+        .trim()
+        .matches(
+          /[0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2}|[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}/,
+          "CPF ou CNPJ inválido"
+        )
+        .required("CPF ou CNPJ é obrigatório"),
+      password: yup
+        .string()
+        .min(6, "Senha precisa de no mínimo 6 dígitos")
+        .required("Senha é obrigatório"),
+      confirmPasword: yup
+        .string()
+        .required("Confirmar senha é obrigatório")
+        .oneOf([yup.ref("password")], "As senham devem coinciderem"),
+    })
+    .required();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IForm>();
+  } = useForm<IForm>({
+    resolver: yupResolver(schemaForm),
+  });
 
-  const onSubmit = ({
-    confirmPassword,
-    confirmTerms,
-    cpfCnpj,
-    email,
-    name,
-    password,
-  }: IForm) => {
-    
+  const onSubmit = (dataUser: IForm) => {
+    LoginService.createAccount(dataUser).then((response) => {
+      if (response instanceof ApiException) {
+        // snackBar({
+        //   title: "Não foi possível criar sua conta",
+        //   description: `${response}.`,
+        //   status: "error",
+        //   duration: 5000,
+        //   isClosable: true,
+        // });
+        // return;
+        console.log("OK");
+      }
+    });
   };
 
   return (
@@ -56,13 +98,19 @@ export const CreateAccountForm = (): JSX.Element => {
             size="sm"
             type="text"
             id="cpfCnpj"
+            as={InputMask}
+            mask={
+              valueInput.length < 15 ? "999.999.999-999" : "99.999.999/0001-99"
+            }
+            maskChar={null}
             {...register("cpfCnpj")}
+            onChange={(e) => setValueInput(e.target.value)}
           />
         </div>
         <div>
           <label htmlFor="password">Senha</label>
           <Input
-            placeholder="Digite uma senha"
+            placeholder="*******"
             size="sm"
             type="password"
             id="password"
@@ -70,20 +118,24 @@ export const CreateAccountForm = (): JSX.Element => {
           />
         </div>
         <div>
-          <label htmlFor="confirmPassword">Confirmar Senha</label>
+          <label htmlFor="confirmPasword">Confirmar Senha</label>
           <Input
-            placeholder="Confirme sua senha"
+            placeholder="*******"
             size="sm"
             type="password"
-            id="confirmPassword"
-            {...register("confirmPassword")}
+            id="confirmPasword"
+            {...register("confirmPasword")}
           />
         </div>
-
         <Button bgColor="red" fontColor="white" width="100%">
           Criar Conta
         </Button>
       </Form>
+      <GenericModal
+        imagePath={mailImage}
+        subTitle="Por favor confirme seu email para prosseguir"
+        title="Conta criada!"
+      ></GenericModal>
     </Container>
   );
 };

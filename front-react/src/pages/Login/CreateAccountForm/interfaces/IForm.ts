@@ -3,6 +3,6 @@ export interface IForm {
   email: string;
   cpfCnpj: string;
   password: string;
-  confirmPassword: string;
+  confirmPasword: string;
   confirmTerms: boolean;
 }

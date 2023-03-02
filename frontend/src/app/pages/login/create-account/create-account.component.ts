@@ -33,15 +33,17 @@ export class CreateAccountComponent implements OnInit {
       confirmPassword: ['', [Validators.required]],
       check: [false],
     });
+
+    this.dialog.open(DialogCreatAccountComponent, {
+      maxWidth: '500px',
+      width: '90%'
+    });
+
   }
 
   public onSubmit = () => {
     this.authService.createUser(this.form.value).subscribe({
       next: (res) => {
-        this.dialog.open(DialogCreatAccountComponent, {
-          maxWidth: '500px',
-          width: '90%'
-        });
 
         this.router.navigate(['']);
       },
