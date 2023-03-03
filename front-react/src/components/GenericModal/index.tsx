@@ -7,12 +7,25 @@ export const GenericModal = ({
   imagePath,
   subTitle,
   title,
-  buttonColor,
+  buttonColorConfirm,
+  buttonColorDenay,
   buttonWidth,
-  fontColor,
+  fontColorConfirm,
+  fontColorDeny,
+  articleWidth,
+  maxArticleWidth,
+  textConfirmButton,
+  textDenayButton,
+  isOpen,
+  clickFunction,
 }: IGenericModal): JSX.Element => {
+  const teste = (resultModal: true | undefined) => {
+    if (clickFunction) {
+      clickFunction(resultModal);
+    }
+  };
   return (
-    <Overlay>
+    <Overlay width={articleWidth} maxWidth={maxArticleWidth} isOpen={isOpen}>
       <article>
         <div>
           <img src={imagePath} alt="" />
@@ -23,12 +36,27 @@ export const GenericModal = ({
         </div>
         <div>
           <Button
-            bgColor={buttonColor ? buttonColor : "red"}
-            fontColor={fontColor ? fontColor : "white"}
+            bgColor={buttonColorConfirm ? buttonColorConfirm : "red"}
+            fontColor={fontColorConfirm ? fontColorConfirm : "white"}
             width={buttonWidth ? buttonWidth : "120px"}
+            onClickFunction={() => teste(undefined)}
           >
-            Confirmar
+            {textConfirmButton}
           </Button>
+          {textDenayButton && (
+            <Button
+              bgColor={buttonColorDenay ? buttonColorDenay : "red"}
+              fontColor={fontColorDeny ? fontColorDeny : "white"}
+              width={buttonWidth ? buttonWidth : "120px"}
+              onClickFunction={() => {
+                if (clickFunction) {
+                  clickFunction(true);
+                }
+              }}
+            >
+              {textDenayButton}
+            </Button>
+          )}
         </div>
       </article>
     </Overlay>

@@ -84,11 +84,12 @@ export class EstablishmentControllerService {
   };
 
   private validateCpfOrCnpj = (cpfOrCnpj: string): boolean => {
-    if (cpfOrCnpj.length === 14 || cpfOrCnpj.length === 11) {
+    if (cpfOrCnpj.length === 11) {
       //CPF
       const cpfFormat = cpf_cnpj.CPF.format(cpfOrCnpj);
       return cpf_cnpj.CPF.isValid(cpfFormat);
     } else {
+      //CNPJ
       const cnpjFormat = cpf_cnpj.CNPJ.format(cpfOrCnpj);
       return cpf_cnpj.CNPJ.isValid(cnpjFormat);
     }

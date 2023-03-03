@@ -11,9 +11,11 @@ import { IForm } from "./interfaces/IForm";
 import { Container, Form } from "./styled";
 import { GenericModal } from "../../../components/GenericModal";
 import mailImage from "../../../assets/images/modal/mail.png";
-export const CreateAccountForm = (): JSX.Element => {
-  const [valueInput, setValueInput] = React.useState("");
+import { useNavigate } from "react-router-dom";
 
+export const CreateAccountForm = (): JSX.Element => {
+  const [valueInput, setValueInput] = React.useState<string>("");
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const snackBar = useToast();
 
   const schemaForm = yup
@@ -42,27 +44,43 @@ export const CreateAccountForm = (): JSX.Element => {
     })
     .required();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
+  const { register, handleSubmit, reset } = useForm<IForm>({
     resolver: yupResolver(schemaForm),
   });
 
-  const onSubmit = (dataUser: IForm) => {
+  const onSubmit = (dataUser: IForm): void => {
     LoginService.createAccount(dataUser).then((response) => {
       if (response instanceof ApiException) {
-        // snackBar({
-        //   title: "Não foi possível criar sua conta",
-        //   description: `${response}.`,
-        //   status: "error",
-        //   duration: 5000,
-        //   isClosable: true,
-        // });
-        // return;
-        console.log("OK");
+        snackBar({
+          title: "Não foi possível criar sua conta",
+          description: `${response}.`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
       }
+      // resetForm();
+      setModalOpen(true);
+    });
+  };
+
+  const onCloseModal = (resultModal: boolean): void => {
+    setModalOpen(false);
+    React.useEffect(() => {
+      const navigate = useNavigate();
+      navigate("/login");
+    }, []);
+  };
+
+  const resetForm = (): void => {
+    reset({
+      confirmPasword: "",
+      confirmTerms: false,
+      email: "",
+      name: "",
+      password: "",
+      cpfCnpj: "",
     });
   };
 
@@ -131,11 +149,17 @@ export const CreateAccountForm = (): JSX.Element => {
           Criar Conta
         </Button>
       </Form>
-      <GenericModal
-        imagePath={mailImage}
-        subTitle="Por favor confirme seu email para prosseguir"
-        title="Conta criada!"
-      ></GenericModal>
+      {modalOpen && (
+        <GenericModal
+          imagePath={mailImage}
+          subTitle="Por favor confirme seu email para prosseguir"
+          title="Conta criada!"
+          articleWidth="400px"
+          isOpen={modalOpen}
+          textConfirmButton="Confirmar"
+          clickFunction={onCloseModal}
+        ></GenericModal>
+      )}
     </Container>
   );
 };

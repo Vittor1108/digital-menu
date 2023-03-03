@@ -7,10 +7,10 @@ interface IProps {
 }
 
 export const Button = styled.button<IProps>`
-  background-color: ${(props) => props.bgColor};
-  color: ${(props) => props.fontColor};
+  background-color: ${(props) => props.bgColor || "red"};
+  color: ${(props) => props.fontColor || "white"};
   width: ${(props) => props.width};
-  border: 1px solid ${(props) => props.bgColor};
+  border: 1px solid ${(props) => props.bgColor || "red"};
   border-radius: 0.25rem;
   text-align: center;
   font-size: 14px;

@@ -3,4 +3,5 @@ export interface IButtonProps {
   bgColor: string;
   fontColor: string;
   width: string;
+  onClickFunction?: Function;
 }

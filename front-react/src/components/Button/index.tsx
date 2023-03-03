@@ -6,9 +6,10 @@ export const Button = ({
   bgColor,
   fontColor,
   width,
+  onClickFunction,
 }: IButtonProps): JSX.Element => {
   return (
-    <ButtonStyled bgColor={bgColor} fontColor={fontColor} width={width}>
+    <ButtonStyled bgColor={bgColor} fontColor={fontColor} width={width} onClick={() => onClickFunction ? onClickFunction() : false}>
       {children}
     </ButtonStyled>
   );
