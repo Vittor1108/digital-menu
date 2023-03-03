@@ -67,10 +67,8 @@ export const CreateAccountForm = (): JSX.Element => {
 
   const onCloseModal = (resultModal: boolean): void => {
     setModalOpen(false);
-    React.useEffect(() => {
-      const navigate = useNavigate();
-      navigate("/login");
-    }, []);
+    const navigate = useNavigate();
+    navigate("/login");
   };
 
   const resetForm = (): void => {
