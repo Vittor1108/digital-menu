@@ -12,10 +12,12 @@ import { Container, Form } from "./styled";
 import { GenericModal } from "../../../components/GenericModal";
 import mailImage from "../../../assets/images/modal/mail.png";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const CreateAccountForm = (): JSX.Element => {
   const [valueInput, setValueInput] = React.useState<string>("");
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const navigate = useNavigate();
   const snackBar = useToast();
 
   const schemaForm = yup
@@ -44,9 +46,7 @@ export const CreateAccountForm = (): JSX.Element => {
     })
     .required();
 
-  const { register, handleSubmit, reset } = useForm<IForm>({
-    resolver: yupResolver(schemaForm),
-  });
+  const { register, handleSubmit, reset } = useForm<IForm>();
 
   const onSubmit = (dataUser: IForm): void => {
     LoginService.createAccount(dataUser).then((response) => {
@@ -60,15 +60,14 @@ export const CreateAccountForm = (): JSX.Element => {
         });
         return;
       }
-      // resetForm();
+      resetForm();
       setModalOpen(true);
     });
   };
 
-  const onCloseModal = (resultModal: boolean): void => {
+  const onCloseModal = (): void => {
     setModalOpen(false);
-    const navigate = useNavigate();
-    navigate("/login")
+    navigate("/login");
   };
 
   const resetForm = (): void => {
@@ -146,6 +145,9 @@ export const CreateAccountForm = (): JSX.Element => {
         <Button bgColor="red" fontColor="white" width="100%">
           Criar Conta
         </Button>
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <Link to="/login">Acessar conta</Link>
+        </div>
       </Form>
       {modalOpen && (
         <GenericModal

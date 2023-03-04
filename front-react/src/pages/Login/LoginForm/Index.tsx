@@ -10,7 +10,7 @@ import { LoginService } from "../../../services/api/login/LoginService";
 import { ApiException } from "../../../services/api/ApiException";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-
+import { Link } from "react-router-dom";
 export const LoginForm = (): JSX.Element => {
   const navigate = useNavigate();
   const snackBar = useToast();
@@ -95,14 +95,15 @@ export const LoginForm = (): JSX.Element => {
           <label htmlFor="keepPassowrd">Manter-se logado?</label>
         </div>
         <div>
-          <a href="">Esqueceu a senha?</a>
+          <Link to="/login/reset-password">Esqueceu a senha?</Link>
         </div>
         <Button bgColor="red" fontColor="white" width="100%">
           Entrar
         </Button>
         <div>
           <span>
-            Não possui conta? <a href="">Criar Conta</a>
+            Não possui conta?{" "}
+            <Link to="/login/create-account">Criar Conta</Link>
           </span>
         </div>
       </Form>

@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { CreateAccountForm } from "../CreateAccountForm";
 import LoginComponent from "../Index";
 import { LoginForm } from "../LoginForm/Index";
+import { ResetPassword } from "../ResetPassword";
 
 export const LoginRotues = [
   {
@@ -16,6 +17,10 @@ export const LoginRotues = [
         path: "create-account",
         element: <CreateAccountForm />,
       },
+      {
+        path: "reset-password",
+        element: <ResetPassword />,
+      }
     ],
   },
 ];
