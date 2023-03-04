@@ -4,13 +4,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import * as yup from "yup";
-import { Button } from "../../../components/Button";
-import { ApiException } from "../../../services/api/ApiException";
-import { LoginService } from "../../../services/api/login/LoginService";
+import { Button } from "@components/Button";
+import { ApiException } from "@services/api/ApiException";
+import { LoginService } from "@services/api/login/LoginService";
 import { IForm } from "./interfaces/IForm";
 import { Container, Form } from "./styled";
-import { GenericModal } from "../../../components/GenericModal";
-import mailImage from "../../../assets/images/modal/mail.png";
+import { GenericModal } from "@components/GenericModal";
+import mailImage from "@assets/images/modal/mail.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -46,7 +46,9 @@ export const CreateAccountForm = (): JSX.Element => {
     })
     .required();
 
-  const { register, handleSubmit, reset } = useForm<IForm>();
+  const { register, handleSubmit, reset } = useForm<IForm>({
+    resolver: schemaForm,
+  });
 
   const onSubmit = (dataUser: IForm): void => {
     LoginService.createAccount(dataUser).then((response) => {

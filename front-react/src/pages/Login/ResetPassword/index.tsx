@@ -1,25 +1,26 @@
 import React from "react";
-import { Container } from "@chakra-ui/react";
+import { Container, UseToastOptions } from "@chakra-ui/react";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Form } from "./styled";
 import { EmailIcon } from "@chakra-ui/icons";
-import { Button } from "../../../components/Button";
+import { Button } from "@components/Button";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { FieldErrorMessage } from "../../../components/BaseForm/FieldErrorMessage";
-import { LoginService } from "../../../services/api/login/LoginService";
-import { ApiException } from "../../../services/api/ApiException";
+import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
+import { LoginService } from "@services/api/login/LoginService";
+import { ApiException } from "@services/api/ApiException";
 import { useToast } from "@chakra-ui/react";
-import { GenericModal } from "../../../components/GenericModal";
-import secureShield from "../../../assets/images/modal/secure-shield.png";
+import { GenericModal } from "@components/GenericModal";
+import secureShield from "@assets/images/modal/secure-shield.png";
 import { useNavigate } from "react-router-dom";
+import { useSnackBar } from "@hooks/useSnackBar";
 
 export const ResetPassword = (): JSX.Element => {
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  const snackBar = useToast();
 
+  const { verifyReponse } = useSnackBar();
   const schemaForm = yup.object({
     email: yup.string().email("Email inválido").required("Email é obrigatório"),
   });
@@ -34,16 +35,14 @@ export const ResetPassword = (): JSX.Element => {
 
   const onSubmit = ({ email }: { email: string }): void => {
     LoginService.forgotPassword(email).then((response) => {
-      if (response instanceof ApiException) {
-        snackBar({
-          title: "Não foi possível resetar sua senha",
-          description: `Email inválido.`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-      setOpenModal(true);
+      const snackOptions: UseToastOptions = {
+        title: "Não foi possível resetar sua senha",
+        description: `Email inválido.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      };
+      verifyReponse(response, snackOptions) ? false : setOpenModal(true);
     });
   };
 
