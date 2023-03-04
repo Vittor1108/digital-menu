@@ -14,12 +14,12 @@ import { useToast } from "@chakra-ui/react";
 import { GenericModal } from "../../../components/GenericModal";
 import secureShield from "../../../assets/images/modal/secure-shield.png";
 import { useNavigate } from "react-router-dom";
-import { useSnackBar } from "../../../hooks/useSnackBar";
 
 export const ResetPassword = (): JSX.Element => {
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  const { snack, error } = useSnackBar();
+  const snackBar = useToast();
+
   const schemaForm = yup.object({
     email: yup.string().email("Email inválido").required("Email é obrigatório"),
   });
@@ -34,14 +34,16 @@ export const ResetPassword = (): JSX.Element => {
 
   const onSubmit = ({ email }: { email: string }): void => {
     LoginService.forgotPassword(email).then((response) => {
-      snack({
-        title: "Usário inválido",
-        description: "Não Existe usuário com este email",
-        duration: 5000,
-        isClosable: true,
-        response,
-        status: "error",
-      });
+      if (response instanceof ApiException) {
+        snackBar({
+          title: "Não foi possível resetar sua senha",
+          description: `Email inválido.`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+      setOpenModal(true);
     });
   };
 
