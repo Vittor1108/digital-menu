@@ -1,4 +1,4 @@
-import { Input, useToast } from "@chakra-ui/react";
+import { Input, useToast, UseToastOptions } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -13,12 +13,13 @@ import { GenericModal } from "@components/GenericModal";
 import mailImage from "@assets/images/modal/mail.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSnackBar } from "@hooks/useSnackBar";
 
 export const CreateAccountForm = (): JSX.Element => {
   const [valueInput, setValueInput] = React.useState<string>("");
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
-  const snackBar = useToast();
+  const { verifyReponse } = useSnackBar();
 
   const schemaForm = yup
     .object({
@@ -47,23 +48,19 @@ export const CreateAccountForm = (): JSX.Element => {
     .required();
 
   const { register, handleSubmit, reset } = useForm<IForm>({
-    resolver: schemaForm,
+    resolver: yupResolver(schemaForm),
   });
 
   const onSubmit = (dataUser: IForm): void => {
     LoginService.createAccount(dataUser).then((response) => {
-      if (response instanceof ApiException) {
-        snackBar({
-          title: "Não foi possível criar sua conta",
-          description: `${response}.`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-      resetForm();
-      setModalOpen(true);
+      const snackOptions: UseToastOptions = {
+        title: "Não foi possível criar sua conta",
+        description: `${response}.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      };
+      verifyReponse(response, snackOptions) ? resetForm() : setModalOpen(true);
     });
   };
 

@@ -37,6 +37,7 @@ export const NavigationMenu = styled.nav<IProps>`
         img {
           max-width: 150px;
           padding: 9px 0;
+          margin: 0 auto;
         }
       }
 
@@ -47,7 +48,7 @@ export const NavigationMenu = styled.nav<IProps>`
         margin-bottom: 10px;
 
         p {
-          margin-left: 10px;
+          margin-left: 15px;
         }
       }
 

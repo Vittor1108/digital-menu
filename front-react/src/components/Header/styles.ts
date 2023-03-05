@@ -9,7 +9,6 @@ export const Header = styled.header<IProps>`
   width: ${(props) => (props.isOpen ? "100%" : "calc(100% - 250px)")};
   margin-left: ${(props) => (props.isOpen ? "0px" : "250px")};
   padding: 15px 0;
-  transition: all 0.3s;
   nav {
     display: flex;
     align-items: center;

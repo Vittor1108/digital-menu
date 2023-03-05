@@ -45,7 +45,7 @@ export const Navigation = (props: INavigation) => {
           <li className="treeMenu" onClick={() => showAccordion(0)}>
             <div>
               <FaArchive />
-              <p>Menus</p>
+              <p>Produtos</p>
             </div>
             <RiArrowDownSLine />
             <ul>

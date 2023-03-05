@@ -42,7 +42,7 @@ export const ResetPassword = (): JSX.Element => {
         duration: 5000,
         isClosable: true,
       };
-      verifyReponse(response, snackOptions) ? false : setOpenModal(true);
+      verifyReponse<boolean>(response, snackOptions) ? false : setOpenModal(true);
     });
   };
 

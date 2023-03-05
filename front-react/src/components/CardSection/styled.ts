@@ -1,5 +1,5 @@
 import styled from "styled-components";
 
-export const Container = styled.main`
+export const Section = styled.section`
     border: 1px solid red;
 `

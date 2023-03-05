@@ -1,16 +1,10 @@
-import React from "react";
-import { HeaderComponent } from "../../components/Header";
-import { Navigation } from "../../components/Nav";
-
+import { BaseLayout } from "@components/BaseLayout";
 export const HomeComponent = () => {
-  const [openMenu, setOpenMenu] = React.useState(false);
   return (
     <>
-      <HeaderComponent
-        openMenu={() => setOpenMenu(!openMenu)}
-        isOpen={openMenu}
-      />
-      <Navigation isOpen={openMenu} />
+      <BaseLayout>
+        <h1>Home</h1>
+      </BaseLayout>
     </>
   );
 };

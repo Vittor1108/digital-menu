@@ -102,7 +102,8 @@ export const LoginForm = (): JSX.Element => {
         </Button>
         <div>
           <span>
-            Não possui conta? <Link to="/login/create-account">Criar Conta</Link>
+            Não possui conta?{" "}
+            <Link to="/login/create-account">Criar Conta</Link>
           </span>
         </div>
       </Form>
