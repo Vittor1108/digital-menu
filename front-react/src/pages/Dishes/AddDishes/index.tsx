@@ -1,18 +1,50 @@
-import React from "react";
+import { Container } from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
+import { TitleSection } from "@components/TitleSection";
+import { Input } from "@chakra-ui/react";
+import { Form } from "@components/BaseForm/styled";
 export const DishesComponent = (): JSX.Element => {
   return (
     <BaseLayout>
-      <div>
+      <Container
+        maxW="100%"
+        h="100%"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <CardSection>
-          <h1>OK</h1>
+          <TitleSection>Teste</TitleSection>
+          <article>
+            <Form>
+              <div>
+                <label htmlFor="dishes">Nome do prato</label>
+                <Input
+                  placeholder="Lasanha de 4 queijos"
+                  size="sm"
+                  type="text"
+                  id="dishes"
+                />
+              </div>
+              <div>
+                <label htmlFor="dishes">Seleciona a categoria</label>
+                <Input
+                  placeholder="Lasanha de 4 queijos"
+                  size="sm"
+                  type="text"
+                  id="dishes"
+                />
+              </div>
+            </Form>
+          </article>
         </CardSection>
 
         <CardSection>
-          <h1>OK</h1>
+          <TitleSection>Teste</TitleSection>
+          <article></article>
         </CardSection>
-      </div>
+      </Container>
     </BaseLayout>
   );
 };
