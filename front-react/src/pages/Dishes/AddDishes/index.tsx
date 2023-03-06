@@ -3,8 +3,15 @@ import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { TitleSection } from "@components/TitleSection";
 import { Input } from "@chakra-ui/react";
-import { Form } from "@components/BaseForm/styled";
+import { Form } from "./styled";
+import { MultipleSelect as Select } from "@components/MultipleSelect";
 export const DishesComponent = (): JSX.Element => {
+  const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
+
   return (
     <BaseLayout>
       <Container
@@ -29,11 +36,12 @@ export const DishesComponent = (): JSX.Element => {
               </div>
               <div>
                 <label htmlFor="dishes">Seleciona a categoria</label>
-                <Input
-                  placeholder="Lasanha de 4 queijos"
-                  size="sm"
-                  type="text"
-                  id="dishes"
+                <Select
+                  options={options}
+                  isMulti
+                  placeholder="Categorias do Prato..."
+                  isSearchable={true}
+                  // styles={}
                 />
               </div>
             </Form>

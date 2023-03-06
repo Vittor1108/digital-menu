@@ -5,8 +5,7 @@ export const Section = styled.section`
   background-color: white;
   box-shadow: 0 1px 6px 1px rgb(69 65 78 / 10%);
 
-  article{
-    border: 1px solid red;
+  article {
     padding: 1.5rem;
   }
 `;
