@@ -7,5 +7,17 @@ export const Section = styled.section`
 
   article {
     padding: 1.5rem;
+
+    /* .doubleInput {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      > div {
+        flex: 1;
+        &:nth-child(1) {
+          margin-right: 30px;
+        }
+      }
+    } */
   }
 `;

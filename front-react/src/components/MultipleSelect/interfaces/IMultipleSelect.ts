@@ -3,4 +3,5 @@ export interface IMultipleSelect<T> {
   isMulti: boolean;
   placeholder: string;
   isSearchable: boolean;
+  inputId: string;
 }
