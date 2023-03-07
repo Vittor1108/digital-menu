@@ -6,3 +6,13 @@ export const Form = styled(BaseFormComponent)`
     margin-bottom: 16px;
   }
 `;
+
+
+export const ArticleImage = styled.article`
+  border: 1px solid red;
+
+  img{
+    object-fit: contain;
+    
+  }
+`

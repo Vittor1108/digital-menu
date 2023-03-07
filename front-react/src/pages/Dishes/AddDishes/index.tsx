@@ -1,6 +1,7 @@
-import { Container, Input } from "@chakra-ui/react";
+import { Container, Input, Textarea } from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
+import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { MultipleSelect as Select } from "@components/MultipleSelect";
 import { TitleSection } from "@components/TitleSection";
 import React from "react";
@@ -9,6 +10,9 @@ import { Form } from "./styled";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
+  const [toogleMaskCurrency, setToogleMaskCurreny] =
+    React.useState<boolean>(false);
+
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
@@ -25,7 +29,7 @@ export const DishesComponent = (): JSX.Element => {
         justifyContent="space-between"
       >
         <CardSection>
-          <TitleSection>Teste</TitleSection>
+          <TitleSection>Adicionar Prato</TitleSection>
           <article>
             <Form>
               <div>
@@ -61,19 +65,48 @@ export const DishesComponent = (): JSX.Element => {
                     size="sm"
                     type="text"
                     as={InputMask}
-                    mask={"R$ 999,99"}
+                    mask={toogleMaskCurrency ? "R$ 999,99" : "R$ 99,99"}
+                    maskChar=""
                     id="price"
-                    onChange={(e) => setPriceInput(e.target.value)}
+                    onChange={(e) => {
+                      setPriceInput(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      priceInput.length >= 8
+                        ? setToogleMaskCurreny(true)
+                        : setToogleMaskCurreny(false);
+                    }}
                   />
                 </Container>
+              </Container>
+              <Container maxW="100%" padding="0">
+                <label htmlFor="description">Descrição:</label>
+                <Textarea
+                  placeholder="Descrição do prato..."
+                  resize="none"
+                  height="auto"
+                  rows={4}
+                  id="description"
+                />
+              </Container>
+              <Container maxW="100%" padding="0">
+                <label htmlFor="">Imagens do prato:</label>
+                <Input
+                  type="file"
+                  size="sm"
+                  accept="image/png, image/gif, image/jpeg"
+                  multiple={true}
+                />
               </Container>
             </Form>
           </article>
         </CardSection>
 
         <CardSection>
-          <TitleSection>Teste</TitleSection>
-          <article></article>
+          <TitleSection>Pratos</TitleSection>
+          <article>
+            <ImagesCarrosel />
+          </article>
         </CardSection>
       </Container>
     </BaseLayout>
