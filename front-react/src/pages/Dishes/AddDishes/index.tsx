@@ -4,7 +4,7 @@ import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { MultipleSelect as Select } from "@components/MultipleSelect";
 import { TitleSection } from "@components/TitleSection";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import InputMask from "react-input-mask";
 import { Form } from "./styled";
 
@@ -12,6 +12,7 @@ export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
+  const [images, setImages] = React.useState<any>([]);
 
   const options = [
     { value: "chocolate", label: "Chocolate" },
@@ -101,11 +102,10 @@ export const DishesComponent = (): JSX.Element => {
             </Form>
           </article>
         </CardSection>
-
         <CardSection>
           <TitleSection>Pratos</TitleSection>
           <article>
-            <ImagesCarrosel />
+            <ImagesCarrosel images={["images"]} />
           </article>
         </CardSection>
       </Container>

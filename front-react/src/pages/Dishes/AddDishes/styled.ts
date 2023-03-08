@@ -10,7 +10,6 @@ export const Form = styled(BaseFormComponent)`
 
 export const ArticleImage = styled.article`
   border: 1px solid red;
-
   img{
     object-fit: contain;
     
