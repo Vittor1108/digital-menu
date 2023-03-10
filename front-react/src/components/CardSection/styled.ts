@@ -8,4 +8,10 @@ export const Section = styled.section`
   article {
     padding: 1.5rem;
   }
+
+  @media screen and (max-width: 1199px){
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+  }
 `;

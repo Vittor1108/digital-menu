@@ -38,6 +38,11 @@ export const DishesComponent = (): JSX.Element => {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
+        sx={{
+          "@media screen and (max-width: 1199px)": {
+            display: "block",
+          },
+        }}
       >
         <CardSection>
           <TitleSection>Adicionar Prato</TitleSection>
@@ -58,6 +63,11 @@ export const DishesComponent = (): JSX.Element => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
+                sx={{
+                  "@media screen and (max-width: 1199px)": {
+                    display: "block",
+                  },
+                }}
               >
                 <Container maxW="100%" padding="0" flex="1">
                   <label htmlFor="category">Seleciona a categoria</label>
@@ -69,7 +79,18 @@ export const DishesComponent = (): JSX.Element => {
                     inputId="category"
                   />
                 </Container>
-                <Container maxW="100%" padding="0" flex="1" marginLeft="20px">
+                <Container
+                  maxW="100%"
+                  padding="0"
+                  flex="1"
+                  marginLeft="20px"
+                  sx={{
+                    "@media screen and (max-width: 1199px)": {
+                      marginLeft: "0px",
+                      marginTop: "1rem",
+                    },
+                  }}
+                >
                   <label htmlFor="price">Preço do prato</label>
                   <Input
                     placeholder="R$"

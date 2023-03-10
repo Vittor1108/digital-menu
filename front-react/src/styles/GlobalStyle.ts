@@ -10,6 +10,10 @@ export default createGlobalStyle`
     }
 
 
+    html, body{
+        background-color: #eee;
+    }
+
     ul{
         list-style: none;
     }
