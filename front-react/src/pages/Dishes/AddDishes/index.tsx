@@ -4,21 +4,31 @@ import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { MultipleSelect as Select } from "@components/MultipleSelect";
 import { TitleSection } from "@components/TitleSection";
-import React, { ChangeEvent } from "react";
+import React from "react";
 import InputMask from "react-input-mask";
 import { Form } from "./styled";
+import { Button } from "@chakra-ui/react";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
-  const [images, setImages] = React.useState<any>([]);
+  const [images, setImages] = React.useState<string[]>([]);
 
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
     { value: "vanilla", label: "Vanilla" },
   ];
+
+  const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setImages([]);
+    const { files } = event.target;
+    Array.from(files!).forEach((file: File) => {
+      const url = URL.createObjectURL(file);
+      setImages((oldImages) => [...oldImages, url]);
+    });
+  };
 
   return (
     <BaseLayout>
@@ -97,6 +107,7 @@ export const DishesComponent = (): JSX.Element => {
                   size="sm"
                   accept="image/png, image/gif, image/jpeg"
                   multiple={true}
+                  onChange={(event) => addImage(event)}
                 />
               </Container>
             </Form>
@@ -105,7 +116,28 @@ export const DishesComponent = (): JSX.Element => {
         <CardSection>
           <TitleSection>Pratos</TitleSection>
           <article>
-            <ImagesCarrosel images={["images"]} />
+            <ImagesCarrosel images={images} />
+            <Button
+              color="white"
+              backgroundColor="red"
+              fontWeight="normal"
+              borderRadius="0.25rem"
+              width="100%"
+              size="sm"
+              margin="5px auto"
+            >
+              Salvar
+            </Button>
+            <Button
+              color="white"
+              backgroundColor="black"
+              fontWeight="normal"
+              borderRadius="0.25rem"
+              width="100%"
+              size="sm"
+            >
+              Deletar Imagens
+            </Button>
           </article>
         </CardSection>
       </Container>

@@ -1,102 +1,68 @@
+import noImageIcon from "@assets/images/noImageIcon.png";
+import { Container } from "@chakra-ui/react";
 import React from "react";
-import { Container, position } from "@chakra-ui/react";
-import image1 from "@assets/images/uploads/prato1.jpg";
-import image2 from "@assets/images/uploads/prato2.jpg";
-
+import { ImagesThumb, ItemThumbLIst, ThumbImagesList } from "./styled";
 export const ImagesCarrosel = ({
   images,
 }: {
   images: Array<string>;
 }): JSX.Element => {
-  
+  const [showImage, setShowImage] = React.useState<number>(0);
+
   return (
     <>
-      <Container
-        maxW="100%"
-        padding="0"
-        height="60vh"
-        position="relative"
-        border="1px solid green"
-      >
+      <Container maxW="100%" padding="0" height="60vh" position="relative">
         <Container
-          border="1px solid green"
           maxW="100%"
           position="relative"
           display="flex"
           alignItems="center"
           justifyContent="center"
           height="100%"
+          border="1px solid black"
+          overflow="hidden"
         >
-          <img
-            src={images[0]}
-            alt=""
-            style={{
-              objectFit: "cover",
-              maxWidth: "100%",
-              position: "absolute",
-              height: "100%",
-            }}
-          />
-          <img
-            src={images[1]}
-            alt=""
-            style={{
-              objectFit: "cover",
-              maxWidth: "100%",
-              position: "absolute",
-              height: "100%",
-            }}
-          />
+          {!images.length && (
+            <img
+              src={noImageIcon}
+              style={{
+                objectFit: "cover",
+              }}
+            />
+          )}
+          {images.map((url: string, index: number) => {
+            return (
+              <ImagesThumb
+                src={url}
+                key={index}
+                select={showImage === index ? true : false}
+              />
+            );
+          })}
         </Container>
-        <Container
-          padding="0"
-          position="absolute"
-          bottom="0px"
-          w="100%"
-          maxW="100%"
-        >
-          <ul
-            style={{
-              bottom: "20px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.4)",
-              padding: "1rem 0",
-            }}
+        {images.length > 0 && (
+          <Container
+            padding="0"
+            position="absolute"
+            bottom="0px"
+            w="100%"
+            maxW="100%"
           >
-            <li>
-              <img
-                src={images[0]}
-                alt=""
-                style={{
-                  border: "10px solid transparent",
-                  objectFit: "contain",
-                  maxWidth: "100%",
-                  height: "100px",
-                  cursor: "pointer",
-                  opacity: "0.4",
-                  borderBottom: "1px solid white",
-                }}
-              />
-            </li>
-            <li>
-              <img
-                src={images[1]}
-                alt=""
-                style={{
-                  border: "10px solid transparent",
-                  outline: "1px solid white",
-                  objectFit: "contain",
-                  height: "100px",
-                  maxWidth: "100%",
-                  marginLeft: "10px",
-                  cursor: "pointer",
-                }}
-              />
-            </li>
-          </ul>
-        </Container>
+            <ThumbImagesList>
+              {images.map((url: string, index: number) => {
+                return (
+                  <ItemThumbLIst
+                    key={index}
+                    select={showImage === index ? true : false}
+                    onClick={() => setShowImage(index)}
+                  >
+                    <img src={url} />
+                  </ItemThumbLIst>
+                );
+              })}
+            </ThumbImagesList>
+          </Container>
+        )}
       </Container>
     </>
   );
