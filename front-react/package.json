@@ -25,6 +25,7 @@
     "react-hook-form": "^7.43.2",
     "react-icons": "^4.7.1",
     "react-input-mask": "^2.0.4",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.8.1",
     "react-select": "^5.7.0",
     "react-text-mask": "^5.5.0",

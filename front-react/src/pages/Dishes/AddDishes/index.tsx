@@ -8,12 +8,24 @@ import React from "react";
 import InputMask from "react-input-mask";
 import { Form } from "./styled";
 import { Button } from "@chakra-ui/react";
+import { useQuery } from "react-query/types/react";
+
+
+
+const getAllCategories = () => {
+  Axios().
+}
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
   const [images, setImages] = React.useState<string[]>([]);
+
+
+  const {} = useQuery("getAllCategories", () => {
+    
+  });
 
   const options = [
     { value: "chocolate", label: "Chocolate" },
