@@ -1,37 +1,62 @@
-import { Container, Input, Textarea } from "@chakra-ui/react";
+import { Button, Container, Input, Textarea, useToast } from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { MultipleSelect as Select } from "@components/MultipleSelect";
 import { TitleSection } from "@components/TitleSection";
+import { useSnackBar } from "@hooks/useSnackBar";
+import { ApiException } from "@services/api/ApiException";
+import { CategorieService } from "@services/api/categories";
 import React from "react";
 import InputMask from "react-input-mask";
+import { isError, useQuery } from "react-query";
 import { Form } from "./styled";
-import { Button } from "@chakra-ui/react";
-import { useQuery } from "react-query/types/react";
-
-
-
-const getAllCategories = () => {
-  Axios().
-}
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { IForm } from "./interfaces/IForm";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
-  const [toogleMaskCurrency, setToogleMaskCurreny] =
-    React.useState<boolean>(false);
+  const [toogleMaskCurrency, setToogleMaskCurreny] = React.useState<boolean>(false);
   const [images, setImages] = React.useState<string[]>([]);
+  const useSnack = useToast();
+  const { register, handleSubmit, reset } = useForm<IForm>();
 
+  const { data, isLoading, isError } = useQuery(
+    "getAllCategories",
+    async () => {
+      const response = await CategorieService.getAllCategories();
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  const {} = useQuery("getAllCategories", () => {
-    
-  });
+  const setCategories = (): {
+    value: number | undefined;
+    label: string;
+  }[] => {
+    if (data) {
+      return data.map((item) => {
+        return {
+          value: item.id,
+          label: item.description,
+        };
+      });
+    }
 
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+    if (isError) {
+      useSnack({
+        title: "Erro de carragemento",
+        description: "Categorias não carregadas. Tente novamente.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    return [];
+  };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setImages([]);
@@ -43,7 +68,7 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   return (
-    <BaseLayout>
+    <BaseLayout isLoading={isLoading}>
       <Container
         maxW="100%"
         h="100%"
@@ -67,6 +92,7 @@ export const DishesComponent = (): JSX.Element => {
                   size="sm"
                   type="text"
                   id="dishes"
+                  {...register("name")}
                 />
               </div>
               <Container
@@ -84,11 +110,12 @@ export const DishesComponent = (): JSX.Element => {
                 <Container maxW="100%" padding="0" flex="1">
                   <label htmlFor="category">Seleciona a categoria</label>
                   <Select
-                    options={options}
+                    options={setCategories()}
                     isMulti
                     placeholder="Categorias do Prato..."
                     isSearchable={true}
                     inputId="category"
+                    {...register("categoriesId")}
                   />
                 </Container>
                 <Container
@@ -112,6 +139,7 @@ export const DishesComponent = (): JSX.Element => {
                     mask={toogleMaskCurrency ? "R$ 999,99" : "R$ 99,99"}
                     maskChar=""
                     id="price"
+                    {...register("price")}
                     onChange={(e) => {
                       setPriceInput(e.target.value);
                     }}
@@ -131,6 +159,7 @@ export const DishesComponent = (): JSX.Element => {
                   height="auto"
                   rows={4}
                   id="description"
+                  {...register("description")}
                 />
               </Container>
               <Container maxW="100%" padding="0">

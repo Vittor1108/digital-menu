@@ -1,19 +1,17 @@
-import { Input, useToast, UseToastOptions } from "@chakra-ui/react";
+import mailImage from "@assets/images/modal/mail.png";
+import { Input, UseToastOptions } from "@chakra-ui/react";
+import { Button } from "@components/Button";
+import { GenericModal } from "@components/GenericModal";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useSnackBar } from "@hooks/useSnackBar";
+import { LoginService } from "@services/api/login/LoginService";
 import React from "react";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { Button } from "@components/Button";
-import { ApiException } from "@services/api/ApiException";
-import { LoginService } from "@services/api/login/LoginService";
 import { IForm } from "./interfaces/IForm";
 import { Container, Form } from "./styled";
-import { GenericModal } from "@components/GenericModal";
-import mailImage from "@assets/images/modal/mail.png";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useSnackBar } from "@hooks/useSnackBar";
 
 export const CreateAccountForm = (): JSX.Element => {
   const [valueInput, setValueInput] = React.useState<string>("");
