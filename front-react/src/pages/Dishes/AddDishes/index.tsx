@@ -17,7 +17,8 @@ import { IForm } from "./interfaces/IForm";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
-  const [toogleMaskCurrency, setToogleMaskCurreny] = React.useState<boolean>(false);
+  const [toogleMaskCurrency, setToogleMaskCurreny] =
+    React.useState<boolean>(false);
   const [images, setImages] = React.useState<string[]>([]);
   const useSnack = useToast();
   const { register, handleSubmit, reset } = useForm<IForm>();
@@ -32,31 +33,6 @@ export const DishesComponent = (): JSX.Element => {
       refetchOnWindowFocus: false,
     }
   );
-
-  const setCategories = (): {
-    value: number | undefined;
-    label: string;
-  }[] => {
-    if (data) {
-      return data.map((item) => {
-        return {
-          value: item.id,
-          label: item.description,
-        };
-      });
-    }
-
-    if (isError) {
-      useSnack({
-        title: "Erro de carragemento",
-        description: "Categorias não carregadas. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-    return [];
-  };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setImages([]);
@@ -109,14 +85,14 @@ export const DishesComponent = (): JSX.Element => {
               >
                 <Container maxW="100%" padding="0" flex="1">
                   <label htmlFor="category">Seleciona a categoria</label>
-                  <Select
-                    options={setCategories()}
+                  {/* <Select
+                    options={[{ value: 1, label: "OK" }]}
                     isMulti
                     placeholder="Categorias do Prato..."
                     isSearchable={true}
                     inputId="category"
                     {...register("categoriesId")}
-                  />
+                  /> */}
                 </Container>
                 <Container
                   maxW="100%"
