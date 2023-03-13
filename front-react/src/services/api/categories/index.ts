@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { ApiException } from "../ApiException";
 import { Axios } from "../axiosConfig";
 import { ICategorie } from "./interfaces/ICategorie";
 import { IPaginationCategorie } from "./interfaces/IPaginationCategorie";
@@ -13,6 +12,7 @@ const getAllCategories = async (
     }/text=${dataParams?.text ? dataParams?.text : ""}`
   );
 };
+
 
 export const CategorieService = {
   getAllCategories,

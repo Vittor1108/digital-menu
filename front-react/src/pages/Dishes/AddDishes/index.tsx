@@ -15,40 +15,70 @@ import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
 import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
+import { ProductService } from "@services/api/dishes";
+import { AxiosError } from "axios";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [images, setImages] = React.useState<string[]>([]);
+  const [files, setFiles] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
-
-  const [categories, setCategories] = React.useState<
-    MultiValue<ICategorieSelect>
-  >([]);
+  const [categories, setCategories] =
+    React.useState<MultiValue<ICategorieSelect> | null>([]);
   const useSnack = useToast();
-
+  const formData = new FormData();
   const schemaForm = yup.object({
     name: yup.string().required("Nome do prato é obrigatório"),
     price: yup.string().required("Preço do prato é obrigatório"),
     description: yup.string().required("Descrição do prato é obrigatória"),
-    categoriesId: yup.array(categories),
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    reset,
   } = useForm<IForm>({
     resolver: yupResolver(schemaForm),
   });
+
   const { data, isLoading, isError } = useQuery(
     "getAllCategories",
     async () => {
-      const response = await CategorieService.getAllCategories();
-      return response.data;
+      const request = await CategorieService.getAllCategories();
+      return request.data;
     },
     {
       refetchOnWindowFocus: false,
+    }
+  );
+
+  React.useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
+  const createProduct = useQuery(
+    "createProduct",
+    async () => {
+      const params = {
+        name: getValues().name,
+        description: getValues().description,
+        price: Number(getValues().price.toString().replace("R$", "")),
+        categories: categories!.map((category) => Number(category.value)),
+        images: formData,
+        avargePrice: null,
+      };
+
+      const request = await ProductService.createProduct(params);
+      return request.data;
+    },
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      retry: false,
     }
   );
 
@@ -85,13 +115,58 @@ export const DishesComponent = (): JSX.Element => {
     });
   };
 
-  const onSubmit = (dataForm: IForm): void => {
-    console.log(dataForm);
-    console.log(categories);
+  const resetForm = (): void => {
+    setCategories([]);
+    reset((formValues) => ({
+      ...formValues,
+      avargePrice: 0,
+      description: "",
+      categoriesId: [],
+      name: "",
+      price: 0,
+    }));
+  };
+
+  const addInfoImage = (event: any): void => {
+    setFiles((event.target as HTMLInputElement).files);
+  };
+
+  const onSubmit = (): void => {
+    Array.from(files).forEach((file: any) => {
+      formData.append("file", file);
+    });
+    setLoading(true);
+    createProduct
+      .refetch()
+      .then((response) => {
+        if (response.error instanceof AxiosError) {
+          useSnack({
+            title: "Não foi possível criar o produto",
+            description: `${response.error.response?.data.message}`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+          return;
+        }
+        useSnack({
+          title: "Prato Criado!",
+          description: `Prato Criado com sucesso!`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        window.scroll(0, 0);
+        return;
+      })
+      .finally(() => {
+        setLoading(false);
+        resetForm();
+      });
   };
 
   return (
-    <BaseLayout isLoading={isLoading}>
+    <BaseLayout isLoading={loading}>
       <Container
         maxW="100%"
         h="100%"
@@ -170,7 +245,7 @@ export const DishesComponent = (): JSX.Element => {
                     size="sm"
                     type="text"
                     as={InputMask}
-                    mask={toogleMaskCurrency ? "R$ 999,99" : "R$ 99,99"}
+                    mask={toogleMaskCurrency ? "R$ 999.99" : "R$ 99.99"}
                     maskChar=""
                     id="price"
                     {...register("price")}
@@ -207,7 +282,10 @@ export const DishesComponent = (): JSX.Element => {
                   size="sm"
                   accept="image/png, image/gif, image/jpeg"
                   multiple={true}
-                  onChange={(event) => addImage(event)}
+                  onChange={(event) => {
+                    addImage(event);
+                    addInfoImage(event);
+                  }}
                 />
               </Container>
             </Form>
