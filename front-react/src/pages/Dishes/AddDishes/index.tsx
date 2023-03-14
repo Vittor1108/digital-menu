@@ -22,6 +22,7 @@ export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [images, setImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<any>(null);
+  const [productId, setProductId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
@@ -82,6 +83,22 @@ export const DishesComponent = (): JSX.Element => {
     }
   );
 
+  const requestProductImage = useQuery(
+    ["productImage", files, productId],
+    async () => {
+      const params = {
+        files,
+        productId,
+      };
+      const request = await ProductService.createImageProduct(params);
+    },
+    {
+      enabled: false,
+      retry: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const setArrayCategories = (): ICategorieSelect[] => {
     if (data) {
       return data.map((item) => {
@@ -131,9 +148,21 @@ export const DishesComponent = (): JSX.Element => {
     setFiles((event.target as HTMLInputElement).files);
   };
 
+  const addProductImage = (): void => {
+    if (!productId) return;
+    requestProductImage.refetch();
+  };
+
+  React.useEffect(() => {
+    addProductImage();
+  }, [productId]);
+
+
+  
+
   const onSubmit = (): void => {
     Array.from(files).forEach((file: any) => {
-      formData.append("file", file);
+      formData.append("files", file as File);
     });
     setLoading(true);
     createProduct
@@ -156,14 +185,20 @@ export const DishesComponent = (): JSX.Element => {
           duration: 5000,
           isClosable: true,
         });
-        window.scroll(0, 0);
+        setProductId(null);
+        setProductId(response.data.id);
         return;
       })
       .finally(() => {
+        window.scroll(0, 0);
         setLoading(false);
-        resetForm();
+        // resetForm();
+        setImages([]);
       });
   };
+
+
+
 
   return (
     <BaseLayout isLoading={loading}>

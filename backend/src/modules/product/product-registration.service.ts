@@ -16,7 +16,6 @@ export class ProductRegistrationService {
     createDto: CreateProductRegistrationDto,
     req: IReq,
   ): Promise<ProductRegistration> => {
-    console.log(createDto);
     const productExists = await this.prismaService.product.findFirst({
       where: {
         name: createDto.name,
