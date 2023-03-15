@@ -22,6 +22,7 @@
       "@hooks/*": ["hooks/*"],
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"],
       "@/*": ["*"]
     }
   },

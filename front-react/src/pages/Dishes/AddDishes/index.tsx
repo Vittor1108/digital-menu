@@ -17,6 +17,7 @@ import * as yup from "yup";
 import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
+import CurrencyInput from "react-currency-input-field";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
@@ -26,8 +27,6 @@ export const DishesComponent = (): JSX.Element => {
     undefined
   );
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [toogleMaskCurrency, setToogleMaskCurreny] =
-    React.useState<boolean>(false);
   const [categories, setCategories] =
     React.useState<MultiValue<ICategorieSelect> | null>([]);
   const useSnack = useToast();
@@ -68,12 +67,11 @@ export const DishesComponent = (): JSX.Element => {
     async () => {
       const params = {
         name: getValues().name,
-        price: Number(getValues().price.toString().replace("R$", "")),
+        price: Number(getValues().price.toString().replace("R$", "").replace(',', '.')),
         categoriesId: categories!.map((category) => Number(category.value)),
         description: getValues().description,
         avargePrice: null,
       };
-
       const request = await ProductService.createProduct(params);
       return request.data;
     },
@@ -126,7 +124,6 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    // setImages([]);
     const { files } = event.target;
     Array.from(files!).forEach((file: File) => {
       const url = URL.createObjectURL(file);
@@ -296,23 +293,19 @@ export const DishesComponent = (): JSX.Element => {
                   }}
                 >
                   <label htmlFor="price">Preço do prato</label>
-                  <Input
+                  <CurrencyInput
                     placeholder="R$"
-                    size="sm"
-                    type="text"
-                    as={InputMask}
-                    mask={toogleMaskCurrency ? "R$ 999.99" : "R$ 99.99"}
-                    maskChar=""
-                    id="price"
+                    defaultValue=""
+                    decimalsLimit={2}
+                    intlConfig={{ locale: "pt-br", currency: "BRL" }}
+                    style={{
+                      border: "1px solid #ddd",
+                      width: "100%",
+                      borderRadius: "3px",
+                      padding: "7.5px",
+                      fontSize: "14px",
+                    }}
                     {...register("price")}
-                    onChange={(e) => {
-                      setPriceInput(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      priceInput.length >= 8
-                        ? setToogleMaskCurreny(true)
-                        : setToogleMaskCurreny(false);
-                    }}
                   />
                   <FieldErrorMessage>{errors.price?.message}</FieldErrorMessage>
                 </Container>
