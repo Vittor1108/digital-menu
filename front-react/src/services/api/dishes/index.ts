@@ -3,7 +3,9 @@ import { Axios } from "../axiosConfig";
 import { ICreateImageProduct } from "./interfaces/ICreateImageDishes";
 import { IDhes } from "./interfaces/IDishes";
 
-export const createProduct = async (data: IDhes): Promise<AxiosResponse<IDhes>> => {
+export const createProduct = async (
+  data: IDhes
+): Promise<AxiosResponse<IDhes>> => {
   return await Axios().post("/product", {
     name: data.name,
     price: data.price,
@@ -23,7 +25,12 @@ export const createImageProduct = async (
   return await Axios().post(`/photo-product/${data.productId}`, formData);
 };
 
-export const ProductService = {
+export const getDisheById = async (id: number): Promise<AxiosResponse<IDhes>> => {
+  return await Axios().get(`/product/${id}`);
+};
+
+export const DishesService = {
   createProduct,
   createImageProduct,
+  getDisheById
 };

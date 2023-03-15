@@ -1,17 +1,10 @@
-//Images
-import imgSystem from "../../assets/images/imgSystem.png";
-//Components Styled
-import { NavigationMenu } from "./styles";
-//ICONS
-import { RiDashboardFill } from "react-icons/ri";
-import { RiArrowDownSLine } from "react-icons/ri";
-import { FaArchive } from "react-icons/fa";
-import { FaClipboardList } from "react-icons/fa";
-import { FaUserFriends } from "react-icons/fa";
-import { FaBriefcase } from "react-icons/fa";
 import { BsFillBasket2Fill } from "react-icons/bs";
-//INTERFACES
+import { FaArchive, FaBriefcase, FaClipboardList, FaUserFriends } from "react-icons/fa";
+import { RiArrowDownSLine, RiDashboardFill } from "react-icons/ri";
+import { Link } from "react-router-dom";
+import imgSystem from "../../assets/images/imgSystem.png";
 import { INavigation } from "./interfaces/INavigation";
+import { NavigationMenu } from "./styles";
 
 export const Navigation = (props: INavigation) => {
   const showAccordion = (numberAccordion: number): void => {
@@ -50,7 +43,7 @@ export const Navigation = (props: INavigation) => {
             <RiArrowDownSLine />
             <ul>
               <li>
-                <a href="">Adicionar Prdouto</a>
+                <Link to="/dishes">Adicionar produto</Link>
               </li>
               <li>
                 <a href="">Editar Prdouto</a>

@@ -6,21 +6,30 @@ import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { TitleSection } from "@components/TitleSection";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CategorieService } from "@services/api/categories";
-import { ProductService } from "@services/api/dishes";
+import { DishesService } from "@services/api/dishes";
 import { AxiosError } from "axios";
 import React from "react";
+import CurrencyInput from "react-currency-input-field";
 import { useForm } from "react-hook-form";
-import InputMask from "react-input-mask";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import Select, { MultiValue } from "react-select";
 import * as yup from "yup";
 import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
-import CurrencyInput from "react-currency-input-field";
+
+const schemaForm = yup.object({
+  name: yup.string().required("Nome do prato é obrigatório"),
+  price: yup.string().required("Preço do prato é obrigatório"),
+  description: yup.string().required("Descrição do prato é obrigatória"),
+});
+
+const getDishesById = async (id: number) => {
+  return await DishesService.getDisheById(id);
+};
 
 export const DishesComponent = (): JSX.Element => {
-  const [priceInput, setPriceInput] = React.useState<string>("");
   const [images, setImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<any>(null);
   const [productId, setProductId] = React.useState<number | undefined>(
@@ -29,23 +38,10 @@ export const DishesComponent = (): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [categories, setCategories] =
     React.useState<MultiValue<ICategorieSelect> | null>([]);
+
   const useSnack = useToast();
   const formData = new FormData();
-  const schemaForm = yup.object({
-    name: yup.string().required("Nome do prato é obrigatório"),
-    price: yup.string().required("Preço do prato é obrigatório"),
-    description: yup.string().required("Descrição do prato é obrigatória"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    reset,
-  } = useForm<IForm>({
-    resolver: yupResolver(schemaForm),
-  });
+  const { id } = useParams();
 
   const { data, isLoading, isError } = useQuery(
     "getAllCategories",
@@ -58,21 +54,29 @@ export const DishesComponent = (): JSX.Element => {
     }
   );
 
-  React.useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    reset,
+  } = useForm<IForm>({
+    resolver: yupResolver(schemaForm),
+  });
 
   const createProduct = useQuery(
     "createProduct",
     async () => {
       const params = {
         name: getValues().name,
-        price: Number(getValues().price.toString().replace("R$", "").replace(',', '.')),
+        price: Number(
+          getValues().price.toString().replace("R$", "").replace(",", ".")
+        ),
         categoriesId: categories!.map((category) => Number(category.value)),
         description: getValues().description,
         avargePrice: null,
       };
-      const request = await ProductService.createProduct(params);
+      const request = await DishesService.createProduct(params);
       return request.data;
     },
     {
@@ -83,13 +87,13 @@ export const DishesComponent = (): JSX.Element => {
   );
 
   const requestProductImage = useQuery(
-    ["productImage", files, productId],
+    ["disheImage", files, productId],
     async () => {
       const params = {
         files,
         productId: productId!,
       };
-      const request = await ProductService.createImageProduct(params);
+      const request = await DishesService.createImageProduct(params);
       return request.data;
     },
     {
@@ -97,6 +101,17 @@ export const DishesComponent = (): JSX.Element => {
       retry: false,
       refetchOnWindowFocus: false,
     }
+  );
+
+  const requestDishesById = useQuery(
+    ["dishe", id],
+    async () => {
+      if (id) {
+        const request = await getDishesById(Number(id));
+        return request.data
+      }
+    },
+    { enabled: false, retry: false }
   );
 
   const setArrayCategories = (): ICategorieSelect[] => {
@@ -165,11 +180,6 @@ export const DishesComponent = (): JSX.Element => {
     resetForm();
   };
 
-  React.useEffect(() => {
-    if (!productId) return;
-    addProductImage();
-  }, [productId]);
-
   const onSubmit = React.useCallback((): void => {
     if (!files) {
       useSnack({
@@ -217,6 +227,26 @@ export const DishesComponent = (): JSX.Element => {
         setLoading(false);
       });
   }, [images]);
+
+
+  const setDataDishe = (): void => {
+    console.logr(requestDishesById.data);
+  }
+
+  React.useEffect(() => {
+    if (id) {
+      requestDishesById.refetch();
+    }
+  }, [id]);
+
+  React.useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
+  React.useEffect(() => {
+    if (!productId) return;
+    addProductImage();
+  }, [productId]);
 
   return (
     <BaseLayout isLoading={loading}>
