@@ -17,7 +17,7 @@ export const createImageProduct = async (
   data: ICreateImageProduct
 ): Promise<AxiosResponse<boolean>> => {
   const formData = new FormData();
-  Array.from(data.files).forEach((file: any) => {
+  Array.from(data.files).forEach((file: File) => {
     formData.append("files", file as File);
   });
   return await Axios().post(`/photo-product/${data.productId}`, formData);

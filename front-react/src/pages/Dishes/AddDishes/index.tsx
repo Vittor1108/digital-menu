@@ -1,12 +1,15 @@
 import { Button, Container, Input, Textarea, useToast } from "@chakra-ui/react";
+import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { TitleSection } from "@components/TitleSection";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CategorieService } from "@services/api/categories";
+import { ProductService } from "@services/api/dishes";
+import { AxiosError } from "axios";
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import { useQuery } from "react-query";
 import Select, { MultiValue } from "react-select";
@@ -14,15 +17,14 @@ import * as yup from "yup";
 import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
-import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
-import { ProductService } from "@services/api/dishes";
-import { AxiosError } from "axios";
 
 export const DishesComponent = (): JSX.Element => {
   const [priceInput, setPriceInput] = React.useState<string>("");
   const [images, setImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<any>(null);
-  const [productId, setProductId] = React.useState<number | null>(null);
+  const [productId, setProductId] = React.useState<number | undefined>(
+    undefined
+  );
   const [loading, setLoading] = React.useState<boolean>(false);
   const [toogleMaskCurrency, setToogleMaskCurreny] =
     React.useState<boolean>(false);
@@ -66,10 +68,9 @@ export const DishesComponent = (): JSX.Element => {
     async () => {
       const params = {
         name: getValues().name,
-        description: getValues().description,
         price: Number(getValues().price.toString().replace("R$", "")),
-        categories: categories!.map((category) => Number(category.value)),
-        images: formData,
+        categoriesId: categories!.map((category) => Number(category.value)),
+        description: getValues().description,
         avargePrice: null,
       };
 
@@ -88,9 +89,10 @@ export const DishesComponent = (): JSX.Element => {
     async () => {
       const params = {
         files,
-        productId,
+        productId: productId!,
       };
       const request = await ProductService.createImageProduct(params);
+      return request.data;
     },
     {
       enabled: false,
@@ -124,7 +126,7 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setImages([]);
+    // setImages([]);
     const { files } = event.target;
     Array.from(files!).forEach((file: File) => {
       const url = URL.createObjectURL(file);
@@ -133,37 +135,59 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const resetForm = (): void => {
-    setCategories([]);
-    reset((formValues) => ({
-      ...formValues,
-      avargePrice: 0,
-      description: "",
-      categoriesId: [],
-      name: "",
-      price: 0,
-    }));
+    setImages([]);
+    reset();
   };
 
-  const addInfoImage = (event: any): void => {
+  const addInfoImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setFiles((event.target as HTMLInputElement).files);
   };
 
-  const addProductImage = (): void => {
-    if (!productId) return;
-    requestProductImage.refetch();
+  const addProductImage = async (): Promise<void> => {
+    const response = await requestProductImage.refetch();
+    if (!response.data) {
+      useSnack({
+        title: "Prato criado.",
+        description: `Prato criado. Porém a foto não adicionada. Confira o prato em editar`,
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      resetForm();
+      return;
+    }
+
+    useSnack({
+      title: "Prato Criado!",
+      description: `Prato Criado com sucesso!`,
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+
+    resetForm();
   };
 
   React.useEffect(() => {
+    if (!productId) return;
     addProductImage();
   }, [productId]);
 
+  const onSubmit = React.useCallback((): void => {
+    if (!files) {
+      useSnack({
+        title: "Imagem é obrigatória",
+        description: `Adicona uma imagem para criar o prato.`,
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
 
-  
-
-  const onSubmit = (): void => {
     Array.from(files).forEach((file: any) => {
       formData.append("files", file as File);
     });
+
     setLoading(true);
     createProduct
       .refetch()
@@ -178,27 +202,24 @@ export const DishesComponent = (): JSX.Element => {
           });
           return;
         }
+
+        setProductId(response.data!.id);
+        return;
+      })
+      .catch((e: any) => {
         useSnack({
-          title: "Prato Criado!",
-          description: `Prato Criado com sucesso!`,
-          status: "success",
+          title: "Não foi possível criar o produto",
+          description: `${e.message}`,
+          status: "error",
           duration: 5000,
           isClosable: true,
         });
-        setProductId(null);
-        setProductId(response.data.id);
-        return;
       })
       .finally(() => {
         window.scroll(0, 0);
         setLoading(false);
-        // resetForm();
-        setImages([]);
       });
-  };
-
-
-
+  }, [images]);
 
   return (
     <BaseLayout isLoading={loading}>
