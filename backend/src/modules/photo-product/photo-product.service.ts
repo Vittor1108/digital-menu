@@ -36,9 +36,6 @@ export class PhotoProductService {
         };
       });
     }
-
-    console.log(files);
-
     await this.prismaService.productPhoto.createMany({
       data: this.dataPhotoProduct,
     });
