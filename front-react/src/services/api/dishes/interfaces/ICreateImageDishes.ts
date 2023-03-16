@@ -1,4 +1,4 @@
 export interface ICreateImageProduct {
-  files: File[];
+  files: File[] | FileList;
   productId: number;
 }

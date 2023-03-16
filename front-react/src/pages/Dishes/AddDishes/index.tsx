@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
+import { IDishes } from "@interfaces/IDishes";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -29,16 +30,33 @@ const getDishesById = async (id: number) => {
   return await DishesService.getDisheById(id);
 };
 
+const updatedDisheById = async (
+  id: number,
+  { name, price, categoriesId, description, avargePrice }: IDishes
+) => {
+  const params = {
+    name,
+    price,
+    categoriesId,
+    description,
+    avargePrice,
+  };
+
+  console.log(params);
+
+  return DishesService.updatedDishe(id, params);
+};
+
 export const DishesComponent = (): JSX.Element => {
   const [images, setImages] = React.useState<string[]>([]);
-  const [files, setFiles] = React.useState<any>(null);
+  const [files, setFiles] = React.useState<File[] | FileList | null>(null);
   const [productId, setProductId] = React.useState<number | undefined>(
     undefined
   );
   const [loading, setLoading] = React.useState<boolean>(false);
   const [categories, setCategories] =
     React.useState<MultiValue<ICategorieSelect> | null>([]);
-
+  const [priceInput, setPriceInput] = React.useState<number>();
   const useSnack = useToast();
   const formData = new FormData();
   const { id } = useParams();
@@ -60,6 +78,7 @@ export const DishesComponent = (): JSX.Element => {
     formState: { errors },
     getValues,
     reset,
+    setValue,
   } = useForm<IForm>({
     resolver: yupResolver(schemaForm),
   });
@@ -90,7 +109,7 @@ export const DishesComponent = (): JSX.Element => {
     ["disheImage", files, productId],
     async () => {
       const params = {
-        files,
+        files: files!,
         productId: productId!,
       };
       const request = await DishesService.createImageProduct(params);
@@ -108,10 +127,34 @@ export const DishesComponent = (): JSX.Element => {
     async () => {
       if (id) {
         const request = await getDishesById(Number(id));
-        return request.data
+        return request.data;
       }
     },
     { enabled: false, retry: false }
+  );
+
+  const updatedDishe = useQuery(
+    ["updatedDishe", id],
+    async () => {
+      const params = {
+        name: getValues().name,
+        price: Number(
+          getValues().price.toString().replace("R$", "").replace(",", ".")
+        ),
+        categoriesId: getValues().categoriesId,
+        description: getValues().description,
+        avargePrice: null,
+      };
+
+      if (id) {
+        const request = await updatedDisheById(Number(id), params);
+        return request.data;
+      }
+    },
+    {
+      enabled: false,
+      retry: false,
+    }
   );
 
   const setArrayCategories = (): ICategorieSelect[] => {
@@ -139,6 +182,7 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setImages([]);
     const { files } = event.target;
     Array.from(files!).forEach((file: File) => {
       const url = URL.createObjectURL(file);
@@ -147,6 +191,7 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const resetForm = (): void => {
+    setCategories([]);
     setImages([]);
     reset();
   };
@@ -180,8 +225,8 @@ export const DishesComponent = (): JSX.Element => {
     resetForm();
   };
 
-  const onSubmit = React.useCallback((): void => {
-    if (!files) {
+  const cheeckErros = (): boolean => {
+    if (!files && !id) {
       useSnack({
         title: "Imagem é obrigatória",
         description: `Adicona uma imagem para criar o prato.`,
@@ -189,16 +234,16 @@ export const DishesComponent = (): JSX.Element => {
         duration: 5000,
         isClosable: true,
       });
+      return true;
     }
+    return false;
+  };
 
-    Array.from(files).forEach((file: any) => {
-      formData.append("files", file as File);
-    });
-
-    setLoading(true);
+  const createDisheOnSubmit = (): void => {
     createProduct
       .refetch()
       .then((response) => {
+        setLoading(true);
         if (response.error instanceof AxiosError) {
           useSnack({
             title: "Não foi possível criar o produto",
@@ -215,7 +260,7 @@ export const DishesComponent = (): JSX.Element => {
       })
       .catch((e: any) => {
         useSnack({
-          title: "Não foi possível criar o produto",
+          title: "Não foi possível criar o prato",
           description: `${e.message}`,
           status: "error",
           duration: 5000,
@@ -226,17 +271,121 @@ export const DishesComponent = (): JSX.Element => {
         window.scroll(0, 0);
         setLoading(false);
       });
+  };
+
+  const appendFiles = (): void => {
+    Array.from(files!).forEach((file: any) => {
+      formData.append("files", file as File);
+    });
+  };
+
+  const updatedDisheOnSubmit = (): void => {
+    updatedDishe
+      .refetch()
+      .then((response) => {
+        setLoading(true);
+        if (response.error instanceof AxiosError) {
+          useSnack({
+            title: "Não foi possível atualizar o produto",
+            description: `${response.error.response?.data.message}`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+          return;
+        }
+
+        setProductId(response.data!.id);
+        return;
+      })
+      .catch((e: any) => {
+        useSnack({
+          title: "Não foi possível atualizar o prato",
+          description: `${e.message}`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        window.scroll(0, 0);
+        setLoading(false);
+      });
+  };
+
+  const onSubmit = React.useCallback((): void => {
+    if (cheeckErros()) return;
+
+    if (!id) {
+      appendFiles();
+      createDisheOnSubmit();
+      return;
+    }
+
+    updatedDisheOnSubmit();
   }, [images]);
 
+  const setValuesField = (data: IDishes): void => {
+    const categoriesValues: { value: number; label: string }[] =
+      data.ProductCategory!.map((item) => {
+        return {
+          value: item.category.id,
+          label: item.category.name,
+        };
+      });
+
+    const imagesUrl: string[] = data.ProductPhoto!.map((photo) => photo.url);
+
+    const categoriesId: number[] = data.ProductCategory!.map(
+      (item) => item.category.id
+    );
+
+    setImages(imagesUrl);
+    setPriceInput(data!.price);
+    setCategories(categoriesValues);
+    setValue("name", data!.name);
+    setValue("description", data.description);
+    setValue(
+      "price",
+      data!.price.toLocaleString("pt-br", {
+        style: "currency",
+        currency: "BRL",
+      })
+    );
+    setValue("categoriesId", categoriesId);
+  };
 
   const setDataDishe = (): void => {
-    console.logr(requestDishesById.data);
-  }
+    requestDishesById
+      .refetch()
+      .then((response) => {
+        setLoading(true);
+        const { data } = response;
+
+        if (data) {
+          setValuesField(data);
+        }
+      })
+      .catch((e: any) => {
+        useSnack({
+          title: "Falha ao carregar os dados.",
+          description: `${e.message}`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   React.useEffect(() => {
     if (id) {
-      requestDishesById.refetch();
+      setDataDishe();
+      return;
     }
+    resetForm();
   }, [id]);
 
   React.useEffect(() => {
@@ -308,6 +457,7 @@ export const DishesComponent = (): JSX.Element => {
                     onChange={(value) => {
                       setCategories(value);
                     }}
+                    value={categories}
                   />
                 </Container>
                 <Container
@@ -325,7 +475,7 @@ export const DishesComponent = (): JSX.Element => {
                   <label htmlFor="price">Preço do prato</label>
                   <CurrencyInput
                     placeholder="R$"
-                    defaultValue=""
+                    defaultValue={priceInput}
                     decimalsLimit={2}
                     intlConfig={{ locale: "pt-br", currency: "BRL" }}
                     style={{
@@ -336,6 +486,9 @@ export const DishesComponent = (): JSX.Element => {
                       fontSize: "14px",
                     }}
                     {...register("price")}
+                    onChange={(e) => {
+                      setPriceInput(Number(e.target.value));
+                    }}
                   />
                   <FieldErrorMessage>{errors.price?.message}</FieldErrorMessage>
                 </Container>
@@ -393,6 +546,10 @@ export const DishesComponent = (): JSX.Element => {
               borderRadius="0.25rem"
               width="100%"
               size="sm"
+              onClick={() => {
+                setImages([]);
+                setFiles([]);
+              }}
             >
               Deletar Imagens
             </Button>

@@ -23,6 +23,7 @@
       "@assets/*": ["assets/*"],
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
+      "@interfaces/*": ["interfaces/*"],
       "@/*": ["*"]
     }
   },

@@ -1,11 +1,11 @@
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
 import { ICreateImageProduct } from "./interfaces/ICreateImageDishes";
-import { IDhes } from "./interfaces/IDishes";
+import { IDishes } from "@interfaces/IDishes";
 
 export const createProduct = async (
-  data: IDhes
-): Promise<AxiosResponse<IDhes>> => {
+  data: IDishes
+): Promise<AxiosResponse<IDishes>> => {
   return await Axios().post("/product", {
     name: data.name,
     price: data.price,
@@ -25,12 +25,28 @@ export const createImageProduct = async (
   return await Axios().post(`/photo-product/${data.productId}`, formData);
 };
 
-export const getDisheById = async (id: number): Promise<AxiosResponse<IDhes>> => {
+export const getDisheById = async (
+  id: number
+): Promise<AxiosResponse<IDishes>> => {
   return await Axios().get(`/product/${id}`);
+};
+
+export const updatedDishe = async (
+  id: number,
+  data: IDishes
+): Promise<AxiosResponse<IDishes>> => {
+  return await Axios().put(`/product/${id}`, {
+    name: data.name,
+    price: data.price,
+    categoriesId: data.categoriesId,
+    description: data.description,
+    avargePrice: data.avargePrice,
+  });
 };
 
 export const DishesService = {
   createProduct,
   createImageProduct,
-  getDisheById
+  getDisheById,
+  updatedDishe
 };
