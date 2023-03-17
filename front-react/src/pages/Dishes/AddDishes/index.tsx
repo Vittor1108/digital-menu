@@ -6,7 +6,7 @@ import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { TitleSection } from "@components/TitleSection";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CategorieService } from "@services/api/categories";
-import { DishesService } from "@services/api/dishes";
+import { deleteImageDishe, DishesService } from "@services/api/dishes";
 import { AxiosError } from "axios";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -14,11 +14,12 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import Select, { MultiValue } from "react-select";
+("");
 import * as yup from "yup";
 import { ICategorieSelect } from "./interfaces/ICategorieSelect";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
-import { IDishes } from "@interfaces/IDishes";
+import { IDishes, ProductPhoto } from "@interfaces/IDishes";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -28,6 +29,10 @@ const schemaForm = yup.object({
 
 const getDishesById = async (id: number) => {
   return await DishesService.getDisheById(id);
+};
+
+const deleteFileDishe = async (id: number) => {
+  return await DishesService.deleteImageDishe(id);
 };
 
 const updatedDisheById = async (
@@ -42,14 +47,14 @@ const updatedDisheById = async (
     avargePrice,
   };
 
-  console.log(params);
-
   return DishesService.updatedDishe(id, params);
 };
 
 export const DishesComponent = (): JSX.Element => {
   const [images, setImages] = React.useState<string[]>([]);
-  const [files, setFiles] = React.useState<File[] | FileList | null>(null);
+  const [files, setFiles] = React.useState<
+    File[] | FileList | null | ProductPhoto[]
+  >(null);
   const [productId, setProductId] = React.useState<number | undefined>(
     undefined
   );
@@ -57,6 +62,10 @@ export const DishesComponent = (): JSX.Element => {
   const [categories, setCategories] =
     React.useState<MultiValue<ICategorieSelect> | null>([]);
   const [priceInput, setPriceInput] = React.useState<number>();
+  const [title, setTitle] = React.useState<string>("Adicionar prato");
+  const [valueInputFiles, setValueInputFiles] =
+    React.useState<string>("Nenhuma Foto");
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const useSnack = useToast();
   const formData = new FormData();
   const { id } = useParams();
@@ -157,6 +166,18 @@ export const DishesComponent = (): JSX.Element => {
     }
   );
 
+  const deleteFileDishe = useQuery(
+    ["deleteFileDishe", id],
+    async () => {
+      const request = await deleteImageDishe(Number(id));
+      return request.data;
+    },
+    {
+      enabled: false,
+      retry: false,
+    }
+  );
+
   const setArrayCategories = (): ICategorieSelect[] => {
     if (data) {
       return data.map((item) => {
@@ -184,15 +205,20 @@ export const DishesComponent = (): JSX.Element => {
   const addImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setImages([]);
     const { files } = event.target;
+    const string: string[] = [];
     Array.from(files!).forEach((file: File) => {
       const url = URL.createObjectURL(file);
+      string.push(file.name);
       setImages((oldImages) => [...oldImages, url]);
     });
+
+    setValueInputFiles(string.join(", "));
   };
 
   const resetForm = (): void => {
     setCategories([]);
     setImages([]);
+    setValueInputFiles("Nenhuma Foto");
     reset();
   };
 
@@ -294,7 +320,6 @@ export const DishesComponent = (): JSX.Element => {
           });
           return;
         }
-
         setProductId(response.data!.id);
         return;
       })
@@ -334,12 +359,17 @@ export const DishesComponent = (): JSX.Element => {
         };
       });
 
-    const imagesUrl: string[] = data.ProductPhoto!.map((photo) => photo.url);
+    const filesName = data
+      .ProductPhoto!.map((photo) => photo.originalname)
+      .join(", ");
 
+    const imagesUrl: string[] = data.ProductPhoto!.map((photo) => photo.url);
     const categoriesId: number[] = data.ProductCategory!.map(
       (item) => item.category.id
     );
-
+    const filesList = data.ProductPhoto!.map((photo) => photo);
+    setFiles(filesList);
+    setValueInputFiles(filesName);
     setImages(imagesUrl);
     setPriceInput(data!.price);
     setCategories(categoriesValues);
@@ -360,10 +390,8 @@ export const DishesComponent = (): JSX.Element => {
       .refetch()
       .then((response) => {
         setLoading(true);
-        const { data } = response;
-
-        if (data) {
-          setValuesField(data);
+        if (response.data) {
+          setValuesField(response.data);
         }
       })
       .catch((e: any) => {
@@ -380,9 +408,19 @@ export const DishesComponent = (): JSX.Element => {
       });
   };
 
+  const onDelete = (): void => {
+    // setImages([]);
+    // setFiles([]);
+    // setValueInputFiles("Nenhuma Foto");
+    Array.from(files! as ProductPhoto[]).forEach((file: ProductPhoto) => {
+      deleteFileDishe.refetch();
+    });
+  };
+
   React.useEffect(() => {
     if (id) {
       setDataDishe();
+      setTitle("Editar Prato");
       return;
     }
     resetForm();
@@ -412,7 +450,7 @@ export const DishesComponent = (): JSX.Element => {
         }}
       >
         <CardSection>
-          <TitleSection>Adicionar Prato</TitleSection>
+          <TitleSection>{title}</TitleSection>
           <article>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <div>
@@ -444,7 +482,7 @@ export const DishesComponent = (): JSX.Element => {
                     isMulti={true}
                     isSearchable={true}
                     options={setArrayCategories()}
-                    placeholder="categoria"
+                    placeholder="Categoria..."
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
@@ -509,16 +547,48 @@ export const DishesComponent = (): JSX.Element => {
               </Container>
               <Container maxW="100%" padding="0">
                 <label htmlFor="">Imagens do prato:</label>
-                <Input
-                  type="file"
-                  size="sm"
-                  accept="image/png, image/gif, image/jpeg"
-                  multiple={true}
-                  onChange={(event) => {
-                    addImage(event);
-                    addInfoImage(event);
-                  }}
-                />
+                <Container
+                  maxW="100%"
+                  padding="0"
+                  display="flex"
+                  alignItems="center"
+                >
+                  <Input
+                    type="file"
+                    size="sm"
+                    accept="image/png, image/gif, image/jpeg"
+                    multiple={true}
+                    onChange={(event) => {
+                      addImage(event);
+                      addInfoImage(event);
+                    }}
+                    hidden
+                    ref={inputFileRef}
+                  />
+                  <Input
+                    type="text"
+                    placeholder={valueInputFiles}
+                    disabled
+                    border="1px solid #ccc"
+                    opacity="1 !important"
+                    size="sm"
+                  />
+                  <Button
+                    fontWeight="normal"
+                    fontSize="14px"
+                    borderRadius="0 3px 3px 0"
+                    height="32px"
+                    backgroundColor="red"
+                    color="white"
+                    onClick={() => {
+                      inputFileRef.current!.click();
+                    }}
+                    isDisabled={id && images?.length ? true : false}
+                    _disabled={{ opacity: "0.5", pointerEvents: "none" }}
+                  >
+                    Adicionar
+                  </Button>
+                </Container>
               </Container>
             </Form>
           </article>
@@ -546,10 +616,7 @@ export const DishesComponent = (): JSX.Element => {
               borderRadius="0.25rem"
               width="100%"
               size="sm"
-              onClick={() => {
-                setImages([]);
-                setFiles([]);
-              }}
+              onClick={() => onDelete()}
             >
               Deletar Imagens
             </Button>
