@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useForm } from "react-hook-form";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Select, { MultiValue } from "react-select";
 ("");
@@ -31,7 +31,7 @@ const getDishesById = async (id: number) => {
   return await DishesService.getDisheById(id);
 };
 
-const deleteFileDishe = async (id: number) => {
+const deleteFileRequest = async (id: number) => {
   return await DishesService.deleteImageDishe(id);
 };
 
@@ -69,6 +69,7 @@ export const DishesComponent = (): JSX.Element => {
   const useSnack = useToast();
   const formData = new FormData();
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery(
     "getAllCategories",
@@ -118,7 +119,7 @@ export const DishesComponent = (): JSX.Element => {
     ["disheImage", files, productId],
     async () => {
       const params = {
-        files: files!,
+        files: files! as File[],
         productId: productId!,
       };
       const request = await DishesService.createImageProduct(params);
@@ -166,17 +167,30 @@ export const DishesComponent = (): JSX.Element => {
     }
   );
 
-  const deleteFileDishe = useQuery(
-    ["deleteFileDishe", id],
-    async () => {
-      const request = await deleteImageDishe(Number(id));
-      return request.data;
+  const deleteImages = useMutation((id: number) => deleteFileRequest(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["dishe"]);
+      useSnack({
+        title: "Imagens excluídas!",
+        description:
+          "Imagens do prato excluídas com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    {
-      enabled: false,
-      retry: false,
+
+    onError: (error: any) => {
+      console.log(error);
+      useSnack({
+        title: "Falha ao excluir imagens.",
+        description: `${error.message}. Tente novamente.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
     }
-  );
+  });
 
   const setArrayCategories = (): ICategorieSelect[] => {
     if (data) {
@@ -300,7 +314,7 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const appendFiles = (): void => {
-    Array.from(files!).forEach((file: any) => {
+    Array.from(files! as File[]).forEach((file: File) => {
       formData.append("files", file as File);
     });
   };
@@ -409,12 +423,9 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const onDelete = (): void => {
-    // setImages([]);
-    // setFiles([]);
-    // setValueInputFiles("Nenhuma Foto");
-    Array.from(files! as ProductPhoto[]).forEach((file: ProductPhoto) => {
-      deleteFileDishe.refetch();
-    });
+    if (id) {
+      deleteImages.mutate(Number(id));
+    }
   };
 
   React.useEffect(() => {

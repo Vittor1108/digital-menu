@@ -7,7 +7,7 @@ import { PhotoProduct } from 'src/modules/photo-product/entities/photo-product.e
 export class PhotoProductService {
   private baseURL = 'http://localhost:3000/assets/uploads/images';
   private dataPhotoProduct: Array<PhotoProduct> = [];
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   public upload = async (
     files: Express.Multer.File,
@@ -43,24 +43,33 @@ export class PhotoProductService {
   };
 
   public delete = async (id: number): Promise<boolean> => {
-    const productPhoto = await this.prismaService.productPhoto.findUnique({
-      where: { id },
-    });
+    try {
+      const productPhoto = await this.prismaService.productPhoto.findMany({
+        where: {
+          product_id: Number(id)
+        }
+      });
 
-    if (!productPhoto) {
-      throw new HttpException(
-        HelpMessager.product_not_exits,
-        HttpStatus.BAD_REQUEST,
-      );
+      productPhoto.forEach(product => {
+         console.log(product);
+        removeFile(product.filename);
+      });
+
+      await this.prismaService.productPhoto.delete({
+        where: {
+          id,
+        },
+      });
+
+      if (!productPhoto || !productPhoto.length) {
+        throw new HttpException(
+          HelpMessager.product_not_exits,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      return true;
+    } catch (e: any) {
+      return e.message;
     }
-
-    await this.prismaService.productPhoto.delete({
-      where: {
-        id,
-      },
-    });
-
-    removeFile(productPhoto.filename);
-    return true;
   };
 }

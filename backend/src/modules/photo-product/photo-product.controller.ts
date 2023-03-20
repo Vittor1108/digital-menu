@@ -17,7 +17,7 @@ import { PhotoProductService } from './photo-product.service';
 @Controller('photo-product')
 @UseGuards(AuthGuard('jwt'))
 export class PhotoProductController {
-  constructor(private readonly photoProductService: PhotoProductService) {}
+  constructor(private readonly photoProductService: PhotoProductService) { }
 
   @Post(':id')
   @UseInterceptors(

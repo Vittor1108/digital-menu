@@ -46,7 +46,7 @@ export const updatedDishe = async (
 
 
 export const deleteImageDishe = async (id: number): Promise<AxiosResponse<boolean>> => {
-  return await Axios().delete(`/product/${id}`);
+  return await Axios().delete(`/photo-product/${id}`);
 }
 export const DishesService = {
   createProduct,

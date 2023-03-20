@@ -1,3 +1,4 @@
+import { CategoryComponent } from "../AddCategory";
 import { DishesComponent } from "../AddDishes";
 
 export const DishesRoutes = [
@@ -6,7 +7,11 @@ export const DishesRoutes = [
     path: "/dishes",
   },
   {
-    element: <DishesComponent/>,
+    element: <DishesComponent />,
     path: "/dishes/:id"
+  },
+  {
+    element: <CategoryComponent />,
+    path: "/category"
   }
 ];
