@@ -472,7 +472,7 @@ export const DishesComponent = (): JSX.Element => {
         <CardSection>
           <TitleSection>{title}</TitleSection>
           <article>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form>
               <div>
                 <label htmlFor="dishes">Nome do prato</label>
                 <Input
