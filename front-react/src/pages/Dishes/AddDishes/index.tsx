@@ -12,7 +12,7 @@ import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Select, { MultiValue } from "react-select";
 ("");
 import * as yup from "yup";
@@ -70,7 +70,7 @@ export const DishesComponent = (): JSX.Element => {
   const formData = new FormData();
   const { id } = useParams();
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useQuery(
     "getAllCategories",
     async () => {
@@ -170,18 +170,9 @@ export const DishesComponent = (): JSX.Element => {
   const deleteImages = useMutation((id: number) => deleteFileRequest(id), {
     onSuccess: () => {
       queryClient.invalidateQueries(["dishe"]);
-      useSnack({
-        title: "Imagens excluídas!",
-        description:
-          "Imagens do prato excluídas com sucesso!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
     },
 
     onError: (error: any) => {
-      console.log(error);
       useSnack({
         title: "Falha ao excluir imagens.",
         description: `${error.message}. Tente novamente.`,
@@ -256,26 +247,31 @@ export const DishesComponent = (): JSX.Element => {
 
     useSnack({
       title: "Prato Criado!",
-      description: `Prato Criado com sucesso!`,
+      description: `Prato Criado/Atualizado com sucesso!`,
       status: "success",
       duration: 5000,
       isClosable: true,
     });
 
-    resetForm();
+
+    if (!id) {
+      resetForm();
+    }
+
   };
 
   const cheeckErros = (): boolean => {
-    if (!files && !id) {
+    if (!images?.length) {
       useSnack({
         title: "Imagem é obrigatória",
-        description: `Adicona uma imagem para criar o prato.`,
+        description: `Adicona uma imagem para criar ou atualizar prato.`,
         status: "warning",
         duration: 5000,
         isClosable: true,
       });
       return true;
     }
+
     return false;
   };
 
@@ -319,7 +315,8 @@ export const DishesComponent = (): JSX.Element => {
     });
   };
 
-  const updatedDisheOnSubmit = (): void => {
+  const updatedDisheOnSubmit = async (): Promise<void> => {
+    deleteImages.mutate(Number(id));
     updatedDishe
       .refetch()
       .then((response) => {
@@ -406,7 +403,19 @@ export const DishesComponent = (): JSX.Element => {
         setLoading(true);
         if (response.data) {
           setValuesField(response.data);
+          return;
         }
+        if (!response.data) {
+          useSnack({
+            title: "Prato não encontrado.",
+            description: `Prato com o id ${id} não encontrado. Tente novamente`,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+
+          navigate("/dishes");
+        };
       })
       .catch((e: any) => {
         useSnack({
@@ -423,9 +432,9 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   const onDelete = (): void => {
-    if (id) {
-      deleteImages.mutate(Number(id));
-    }
+    setImages([]);
+    setValueInputFiles("Não há foto selecionada");
+    queryClient.invalidateQueries(["dishe"]);
   };
 
   React.useEffect(() => {

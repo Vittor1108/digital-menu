@@ -119,7 +119,6 @@ export class ProductRegistrationService {
         HttpStatus.NO_CONTENT,
       );
     }
-
     return product;
   };
 

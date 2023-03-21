@@ -51,14 +51,7 @@ export class PhotoProductService {
       });
 
       productPhoto.forEach(product => {
-         console.log(product);
         removeFile(product.filename);
-      });
-
-      await this.prismaService.productPhoto.delete({
-        where: {
-          id,
-        },
       });
 
       if (!productPhoto || !productPhoto.length) {
@@ -67,6 +60,13 @@ export class PhotoProductService {
           HttpStatus.BAD_REQUEST,
         );
       }
+
+      await this.prismaService.productPhoto.deleteMany({
+        where: {
+          product_id: Number(id),
+        },
+      });
+
       return true;
     } catch (e: any) {
       return e.message;
