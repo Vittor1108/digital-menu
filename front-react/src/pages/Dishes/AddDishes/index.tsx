@@ -120,7 +120,7 @@ export const DishesComponent = (): JSX.Element => {
     async () => {
       const params = {
         files: files! as File[],
-        productId: productId!,
+        id: productId!,
       };
       const request = await DishesService.createImageProduct(params);
       return request.data;

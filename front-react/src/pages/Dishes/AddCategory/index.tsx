@@ -1,4 +1,4 @@
-import { Button, Container, Input, InputRightAddon, Textarea } from "@chakra-ui/react";
+import { Button, Container, Input, InputRightAddon, Textarea, useToast } from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
@@ -9,16 +9,34 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
+import { useThumbImages } from "@hooks/useThumbImages";
+import { useCreateCategory } from "./hooks/useCreateCategory";
+import { useValidationResquest } from "@hooks/useValidationRequest";
+import { AxiosResponse } from "axios";
 
 const schemaForm = yup.object({
     name: yup.string().required("Nome do prato é obrigatório"),
     description: yup.string().required("Descrição do prato é obrigatória"),
-    files: yup.mixed().required("Imagem da categoria é obrigatória"),
+    // files: yup.mixed().required("Imagem da categoria é obrigatória"),
 });
 
+const validationForm = (files: string[]): boolean => {
+    if (!files.length) return true;
+    return false;
+}
+
+
 export const CategoryComponent = (): JSX.Element => {
+    const [placeHolderFiles, setPlaceholderFiles] = React.useState<string>("Nenhuma Foto");
+    const [thumbImages, setThumbImages] = React.useState<string[]>([]);
+    const [files, setFiles] = React.useState<FileList | null>(null);
+    const [urlImages, genFiles, genPlaceholder] = useThumbImages();
+    const [createCategory, createImageCategory] = useCreateCategory();
+    const [validationRequest] = useValidationResquest();
+    const useSnack = useToast();
 
     const inputFileRef = React.useRef<HTMLInputElement | null>(null);
+
 
     const {
         register,
@@ -31,10 +49,45 @@ export const CategoryComponent = (): JSX.Element => {
         resolver: yupResolver(schemaForm),
     });
 
-    const onSubmit = (data: IForm): void => {
-        console.log(data);
+    const onSubmit = async (data: IForm): Promise<void> => {
+        if (validationForm(thumbImages)) {
+            useSnack({
+                title: "Imagem obrigatória!",
+                description: "Adiciona a imagem da categoria.",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        requestCreateCategory(data);
+        resetForm();
     }
 
+    const requestCreateCategory = async (data: IForm): Promise<void> => {
+        const request = await createCategory.mutateAsync(data);
+
+        const params = {
+            files,
+            id: Number(request.data.id),
+        };
+
+        await createImageCategory.mutateAsync(params);
+    }
+
+    const resetForm = (): void => {
+        setThumbImages(urlImages(null));
+        setPlaceholderFiles(genPlaceholder(null));
+        setFiles(genFiles(null));
+        reset();
+    }
+
+    const eventImages = (fileList: FileList | null): void => {
+        setPlaceholderFiles(genPlaceholder(fileList));
+        setThumbImages(urlImages(fileList));
+        setFiles(genFiles(fileList));
+    }
 
     return (
         <BaseLayout isLoading={false}>
@@ -81,8 +134,11 @@ export const CategoryComponent = (): JSX.Element => {
                                         accept="image/png, image/gif, image/jpeg"
                                         multiple={true}
                                         hidden
-                                        {...register("files")}
+
                                         ref={inputFileRef}
+                                        onChange={(event) => {
+                                            eventImages(event.target.files);
+                                        }}
                                     />
                                     <Input
                                         type="text"
@@ -90,7 +146,7 @@ export const CategoryComponent = (): JSX.Element => {
                                         border="1px solid #ccc"
                                         opacity="1 !important"
                                         size="sm"
-                                        placeholder="Nenhuma Foto"
+                                        placeholder={placeHolderFiles}
                                     />
                                     <Button
                                         fontWeight="normal"
@@ -111,7 +167,7 @@ export const CategoryComponent = (): JSX.Element => {
                     <CardSection>
                         <TitleSection>Categorias</TitleSection>
                         <article>
-                            <ImagesCarrosel images={[]} />
+                            <ImagesCarrosel images={thumbImages} />
                             <Button
                                 color="white"
                                 backgroundColor="red"
@@ -137,7 +193,6 @@ export const CategoryComponent = (): JSX.Element => {
                         </article>
                     </CardSection>
                 </Form>
-
             </Container>
         </BaseLayout>
     );

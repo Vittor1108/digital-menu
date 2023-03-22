@@ -1,7 +1,7 @@
+import { IDishes } from "@interfaces/IDishes";
+import { IFiles } from "@interfaces/IFiles";
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
-import { ICreateImageProduct } from "./interfaces/ICreateImageDishes";
-import { IDishes } from "@interfaces/IDishes";
 
 export const createProduct = async (
   data: IDishes
@@ -16,13 +16,13 @@ export const createProduct = async (
 };
 
 export const createImageProduct = async (
-  data: ICreateImageProduct
+  data: IFiles
 ): Promise<AxiosResponse<boolean>> => {
   const formData = new FormData();
   Array.from(data.files).forEach((file: File) => {
     formData.append("files", file as File);
   });
-  return await Axios().post(`/photo-product/${data.productId}`, formData);
+  return await Axios().post(`/photo-product/${data.id}`, formData);
 };
 
 export const getDisheById = async (
