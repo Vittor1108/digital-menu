@@ -37,11 +37,11 @@ export const CategoryComponent = (): JSX.Element => {
     const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
     const [urlImages, genFiles, genPlaceholder] = useThumbImages();
     const [createCategory, createImageCategory] = useCreateCategory();
-    const [requestGetCategory] = useGetCategory();
+    const { id } = useParams();
+    const [requestGetCategory] = useGetCategory(Number(id));
     const [updateCategory] = useUpdateCategory();
     const [delImages] = useDelImgCategory();
     const useSnack = useToast();
-    const { id } = useParams();
 
     const {
         register,
@@ -101,7 +101,7 @@ export const CategoryComponent = (): JSX.Element => {
 
 
     const getCategory = async (id: number): Promise<void> => {
-        const { data } = await requestGetCategory.mutateAsync(Number(id));
+        const { data } = requestGetCategory;
         setValue("name", data.name);
         setValue("description", data.description);
         eventImages(data.PhotoCategory!);
@@ -137,7 +137,7 @@ export const CategoryComponent = (): JSX.Element => {
     }, [id])
 
     return (
-        <BaseLayout isLoading={false}>
+        <BaseLayout isLoading={[updateCategory.isLoading, delImages.isLoading, createImageCategory.isLoading, requestGetCategory.isLoading, createCategory.isLoading]}>
             <Container
                 maxW="100%"
                 h="100%"

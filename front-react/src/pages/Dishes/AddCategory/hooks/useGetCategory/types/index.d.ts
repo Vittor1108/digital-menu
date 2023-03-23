@@ -1,4 +1,4 @@
 export type TUseGetCategory = [
-    getCategory: UseMutationResult<AxiosResponse<ICategorie>>
+    getCategory: UseQueryResult<ICategorie>
 ]
 
