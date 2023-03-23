@@ -8,7 +8,7 @@ import { removeFile } from 'src/utils/file-upload.utils';
 export class PhotoCategoryService {
   private baseURL = 'http://localhost:3000/assets/uploads/images';
   private dataPhoto: Array<PhotoCategory> = [];
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   public upload = async (
     files: Express.Multer.File,
@@ -50,26 +50,29 @@ export class PhotoCategoryService {
   };
 
   public deleteFile = async (id: number): Promise<boolean> => {
-    const file = await this.prismaService.photoCategory.findUnique({
+    const files = await this.prismaService.photoCategory.findMany({
       where: {
-        id,
-      },
+        category_id: Number(id),
+      }
     });
 
-    if (!file) {
+    if (!files.length) {
       throw new HttpException(
         HelpMessager.photo_not_found,
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    await this.prismaService.photoCategory.delete({
+    files.forEach(file => {
+      removeFile(file.filename);
+    })
+
+    await this.prismaService.photoCategory.deleteMany({
       where: {
-        id,
+        category_id: Number(id),
       },
     });
 
-    removeFile(file.filename);
     return true;
   };
 }

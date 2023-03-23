@@ -13,5 +13,9 @@ export const DishesRoutes = [
   {
     element: <CategoryComponent />,
     path: "/category"
+  },
+  {
+    element: <CategoryComponent />,
+    path: "/category/:id",
   }
 ];

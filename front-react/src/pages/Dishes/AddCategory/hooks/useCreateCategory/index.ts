@@ -26,7 +26,7 @@ export const useCreateCategory = (): TUseCreateCategory => {
         onSuccess: () => {
             useSnack({
                 title: "Categoria Criada com sucesso.",
-                description: "Categoria Criada com sucesso.",
+                description: "Categoria Criada/Atualizada com sucesso.",
                 status: "success",
                 duration: 5000,
                 isClosable: true,

@@ -10,13 +10,20 @@ import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   public findOne = async (id: number): Promise<Category> => {
     const categorie = await this.prismaService.category.findUnique({
       where: {
         id,
       },
+
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        PhotoCategory: true
+      }
     });
 
     if (!categorie) {

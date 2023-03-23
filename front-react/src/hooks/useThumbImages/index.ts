@@ -1,8 +1,9 @@
+import { IPhoto } from "@interfaces/IPhoto";
 import { TUseThumbImages } from "./types";
 
 export const useThumbImages = (): TUseThumbImages => {
 
-    const urlImages = (fileList: FileList | null): string[] => {
+    const urlImages = (fileList: FileList | null | IPhoto[]): string[] => {
         if (fileList instanceof FileList) {
             const urlFiles: string[] = [];
             Array.from(fileList).forEach((file: File) => {
@@ -11,25 +12,29 @@ export const useThumbImages = (): TUseThumbImages => {
             });
             return urlFiles;
         }
-        return []
+
+        if (!fileList) return []
+
+        return fileList.map((file: IPhoto) => file.url);
     }
 
-    const genFiles = (fileList: FileList | null): FileList | null => {
-        if (fileList instanceof FileList) {
-            return fileList
-        }
-        return null;
+    const genFiles = (fileList: FileList | null | IPhoto[]): FileList | null | IPhoto[] => {
+        if (!fileList) null
+        return fileList;
     }
 
-    const genPlaceholder = (fileList: FileList | null): string => {
-        const placeholderArray: string[] = [""];
+    const genPlaceholder = (fileList: FileList | null | IPhoto[]): string => {
         if (fileList instanceof FileList) {
+            const placeholderArray: string[] = [""];
             Array.from(fileList).forEach((file: File) => {
                 placeholderArray.push(file.name);
             });
             return placeholderArray.join(", ");
         }
-        return "Nenhuma Foto";
+
+        if (!fileList) return "Nenhuma Foto";
+
+        return fileList!.map((file: IPhoto) => file.filename).join(", ");
     }
 
 

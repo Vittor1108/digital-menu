@@ -49,7 +49,7 @@ export const Navigation = (props: INavigation) => {
                 <a href="">Editar Prdouto</a>
               </li>
               <li>
-                <a href="">Adicionar Categorias</a>
+                <Link to="/category">Adicionar Categorias</Link>
               </li>
               <li>
                 <a href="">Editar Categorias</a>

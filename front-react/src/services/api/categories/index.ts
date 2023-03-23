@@ -30,8 +30,27 @@ const createImageCategory = async (data: IFiles): Promise<AxiosResponse<boolean>
   return await Axios().post(`/photo-category/${data.id}`, formData);
 }
 
+
+const getCategory = async (id: number): Promise<AxiosResponse<ICategorie>> => {
+  return await Axios().get(`/category/${id}`);
+}
+
+const deleteImage = async (id: number): Promise<AxiosResponse<boolean>> => {
+  return await Axios().delete(`/photo-category/${id}`);
+}
+
+const update = async (id: number, { name, description }: ICategorie): Promise<AxiosResponse<ICategorie>> => {
+  return await Axios().put(`/category/${id}`, {
+    name,
+    description
+  });
+}
+
 export const CategorieService = {
   getAllCategories,
   createCategory,
-  createImageCategory
+  createImageCategory,
+  getCategory,
+  deleteImage,
+  update
 };
