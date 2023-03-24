@@ -12,7 +12,7 @@ import { useCreateCategory } from "./hooks/useCreateCategory";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
 import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCategory } from "./hooks/useGetCategory";
 import { IPhoto } from "@interfaces/IPhoto";
 import { useUpdateCategory } from "./hooks/useUpdateCategory";
@@ -32,16 +32,18 @@ const validationForm = (files: string[]): boolean => {
 
 export const CategoryComponent = (): JSX.Element => {
     const [placeHolderFiles, setPlaceholderFiles] = React.useState<string>("Nenhuma Foto");
+    const [titlePage, setTitlePage] = React.useState<string>("Adicionar Categoria");
     const [thumbImages, setThumbImages] = React.useState<string[]>([]);
     const inputFileRef = React.useRef<HTMLInputElement | null>(null);
     const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
     const [urlImages, genFiles, genPlaceholder] = useThumbImages();
     const [createCategory, createImageCategory] = useCreateCategory();
     const { id } = useParams();
-    const [requestGetCategory] = useGetCategory(Number(id));
+    const { dataCategory, dataCategoryLoading } = useGetCategory(Number(id));
     const [updateCategory] = useUpdateCategory();
     const [delImages] = useDelImgCategory();
     const useSnack = useToast();
+    const navigate = useNavigate();
 
     const {
         register,
@@ -67,7 +69,6 @@ export const CategoryComponent = (): JSX.Element => {
 
         if (!id) {
             requestCreateCategory(data);
-            resetForm();
             return;
         }
 
@@ -75,15 +76,17 @@ export const CategoryComponent = (): JSX.Element => {
 
     }
 
-    const requestCreateCategory = async (data: IForm): Promise<void> => {
-        const request = await createCategory.mutateAsync(data);
-
-        const params = {
-            files,
-            id: Number(request.data.id),
-        };
-
-        await createImageCategory.mutateAsync(params);
+    const requestCreateCategory = (data: IForm): void => {
+        createCategory.mutate(data, {
+            onSuccess: async ({ data }) => {
+                const params = {
+                    files,
+                    id: Number(data.id),
+                };
+                await createImageCategory.mutateAsync(params);
+                resetForm();
+            }
+        });
     }
 
     const resetForm = (): void => {
@@ -100,14 +103,15 @@ export const CategoryComponent = (): JSX.Element => {
     }
 
 
-    const getCategory = async (id: number): Promise<void> => {
-        const { data } = requestGetCategory;
-        setValue("name", data.name);
-        setValue("description", data.description);
-        eventImages(data.PhotoCategory!);
+    const getCategory = (id: number): void => {
+        console.log(dataCategory);
+        setValue("name", dataCategory!.name);
+        setValue("description", dataCategory!.description);
+        eventImages(dataCategory!.PhotoCategory!);
     }
 
     const requestUpdateCategory = async (data: IForm): Promise<void> => {
+        console.log("Updated");
         const params = {
             id: Number(id!),
             name: data.name,
@@ -119,8 +123,8 @@ export const CategoryComponent = (): JSX.Element => {
             files,
         }
 
-        await updateCategory.mutateAsync(params);
         await delImages.mutateAsync(Number(id));
+        await updateCategory.mutateAsync(params);
         await createImageCategory.mutateAsync(paramsFiles);
     }
 
@@ -131,20 +135,25 @@ export const CategoryComponent = (): JSX.Element => {
     }
 
     React.useEffect(() => {
-        if (id) {
+        resetForm();
+    }, [])
+
+    React.useEffect(() => {
+        if (id && !dataCategoryLoading) {
             getCategory(Number(id));
+            setTitlePage("Editar Categoria");
         }
-    }, [id])
+    }, [id, dataCategoryLoading])
 
     return (
-        <BaseLayout isLoading={[updateCategory.isLoading, delImages.isLoading, createImageCategory.isLoading, requestGetCategory.isLoading, createCategory.isLoading]}>
+        <BaseLayout isLoading={[updateCategory.isLoading, delImages.isLoading, createImageCategory.isLoading, dataCategoryLoading, createCategory.isLoading]}>
             <Container
                 maxW="100%"
                 h="100%"
             >
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <CardSection>
-                        <TitleSection>Adicionar Categoria</TitleSection>
+                        <TitleSection>{titlePage}</TitleSection>
                         <article>
                             <Container maxW="100%" padding="0" marginBottom="15px">
                                 <label htmlFor="category">Nome da Categoria</label>

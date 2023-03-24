@@ -27,11 +27,9 @@ export class PhotoCategoryService {
       );
     }
 
-    if (!files) {
-      throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
-    }
-
     if (Array.isArray(files)) {
+      if (!files.length) throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
+
       this.dataPhoto = files.map((file: PhotoCategory) => {
         return {
           filename: file.filename,
@@ -41,7 +39,7 @@ export class PhotoCategoryService {
         };
       });
     }
-
+    console.log(files);
     await this.prismaService.photoCategory.createMany({
       data: this.dataPhoto,
     });

@@ -1,3 +1,4 @@
 export const queryObject = {
-    category: 'category',
+    getCategory: 'category',
+    getAllCategories: 'categories'
 }
