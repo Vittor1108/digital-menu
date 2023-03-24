@@ -10,6 +10,11 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IForm } from "./interfaces/IForm";
+import { useGetAllCategories } from "./hooks/useGetAllCategories";
+import React from "react";
+import { ICategorieSelect } from "./interfaces/ICategorieSelect";
+import { IOPtionType } from "@interfaces/IOption";
+import AsyncSelect from "react-select/async";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -20,6 +25,10 @@ const schemaForm = yup.object({
 
 
 export const DishesComponent = (): JSX.Element => {
+  const [categories, setCategories] = React.useState<IOPtionType[]>([]);
+  const [categorieSelect, setCategorieSelect] = React.useState<IOPtionType[]>([]);
+  const { dataFetchCategories, categoriesIsLoading } = useGetAllCategories();
+
 
   const {
     register,
@@ -36,8 +45,24 @@ export const DishesComponent = (): JSX.Element => {
     console.log(data);
   }
 
+
+  React.useEffect(() => {
+    if (dataFetchCategories) {
+      const categories: IOPtionType[] = dataFetchCategories.map(category => {
+        return {
+          value: category.id!.toString(),
+          label: category.name,
+        }
+      });
+
+
+      setCategories(categories);
+
+    }
+  }, [dataFetchCategories, categoriesIsLoading])
+
   return (
-    <BaseLayout isLoading={[false]}>
+    <BaseLayout isLoading={[categoriesIsLoading]}>
       <Container
         maxW="100%"
         h="100%"
@@ -85,10 +110,12 @@ export const DishesComponent = (): JSX.Element => {
                     render={({
                       field: { onChange, onBlur, value, name, ref },
                     }) => (
-                      <Select
-                        options={[]}
+                      <AsyncSelect
+                        options={categories}
                         isLoading={false}
-                        onChange={onChange}
+                        // onChange={(options) => {
+                        //   setCategorieSelect(options)
+                        // }}
                         isMulti={true}
                         onBlur={onBlur}
                         value={value}

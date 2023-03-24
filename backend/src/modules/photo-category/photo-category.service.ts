@@ -39,7 +39,7 @@ export class PhotoCategoryService {
         };
       });
     }
-    console.log(files);
+
     await this.prismaService.photoCategory.createMany({
       data: this.dataPhoto,
     });

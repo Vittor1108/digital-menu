@@ -6,7 +6,7 @@ import { useQuery } from "react-query"
 export const useGetAllCategories = () => {
     const useSnack = useToast();
 
-    return useQuery([queryObject.getAllCategories], async () => {
+    const fetchCategories = useQuery([queryObject.getAllCategories], async () => {
         const request = await CategorieService.getAllCategories();
         return request.data;
     },
@@ -21,4 +21,11 @@ export const useGetAllCategories = () => {
                 });
             }
         })
+
+
+    return {
+        ...fetchCategories,
+        dataFetchCategories: fetchCategories.data,
+        categoriesIsLoading: fetchCategories.isLoading,
+    }
 }

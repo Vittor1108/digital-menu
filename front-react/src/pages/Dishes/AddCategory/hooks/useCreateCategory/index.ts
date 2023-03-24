@@ -36,7 +36,7 @@ export const useCreateCategory = (): TUseCreateCategory => {
         onError: (e: any) => {
             useSnack({
                 title: "Categoria criada",
-                description: `${e.response.data.message}. Categoria criada mas a imagem não foi adicioanda. Edite a categoria`,
+                description: `${e.response.data.message}`,
                 status: "warning",
                 duration: 10000,
                 isClosable: true,

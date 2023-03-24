@@ -104,14 +104,12 @@ export const CategoryComponent = (): JSX.Element => {
 
 
     const getCategory = (id: number): void => {
-        console.log(dataCategory);
         setValue("name", dataCategory!.name);
         setValue("description", dataCategory!.description);
         eventImages(dataCategory!.PhotoCategory!);
     }
 
     const requestUpdateCategory = async (data: IForm): Promise<void> => {
-        console.log("Updated");
         const params = {
             id: Number(id!),
             name: data.name,
