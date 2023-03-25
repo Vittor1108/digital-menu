@@ -190,7 +190,6 @@ export const CategoryComponent = (): JSX.Element => {
                                         accept="image/png, image/gif, image/jpeg"
                                         multiple={true}
                                         hidden
-
                                         ref={inputFileRef}
                                         onChange={(event) => {
                                             eventImages(event.target.files);

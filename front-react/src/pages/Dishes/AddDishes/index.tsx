@@ -3,18 +3,20 @@ import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { TitleSection } from "@components/TitleSection";
-import CurrencyInput from "react-currency-input-field";
-import Select from "react-select";
-import { Form } from "./styled";
-import * as yup from "yup";
-import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IForm } from "./interfaces/IForm";
-import { useGetAllCategories } from "./hooks/useGetAllCategories";
+import { IOptionType } from "@interfaces/IOption";
+import { currencyFormat } from "@utils/functions/currencyFormat";
 import React from "react";
-import { ICategorieSelect } from "./interfaces/ICategorieSelect";
-import { IOPtionType } from "@interfaces/IOption";
-import AsyncSelect from "react-select/async";
+import CurrencyInput from "react-currency-input-field";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+import * as yup from "yup";
+import { useCreateDishe } from "./hooks/useCreateDishe";
+import { useGetAllCategories } from "./hooks/useGetAllCategories";
+import { IForm } from "./interfaces/IForm";
+import { Form } from "./styled";
+import { useThumbImages } from "@hooks/useThumbImages";
+import { IPhoto } from "@interfaces/IPhoto";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -25,10 +27,14 @@ const schemaForm = yup.object({
 
 
 export const DishesComponent = (): JSX.Element => {
-  const [categories, setCategories] = React.useState<IOPtionType[]>([]);
-  const [categorieSelect, setCategorieSelect] = React.useState<IOPtionType[]>([]);
+  const [placeHolderFiles, setPlaceholderFiles] = React.useState<string>("Nenhuma Foto");
+  const [thumbImages, setThumbImages] = React.useState<string[]>([]);
+  const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
+  const [categories, setCategories] = React.useState<IOptionType[]>([]);
   const { dataFetchCategories, categoriesIsLoading } = useGetAllCategories();
-
+  const [urlImages, genFiles, genPlaceholder] = useThumbImages();
+  const { fetchCreateDishe } = useCreateDishe();
+  const refInput = React.useRef<HTMLInputElement | null>(null);
 
   const {
     register,
@@ -42,22 +48,39 @@ export const DishesComponent = (): JSX.Element => {
   });
 
   const onSubmit = (data: IForm): void => {
-    console.log(data);
+    createDishe(data);
   }
+
+
+  const createDishe = ({ name, categoriesId, price, description }: IForm) => {
+    const params = {
+      name,
+      price: Number(currencyFormat(price)),
+      categoriesId,
+      description
+    }
+    fetchCreateDishe.mutate(params);
+  }
+
+
+  const eventImages = (fileList: FileList | null | IPhoto[]): void => {
+    setPlaceholderFiles(genPlaceholder(fileList));
+    setThumbImages(urlImages(fileList));
+    setFiles(genFiles(fileList));
+  }
+
+
 
 
   React.useEffect(() => {
     if (dataFetchCategories) {
-      const categories: IOPtionType[] = dataFetchCategories.map(category => {
+      const categories: IOptionType[] = dataFetchCategories.map(category => {
         return {
-          value: category.id!.toString(),
+          value: category.id!,
           label: category.name,
         }
       });
-
-
       setCategories(categories);
-
     }
   }, [dataFetchCategories, categoriesIsLoading])
 
@@ -110,15 +133,14 @@ export const DishesComponent = (): JSX.Element => {
                     render={({
                       field: { onChange, onBlur, value, name, ref },
                     }) => (
-                      <AsyncSelect
-                        options={categories}
-                        isLoading={false}
-                        // onChange={(options) => {
-                        //   setCategorieSelect(options)
-                        // }}
+                      <Select
+                        options={categories as any}
+                        isLoading={categoriesIsLoading}
                         isMulti={true}
                         onBlur={onBlur}
-                        value={value}
+                        onChange={(selectedOption) => {
+                          onChange(selectedOption.map((item: any) => item.value));
+                        }}
                         name={name}
                         ref={ref}
                         placeholder="Categoria..."
@@ -188,6 +210,10 @@ export const DishesComponent = (): JSX.Element => {
                     accept="image/png, image/gif, image/jpeg"
                     multiple={true}
                     hidden
+                    ref={refInput}
+                    onChange={(event) => {
+                      eventImages(event.target.files);
+                    }}
                   />
                   <Input
                     type="text"
@@ -195,7 +221,7 @@ export const DishesComponent = (): JSX.Element => {
                     border="1px solid #ccc"
                     opacity="1 !important"
                     size="sm"
-                    placeholder="Nenhuma Imagem"
+                    placeholder={placeHolderFiles}
                   />
                   <Button
                     fontWeight="normal"
@@ -204,6 +230,7 @@ export const DishesComponent = (): JSX.Element => {
                     height="32px"
                     backgroundColor="red"
                     color="white"
+                    onClick={() => refInput.current!.click()}
                     _disabled={{ opacity: "0.5", pointerEvents: "none" }}
                   >
                     Adicionar
@@ -215,7 +242,7 @@ export const DishesComponent = (): JSX.Element => {
           <CardSection>
             <TitleSection>Pratos</TitleSection>
             <article>
-              <ImagesCarrosel images={[]} />
+              <ImagesCarrosel images={thumbImages} />
               <Button
                 color="white"
                 backgroundColor="red"
@@ -224,6 +251,7 @@ export const DishesComponent = (): JSX.Element => {
                 width="100%"
                 size="sm"
                 margin="5px auto"
+                type="submit"
               >
                 Salvar
               </Button>

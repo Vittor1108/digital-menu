@@ -1,4 +1,4 @@
-export interface IOPtionType {
-    value: string;
+export  interface  IOptionType {
+    value: number;
     label: string;
 }
