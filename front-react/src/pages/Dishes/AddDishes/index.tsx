@@ -1,4 +1,4 @@
-import { Button, Container, Input, Textarea } from "@chakra-ui/react";
+import { Button, Container, Input, Textarea, useToast } from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
 import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
@@ -17,6 +17,9 @@ import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
 import { useThumbImages } from "@hooks/useThumbImages";
 import { IPhoto } from "@interfaces/IPhoto";
+import { useCreateImageDishe } from "./hooks/useCreateImageDishe";
+import { IDishes } from "@interfaces/IDishes";
+import { useSnackBar } from "@hooks/useSnackBar";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -31,10 +34,14 @@ export const DishesComponent = (): JSX.Element => {
   const [thumbImages, setThumbImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
   const [categories, setCategories] = React.useState<IOptionType[]>([]);
+  const refInput = React.useRef<HTMLInputElement | null>(null);
+  const [categoriesSelect, setCategoriesSelect] = React.useState<any>([]);
+  const [currencyInput, setCurrencyInput] = React.useState<string | undefined>();
   const { dataFetchCategories, categoriesIsLoading } = useGetAllCategories();
   const [urlImages, genFiles, genPlaceholder] = useThumbImages();
   const { fetchCreateDishe } = useCreateDishe();
-  const refInput = React.useRef<HTMLInputElement | null>(null);
+  const { createDisheImage } = useCreateImageDishe();
+  const useSnack = useToast();
 
   const {
     register,
@@ -42,7 +49,6 @@ export const DishesComponent = (): JSX.Element => {
     formState: { errors },
     reset,
     control,
-    setValue,
   } = useForm<IForm>({
     resolver: yupResolver(schemaForm),
   });
@@ -52,25 +58,62 @@ export const DishesComponent = (): JSX.Element => {
   }
 
 
-  const createDishe = ({ name, categoriesId, price, description }: IForm) => {
+  const createDishe = async ({ name, categoriesId, price, description }: IForm) => {
     const params = {
       name,
       price: Number(currencyFormat(price)),
       categoriesId,
       description
     }
-    fetchCreateDishe.mutate(params);
+    const { data } = await fetchCreateDishe.mutateAsync(params);
+    createImage(data.id);
   }
 
+  const createImage = (id: number) => {
+    const params = {
+      id: Number(id),
+      files,
+    }
 
+    createDisheImage.mutate(params, {
+      onSuccess: () => {
+        useSnack({
+          title: "Prato criado!",
+          description: `Prato criado com sucesso`,
+          status: "success",
+          duration: 7000,
+          isClosable: true,
+        });
+        resetForm();
+      },
+
+      onError: (e: any) => {
+        useSnack({
+          title: "Erro ao criar prato.",
+          description: `${e.response.data.message}`,
+          status: "warning",
+          duration: 10000,
+          isClosable: true,
+        });
+        resetForm();
+      },
+    });
+
+  }
+
+  const resetForm = (): void => {
+    setThumbImages(urlImages(null));
+    setPlaceholderFiles(genPlaceholder(null));
+    setFiles(genFiles(null));
+    setCategoriesSelect([]);
+    setCurrencyInput("");
+    reset();
+  }
   const eventImages = (fileList: FileList | null | IPhoto[]): void => {
     setPlaceholderFiles(genPlaceholder(fileList));
     setThumbImages(urlImages(fileList));
     setFiles(genFiles(fileList));
   }
-
-
-
 
   React.useEffect(() => {
     if (dataFetchCategories) {
@@ -140,9 +183,10 @@ export const DishesComponent = (): JSX.Element => {
                         onBlur={onBlur}
                         onChange={(selectedOption) => {
                           onChange(selectedOption.map((item: any) => item.value));
+                          setCategoriesSelect(selectedOption);
                         }}
+                        value={categoriesSelect}
                         name={name}
-                        ref={ref}
                         placeholder="Categoria..."
                         styles={{
                           control: (baseStyles, state) => ({
@@ -173,6 +217,11 @@ export const DishesComponent = (): JSX.Element => {
                   <CurrencyInput
                     placeholder="R$"
                     decimalsLimit={2}
+                    defaultValue=""
+                    value={currencyInput ? currencyInput : ""}
+                    onValueChange={(valueField) => {
+                      setCurrencyInput(valueField)
+                    }}
                     intlConfig={{ locale: "pt-br", currency: "BRL" }}
                     style={{
                       border: "1px solid #ddd",
@@ -182,6 +231,7 @@ export const DishesComponent = (): JSX.Element => {
                       fontSize: "14px",
                     }}
                     {...register("price")}
+
                   />
                 </Container>
               </Container>
