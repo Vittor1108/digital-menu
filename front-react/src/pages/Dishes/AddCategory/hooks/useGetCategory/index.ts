@@ -1,8 +1,7 @@
 import { useToast } from "@chakra-ui/react";
-import { ICategorie } from "@interfaces/ICategorie";
 import { CategorieService } from "@services/api/categories";
 import { queryObject } from "@utils/queryObject";
-import { useQuery, UseQueryResult } from "react-query";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 export const useGetCategory = (id: number | null) => {

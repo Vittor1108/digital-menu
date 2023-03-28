@@ -4,27 +4,30 @@ import { CardSection } from "@components/CardSection";
 import { ImagesCarrosel } from "@components/ImagesCarrosel";
 import { TitleSection } from "@components/TitleSection";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useThumbImages } from "@hooks/useThumbImages";
 import { IOptionType } from "@interfaces/IOption";
+import { IPhoto } from "@interfaces/IPhoto";
 import { currencyFormat } from "@utils/functions/currencyFormat";
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
+import { useParams } from "react-router-dom";
+import Select, { MultiValue } from "react-select";
 import * as yup from "yup";
 import { useCreateDishe } from "./hooks/useCreateDishe";
+import { useCreateImageDishe } from "./hooks/useCreateImageDishe";
 import { useGetAllCategories } from "./hooks/useGetAllCategories";
+import { useGetDishe } from "./hooks/useGetDishe";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
-import { useThumbImages } from "@hooks/useThumbImages";
-import { IPhoto } from "@interfaces/IPhoto";
-import { useCreateImageDishe } from "./hooks/useCreateImageDishe";
-import { IDishes } from "@interfaces/IDishes";
-import { useSnackBar } from "@hooks/useSnackBar";
+import { ProductCategory } from "@interfaces/IDishes";
+import { useUpdateDishe } from "./hooks/useUpdateDishe";
+import { useDeleteImageDishe } from "./hooks/useDeleteImageDishe";
+
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
   description: yup.string().required("Descrição do prato é obrigatória"),
-  categoriesId: yup.array().required("Categoria é obrigatória"),
   price: yup.string().required("Preço é obrigatório"),
 });
 
@@ -34,38 +37,63 @@ export const DishesComponent = (): JSX.Element => {
   const [thumbImages, setThumbImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
   const [categories, setCategories] = React.useState<IOptionType[]>([]);
+  const [titlePage, setTitlePage] = React.useState<string>("Adicionar Prato");
   const refInput = React.useRef<HTMLInputElement | null>(null);
-  const [categoriesSelect, setCategoriesSelect] = React.useState<any>([]);
+  const [categoriesSelect, setCategoriesSelect] = React.useState<MultiValue<never> | { label: string; value: number; }[]>([]);
   const [currencyInput, setCurrencyInput] = React.useState<string | undefined>();
   const { dataFetchCategories, categoriesIsLoading } = useGetAllCategories();
   const [urlImages, genFiles, genPlaceholder] = useThumbImages();
   const { fetchCreateDishe } = useCreateDishe();
   const { createDisheImage } = useCreateImageDishe();
+  const { fetchUpdateDishe } = useUpdateDishe();
+  const { fetchDeleteImage } = useDeleteImageDishe();
   const useSnack = useToast();
+  const { id } = useParams();
+  const { dataDishe, dataDisheIsLoading } = useGetDishe(Number(id));
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
     control,
   } = useForm<IForm>({
-    resolver: yupResolver(schemaForm),
+
   });
 
   const onSubmit = (data: IForm): void => {
-    createDishe(data);
+    if (!id) {
+      createDishe(data);
+      return;
+    }
+
+    updateDishe(data)
   }
 
-
-  const createDishe = async ({ name, categoriesId, price, description }: IForm) => {
+  const createDishe = async ({ name, price, description }: IForm): Promise<void> => {
     const params = {
       name,
       price: Number(currencyFormat(price)),
-      categoriesId,
+      categoriesId: categoriesSelect.map(category => category.value),
       description
     }
+
     const { data } = await fetchCreateDishe.mutateAsync(params);
+    createImage(data.id);
+  }
+
+  const updateDishe = async ({ name, price, description }: IForm): Promise<void> => {
+    const params = {
+      id: Number(id!),
+      name,
+      price: Number(currencyFormat(price)),
+      categoriesId: categoriesSelect.map(category => category.value),
+      description
+    }
+
+    const { data } = await fetchUpdateDishe.mutateAsync(params);
+    await fetchDeleteImage.mutateAsync(Number(data.id));
     createImage(data.id);
   }
 
@@ -84,7 +112,6 @@ export const DishesComponent = (): JSX.Element => {
           duration: 7000,
           isClosable: true,
         });
-        resetForm();
       },
 
       onError: (e: any) => {
@@ -95,10 +122,30 @@ export const DishesComponent = (): JSX.Element => {
           duration: 10000,
           isClosable: true,
         });
-        resetForm();
       },
     });
 
+    if (!id) {
+      resetForm();
+    }
+  }
+
+  const setDataForm = () => {
+    setValue("name", dataDishe!.name);
+    setValue("description", dataDishe!.description);
+    setValue("price", dataDishe!.price.toString());
+    setCurrencyInput(Number(dataDishe!.price).toFixed(2).toString());
+    setCategoriesSelect(formatCategoriesRequest(dataDishe!.ProductCategory!));
+    eventImages(dataDishe!.ProductPhoto!);
+  }
+
+  const formatCategoriesRequest = (categories: ProductCategory[]): { label: string; value: number; }[] => {
+    return categories.map(({ category }) => {
+      return {
+        label: category.name,
+        value: Number(category.id),
+      }
+    });
   }
 
   const resetForm = (): void => {
@@ -115,6 +162,10 @@ export const DishesComponent = (): JSX.Element => {
     setFiles(genFiles(fileList));
   }
 
+  const onDelete = (): void => {
+    eventImages(null);
+  }
+
   React.useEffect(() => {
     if (dataFetchCategories) {
       const categories: IOptionType[] = dataFetchCategories.map(category => {
@@ -127,8 +178,23 @@ export const DishesComponent = (): JSX.Element => {
     }
   }, [dataFetchCategories, categoriesIsLoading])
 
+  React.useEffect(() => {
+    if (id && dataDishe) {
+      setDataForm();
+      setTitlePage("Editar Prato");
+    }
+  }, [id, dataDishe]);
+
+  React.useEffect(() => {
+    if (!id) {
+      resetForm();
+    }
+  }, []);
+
+
+
   return (
-    <BaseLayout isLoading={[categoriesIsLoading]}>
+    <BaseLayout isLoading={[categoriesIsLoading, dataDisheIsLoading]}>
       <Container
         maxW="100%"
         h="100%"
@@ -143,7 +209,7 @@ export const DishesComponent = (): JSX.Element => {
       >
         <Form onSubmit={handleSubmit(onSubmit)}>
           <CardSection>
-            <TitleSection>Adicionar Prato</TitleSection>
+            <TitleSection>{titlePage}</TitleSection>
             <article>
               <div>
                 <label htmlFor="dishes">Nome do prato</label>
@@ -183,7 +249,7 @@ export const DishesComponent = (): JSX.Element => {
                         onBlur={onBlur}
                         onChange={(selectedOption) => {
                           onChange(selectedOption.map((item: any) => item.value));
-                          setCategoriesSelect(selectedOption);
+                          setCategoriesSelect(selectedOption as MultiValue<never>);
                         }}
                         value={categoriesSelect}
                         name={name}
@@ -281,6 +347,7 @@ export const DishesComponent = (): JSX.Element => {
                     backgroundColor="red"
                     color="white"
                     onClick={() => refInput.current!.click()}
+                    isDisabled={thumbImages.length > 0}
                     _disabled={{ opacity: "0.5", pointerEvents: "none" }}
                   >
                     Adicionar
@@ -312,6 +379,7 @@ export const DishesComponent = (): JSX.Element => {
                 borderRadius="0.25rem"
                 width="100%"
                 size="sm"
+                onClick={() => onDelete()}
               >
                 Deletar Imagens
               </Button>

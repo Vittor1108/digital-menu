@@ -127,9 +127,7 @@ export const CategoryComponent = (): JSX.Element => {
     }
 
     const onDelete = (): void => {
-        setThumbImages(urlImages(null));
-        setPlaceholderFiles(genPlaceholder(null));
-        setFiles(genFiles(null));
+        eventImages(null);
     }
 
     React.useEffect(() => {

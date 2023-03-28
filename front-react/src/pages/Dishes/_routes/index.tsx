@@ -17,5 +17,5 @@ export const DishesRoutes = [
   {
     element: <CategoryComponent />,
     path: "/category/:id",
-  }
+  },
 ];
