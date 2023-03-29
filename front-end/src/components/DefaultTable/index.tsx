@@ -1,10 +1,11 @@
-import { Container, Input, Select, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
-import { IDefaultTable } from "./interfaces";
-import { Header, Main } from "./styled";
-import { TriangleDownIcon } from "@chakra-ui/icons";
+import { Container, Input, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { TableProps } from "./interfaces";
+import { Button, Header, Main } from "./styled";
+import Bell from "@assets/images/Bell.png";
+import { Image } from "./styled";
 
+export const DefaulTable = <T,>({ title, data, columns }: TableProps<T>): JSX.Element => {
 
-export const DefaulTable = ({ title }: IDefaultTable): JSX.Element => {
     return (
         <Container maxW="95%" backgroundColor="white" boxShadow="0 1px 6px 1px rgba(69,65,78,0.1)" padding="0">
             <Header>
@@ -28,35 +29,48 @@ export const DefaulTable = ({ title }: IDefaultTable): JSX.Element => {
                     <Table>
                         <Thead backgroundColor="red">
                             <Tr>
-                                <Th color="white">ID</Th>
-                                <Th color="white">Nome</Th>
-                                <Th color="white" isNumeric>multiply by</Th>
+                                {columns.map((column) => {
+                                    return <Th textAlign="center" color="white" key={column.key}>{column.header}</Th>
+                                })}
+                                <Th textAlign="center" color="white">Ações</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
-                                <Td>inches</Td>
-                                <Td>millimetres (mm)</Td>
-                                <Td isNumeric>25.4</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>feet</Td>
-                                <Td>centimetres (cm)</Td>
-                                <Td isNumeric>30.48</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>yards</Td>
-                                <Td>metres (m)</Td>
-                                <Td isNumeric>0.91444</Td>
-                            </Tr>
+                            {
+                                data.map((item, index) => {
+                                    return (
+                                        <Tr key={index}>
+                                            {columns.map((column) => {
+
+                                                return (
+                                                    <Td textAlign="center" key={column.key}>
+                                                        if(column.key === ){
+                                                            
+                                                        }
+                                                        {column.render(item)}
+                                                    </Td>
+                                                )
+                                            })}
+                                            <Td textAlign="center">
+                                                <Button backgroundColor="black">Editar</Button>
+                                                <Button backgroundColor="red">Excluir</Button>
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })
+                            }
+                            {/* <Tr>
+                                <Td textAlign="center">10</Td>
+                                <Td textAlign="center" display="flex" alignItems="center" justifyContent="center">
+                                    <Image src={Bell} />
+                                    Pizzas
+                                </Td>
+                                <Td textAlign="center">
+                                    <Button backgroundColor="black">Editar</Button>
+                                    <Button backgroundColor="red">Excluir</Button>
+                                </Td>
+                            </Tr> */}
                         </Tbody>
-                        <Tfoot>
-                            <Tr>
-                                <Th>To convert</Th>
-                                <Th>into</Th>
-                                <Th isNumeric>multiply by</Th>
-                            </Tr>
-                        </Tfoot>
                     </Table>
                 </TableContainer>
             </Main>
