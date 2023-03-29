@@ -21,6 +21,6 @@ export const DishesRoutes = [
   },
   {
     element: <EditCategoryComponent />,
-    path: "/category/edit",
+    path: "/category-edit",
   }
 ];

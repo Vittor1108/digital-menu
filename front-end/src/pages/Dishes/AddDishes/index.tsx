@@ -16,7 +16,7 @@ import Select, { MultiValue } from "react-select";
 import * as yup from "yup";
 import { useCreateDishe } from "./hooks/useCreateDishe";
 import { useCreateImageDishe } from "./hooks/useCreateImageDishe";
-import { useGetAllCategories } from "./hooks/useGetAllCategories";
+import { useGetAllCategories } from "@hooks/useGetAllCategories";
 import { useGetDishe } from "./hooks/useGetDishe";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";

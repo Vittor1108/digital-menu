@@ -7,7 +7,7 @@ export class Category {
 }
 
 interface PhotoCategory {
-  filename: string;
+  filename?: string;
   url: string;
 }
 

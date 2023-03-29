@@ -1,12 +1,23 @@
 import { BaseLayout } from "@components/BaseLayout"
 import { Container } from "@chakra-ui/react"
 import { DefaulTable } from "@components/DefaultTable"
+import { ICategorie } from "@interfaces/ICategorie"
+import { useGetAllCategories } from "@hooks/useGetAllCategories"
+
+const columns = [
+    { key: 'id', header: "Id", render: (category: ICategorie) => <>{category.id}</> },
+    { key: 'name', header: "Nome", render: (category: ICategorie) => <>{category.name}</> },
+]
 
 export const EditCategoryComponent = (): JSX.Element => {
+
+    const { categoriesIsLoading, dataFetchCategories } = useGetAllCategories();
+
+
     return (
-        <BaseLayout isLoading={[false]}>
+        <BaseLayout isLoading={[categoriesIsLoading]}>
             <Container maxW="100%" padding="0">
-                <DefaulTable title="Lista de Categorias" />
+                <DefaulTable<ICategorie> data={dataFetchCategories!} columns={columns} title="Lista de Categorias" />
             </Container>
         </BaseLayout>
     )

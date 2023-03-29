@@ -92,6 +92,14 @@ export class CategoryService {
             establishmentId: req.user.establishmentId,
           },
         },
+
+        include: {
+          PhotoCategory: {
+            select: {
+              url: true
+            }
+          }
+        }
       });
     }
 
@@ -110,6 +118,15 @@ export class CategoryService {
       where: {
         establishmentId: req.user.establishmentId,
       },
+
+
+      include: {
+        PhotoCategory: {
+          select: {
+            url: true
+          }
+        }
+      }
     });
   };
 
