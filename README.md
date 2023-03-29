@@ -10,13 +10,16 @@
 
 ## Página de Login
 
-![Página de Login](../../../Downloads/login.PNG)
+![login](https://user-images.githubusercontent.com/72480062/228412385-5dd0900d-2723-4a36-892a-1df3a7aefad6.PNG)
+
+## Home
+![home](https://user-images.githubusercontent.com/72480062/228412394-7e27943e-49fd-4927-97a6-6d073f19b22c.PNG)
 
 ## Cadastro de Pratos
-![Página Cadastro de Pratos](../../../Downloads/cadastroPratos.PNG)
+![cadastroPratos](https://user-images.githubusercontent.com/72480062/228412393-2af5a759-dbe0-42bc-b135-6ce925e8542f.PNG)
 
 ## Cadastro de Categorias
-![Cadastro de Categorias](../../../Downloads/cadastroCategorias.PNG)
+![cadastroCategorias](https://user-images.githubusercontent.com/72480062/228412389-a6f9b3c6-bf4d-461f-87f8-36076ce64be3.PNG)
 
 
 # :hammer: Funcionalidades do projeto
