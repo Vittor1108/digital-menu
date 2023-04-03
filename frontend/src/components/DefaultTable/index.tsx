@@ -44,9 +44,6 @@ export const DefaulTable = <T,>({ title, data, columns }: TableProps<T>): JSX.El
 
                                                 return (
                                                     <Td textAlign="center" key={column.key}>
-                                                        if(column.key === ){
-                                                            
-                                                        }
                                                         {column.render(item)}
                                                     </Td>
                                                 )
