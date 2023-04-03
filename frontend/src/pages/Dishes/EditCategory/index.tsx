@@ -3,6 +3,7 @@ import { Container } from "@chakra-ui/react";
 import { DefaulTable } from "@components/DefaultTable";
 import { ICategorie } from "@interfaces/ICategorie";
 import { useGetAllCategories } from "@hooks/useGetAllCategories";
+import { CategorieService } from "@services/api/categories";
 
 const columns = [
   {
@@ -28,7 +29,7 @@ export const EditCategoryComponent = (): JSX.Element => {
           columns={columns}
           title="Lista de Categorias"
           keyImage="PhotoCategory"
-          deleteAction={()=> {console.log("Deletar")}}
+          deleteAction={(id: number) => deleteCategory(id)}
           editAction="/category/"
         />
       </Container>

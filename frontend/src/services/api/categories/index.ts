@@ -46,11 +46,16 @@ const update = async (id: number, { name, description }: ICategorie): Promise<Ax
   });
 }
 
+const deleteCategory = async (id: number): Promise<AxiosResponse<boolean>> => {
+  return await Axios().delete<boolean>(`/category/${id}`);
+}
+
 export const CategorieService = {
   getAllCategories,
   createCategory,
   createImageCategory,
   getCategory,
   deleteImage,
-  update
+  update,
+  deleteCategory
 };

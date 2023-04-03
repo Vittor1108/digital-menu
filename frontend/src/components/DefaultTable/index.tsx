@@ -10,11 +10,12 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { GenericModal } from "@components/GenericModal";
 import { IPhoto } from "@interfaces/IPhoto";
+import React from "react";
 import { TableProps } from "./interfaces";
-import { Button, Header, Main } from "./styled";
-import { Image, Link } from "./styled";
-
+import { Button, Header, Image, Link, Main } from "./styled";
+import AlertImage from "@assets/images/modal/alert.png";
 
 export const DefaulTable = <T,>({
   title,
@@ -24,6 +25,9 @@ export const DefaulTable = <T,>({
   deleteAction,
   editAction,
 }: TableProps<T>): JSX.Element => {
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [idCategory, setIdCategory] = React.useState<number | null>(null);
+
   return (
     <Container
       maxW="95%"
@@ -83,6 +87,7 @@ export const DefaulTable = <T,>({
             </Thead>
             <Tbody>
               {data.map((item, index) => {
+                const id = data[index]["id" as keyof typeof data[0]];
                 return (
                   <Tr key={index}>
                     {columns.map((column) => {
@@ -113,15 +118,17 @@ export const DefaulTable = <T,>({
                       );
                     })}
                     <Td textAlign="center">
-                      <Link
-                        to={
-                          editAction + data[index]["id" as keyof typeof data[0]]
-                        }
-                      >
-                        Editar
-                      </Link>
+                      <Link to={editAction + id}>Editar</Link>
 
-                      <Button backgroundColor="red" onClick={() => deleteAction()}>Excluir</Button>
+                      <Button
+                        backgroundColor="red"
+                        onClick={() => {
+                          setModalOpen(true);
+                          setIdCategory(Number(id));
+                        }}
+                      >
+                        Excluir
+                      </Button>
                     </Td>
                   </Tr>
                 );
@@ -130,6 +137,22 @@ export const DefaulTable = <T,>({
           </Table>
         </TableContainer>
       </Main>
+      {modalOpen && (
+        <GenericModal
+          imagePath={AlertImage}
+          subTitle="Por favor confirme se deseja excluir"
+          title="Deseja excluir a categoria?"
+          articleWidth="400px"
+          isOpen={modalOpen}
+          textConfirmButton="Excluir"
+          textDenayButton="Voltar"
+          buttonColorDenay="black"
+          clickFunction={(result: boolean) => {
+            !result ? deleteAction(idCategory) : false;
+            setModalOpen(false);
+          }}
+        ></GenericModal>
+      )}
     </Container>
   );
 };

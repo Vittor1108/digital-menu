@@ -19,7 +19,7 @@ export const GenericModal = ({
   isOpen,
   clickFunction,
 }: IGenericModal): JSX.Element => {
-  const teste = (resultModal: true | undefined) => {
+  const callAction = (resultModal: true | undefined) => {
     if (clickFunction) {
       clickFunction(resultModal);
     }
@@ -39,7 +39,7 @@ export const GenericModal = ({
             bgColor={buttonColorConfirm ? buttonColorConfirm : "red"}
             fontColor={fontColorConfirm ? fontColorConfirm : "white"}
             width={buttonWidth ? buttonWidth : "120px"}
-            onClickFunction={() => teste(undefined)}
+            onClickFunction={() => callAction(undefined)}
           >
             {textConfirmButton}
           </Button>
