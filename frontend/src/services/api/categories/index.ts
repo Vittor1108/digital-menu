@@ -16,7 +16,7 @@ const getAllCategories = async (
 
 
 const createCategory = async ({ name, description }: ICategorie): Promise<AxiosResponse<ICategorie>> => {
-  return await Axios().post('/category', {
+  return await Axios().post<ICategorie>('/category', {
     name,
     description
   });

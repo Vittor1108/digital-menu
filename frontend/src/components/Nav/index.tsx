@@ -1,5 +1,10 @@
 import { BsFillBasket2Fill } from "react-icons/bs";
-import { FaArchive, FaBriefcase, FaClipboardList, FaUserFriends } from "react-icons/fa";
+import {
+  FaArchive,
+  FaBriefcase,
+  FaClipboardList,
+  FaUserFriends,
+} from "react-icons/fa";
 import { RiArrowDownSLine, RiDashboardFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import imgSystem from "../../assets/images/imgSystem.png";
@@ -46,13 +51,13 @@ export const Navigation = (props: INavigation) => {
                 <Link to="/dishes">Adicionar produto</Link>
               </li>
               <li>
-                <a href="">Editar Prdouto</a>
+                <Link to="edit-category">Editar Prdouto</Link>
               </li>
               <li>
-                <Link to="/category">Adicionar Categorias</Link>
+                <Link to="/category">Adicionar Categoria</Link>
               </li>
               <li>
-                <a href="">Editar Categorias</a>
+                <Link to="/category-edit">Editar Categorias</Link>
               </li>
             </ul>
           </li>

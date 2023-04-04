@@ -59,7 +59,7 @@ export const DishesComponent = (): JSX.Element => {
     setValue,
     control,
   } = useForm<IForm>({
-
+    resolver: yupResolver(schemaForm),
   });
 
   const onSubmit = (data: IForm): void => {

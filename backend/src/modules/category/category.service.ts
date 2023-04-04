@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { uptime } from 'process';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
@@ -7,10 +6,14 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { PaginationCategroyDto } from './dto/pagination-category';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
+import { PhotoCategoryService } from '../photo-category/photo-category.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly photoCategoryService: PhotoCategoryService,
+  ) {}
 
   public findOne = async (id: number): Promise<Category> => {
     const categorie = await this.prismaService.category.findUnique({
@@ -22,8 +25,8 @@ export class CategoryService {
         id: true,
         name: true,
         description: true,
-        PhotoCategory: true
-      }
+        PhotoCategory: true,
+      },
     });
 
     if (!categorie) {
@@ -67,6 +70,14 @@ export class CategoryService {
 
   public delete = async (id: number): Promise<boolean> => {
     await this.findOne(id);
+    const fileDeleted = await this.photoCategoryService.deleteFile(id);
+
+    if (!fileDeleted) {
+      throw new HttpException(
+        'Não foi possível excluir a categoria',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     await this.prismaService.category.delete({
       where: {
@@ -96,10 +107,10 @@ export class CategoryService {
         include: {
           PhotoCategory: {
             select: {
-              url: true
-            }
-          }
-        }
+              url: true,
+            },
+          },
+        },
       });
     }
 
@@ -119,14 +130,13 @@ export class CategoryService {
         establishmentId: req.user.establishmentId,
       },
 
-
       include: {
         PhotoCategory: {
           select: {
-            url: true
-          }
-        }
-      }
+            url: true,
+          },
+        },
+      },
     });
   };
 
