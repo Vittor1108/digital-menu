@@ -15,6 +15,7 @@ import { CreateProductRegistrationDto } from './dto/create-product-registration.
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import { ProductRegistration } from './entities/product-registration.entity';
 import { ProductRegistrationService } from './product-registration.service';
+import { PaginationCategroyDto } from '../category/dto/pagination-category';
 
 @Controller('product')
 @UseGuards(AuthGuard('jwt'))
@@ -51,7 +52,17 @@ export class ProductRegistrationController {
   }
 
   @Get('salesAccount/count')
-  salesAccount(@Request() req: IReq) {
+  salesAccount(@Request() req: IReq): Promise<
+    {
+      products: ProductRegistration;
+      countSales: number;
+    }[]
+  > {
     return this.productRegistrationService.salesAccount(req);
+  }
+
+  @Get('/take=:take?/skip=:skip?/text=:text?')
+  findAll(@Param() pagination: PaginationCategroyDto, @Request() req: IReq) {
+    return this.productRegistrationService.findAll(pagination, req);
   }
 }

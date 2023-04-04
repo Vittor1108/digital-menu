@@ -2,6 +2,7 @@ import { IDishes } from "@interfaces/IDishes";
 import { IFiles } from "@interfaces/IFiles";
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
+import { IPaginationCategorie } from "../categories/interfaces/IPaginationCategorie";
 
 export const createProduct = async (
   data: IDishes
@@ -44,14 +45,27 @@ export const updatedDishe = async (
   });
 };
 
-
-export const deleteImageDishe = async (id: number): Promise<AxiosResponse<boolean>> => {
+export const deleteImageDishe = async (
+  id: number
+): Promise<AxiosResponse<boolean>> => {
   return await Axios().delete(`/photo-product/${id}`);
-}
+};
+
+const getAll = async (
+  dataParams?: IPaginationCategorie
+): Promise<AxiosResponse<IDishes[]>> => {
+  return await Axios().get<IDishes[]>(
+    `product/take=${dataParams?.take ? dataParams?.take : ""}/skip=${
+      dataParams?.skip ? dataParams?.skip : ""
+    }/text=${dataParams?.text ? dataParams?.text : ""}`
+  );
+};
+
 export const DishesService = {
   createProduct,
   createImageProduct,
   getDisheById,
   updatedDishe,
-  deleteImageDishe
+  deleteImageDishe,
+  getAll,
 };

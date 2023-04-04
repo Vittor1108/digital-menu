@@ -1,9 +1,8 @@
-import { BaseLayout } from "@components/BaseLayout";
 import { Container } from "@chakra-ui/react";
+import { BaseLayout } from "@components/BaseLayout";
 import { DefaulTable } from "@components/DefaultTable";
-import { ICategorie } from "@interfaces/ICategorie";
 import { useGetAllCategories } from "@hooks/useGetAllCategories";
-import { CategorieService } from "@services/api/categories";
+import { ICategorie } from "@interfaces/ICategorie";
 import { useDeleteCategory } from "./hooks/useDeleteCategory";
 
 const columns = [

@@ -1,3 +1,4 @@
+import AlertImage from "@assets/images/modal/alert.png";
 import {
   Container,
   Input,
@@ -15,8 +16,6 @@ import { IPhoto } from "@interfaces/IPhoto";
 import React from "react";
 import { TableProps } from "./interfaces";
 import { Button, Header, Image, Link, Main } from "./styled";
-import AlertImage from "@assets/images/modal/alert.png";
-import { TitleSection } from "@components/TitleSection";
 
 export const DefaulTable = <T,>({
   title,
@@ -28,7 +27,7 @@ export const DefaulTable = <T,>({
 }: TableProps<T>): JSX.Element => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [idCategory, setIdCategory] = React.useState<number | null>(null);
-
+  console.log(data);
   if (!data.length) {
     return (
       <Container
@@ -148,11 +147,18 @@ export const DefaulTable = <T,>({
                 return (
                   <Tr key={index}>
                     {columns.map((column) => {
-                      const objectImage =
-                        data[index][keyImage as keyof typeof data[0]];
-                      const { url } = objectImage[
-                        0 as keyof typeof objectImage
-                      ] as IPhoto;
+                      let objectImage;
+                      let objectFiles;
+                      let url;
+                      if (data[0][keyImage as keyof typeof data[0]]) {
+                        objectImage =
+                          data[index][keyImage as keyof typeof data[0]];
+                          objectFiles = objectImage[
+                          0 as keyof typeof objectImage
+                        ] as IPhoto;
+                        
+                        url = objectFiles.url ? objectFiles.url : "";
+                      }
 
                       if (column.key === "name") {
                         return (
@@ -163,7 +169,7 @@ export const DefaulTable = <T,>({
                             justifyContent="center"
                             marginTop="10px"
                           >
-                            <Image src={url} />
+                            {url && <Image src={url!} />}
                             {column.render(item)}
                           </Td>
                         );

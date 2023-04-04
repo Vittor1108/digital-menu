@@ -97,12 +97,12 @@ export const DishesComponent = (): JSX.Element => {
     createImage(data.id);
   }
 
-  const createImage = (id: number) => {
+  const createImage = (idParam: number) => {
     const params = {
-      id: Number(id),
+      id: Number(idParam),
       files,
     }
-
+    console.log(files);
     createDisheImage.mutate(params, {
       onSuccess: () => {
         useSnack({
@@ -124,7 +124,7 @@ export const DishesComponent = (): JSX.Element => {
         });
       },
     });
-
+    
     if (!id) {
       resetForm();
     }

@@ -7,7 +7,7 @@ import { PhotoProduct } from 'src/modules/photo-product/entities/photo-product.e
 export class PhotoProductService {
   private baseURL = 'http://localhost:3000/assets/uploads/images';
   private dataPhotoProduct: Array<PhotoProduct> = [];
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   public upload = async (
     files: Express.Multer.File,
@@ -36,6 +36,9 @@ export class PhotoProductService {
         };
       });
     }
+
+    console.log(this.dataPhotoProduct);
+
     await this.prismaService.productPhoto.createMany({
       data: this.dataPhotoProduct,
     });
@@ -46,11 +49,11 @@ export class PhotoProductService {
     try {
       const productPhoto = await this.prismaService.productPhoto.findMany({
         where: {
-          product_id: Number(id)
-        }
+          product_id: Number(id),
+        },
       });
 
-      productPhoto.forEach(product => {
+      productPhoto.forEach((product) => {
         removeFile(product.filename);
       });
 

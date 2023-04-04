@@ -48,16 +48,16 @@ export const Navigation = (props: INavigation) => {
             <RiArrowDownSLine />
             <ul>
               <li>
-                <Link to="/dishes">Adicionar produto</Link>
+                <Link to="/dishes">Adicionar Prato</Link>
               </li>
               <li>
-                <Link to="edit-category">Editar Prdouto</Link>
+                <Link to="/dishes-edit">Editar Pratos</Link>
               </li>
               <li>
                 <Link to="/category">Adicionar Categoria</Link>
               </li>
               <li>
-                <Link to="/category-edit">Editar Categorias</Link>
+                <Link to="/categories-edit">Editar Categorias</Link>
               </li>
             </ul>
           </li>

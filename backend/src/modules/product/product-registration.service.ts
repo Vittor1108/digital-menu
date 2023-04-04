@@ -272,6 +272,15 @@ export class ProductRegistrationService {
       where: {
         establishmentId: req.user.establishmentId,
       },
+
+      include: {
+        ProductPhoto: {
+          select: {
+            filename: true,
+            url: true,
+          },
+        },
+      },
     });
   };
 

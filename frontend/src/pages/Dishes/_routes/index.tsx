@@ -1,6 +1,7 @@
 import { CategoryComponent } from "../AddCategory";
 import { DishesComponent } from "../AddDishes";
 import { EditCategoryComponent } from "../EditCategory";
+import { EditDishesComponent } from "../EditDishe";
 
 export const DishesRoutes = [
   {
@@ -9,11 +10,11 @@ export const DishesRoutes = [
   },
   {
     element: <DishesComponent />,
-    path: "/dishes/:id"
+    path: "/dishes/:id",
   },
   {
     element: <CategoryComponent />,
-    path: "/category"
+    path: "/category",
   },
   {
     element: <CategoryComponent />,
@@ -21,6 +22,10 @@ export const DishesRoutes = [
   },
   {
     element: <EditCategoryComponent />,
-    path: "/category-edit",
-  }
+    path: "/categories-edit",
+  },
+  {
+    element: <EditDishesComponent />,
+    path: "/dishes-edit",
+  },
 ];

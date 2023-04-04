@@ -1,5 +1,6 @@
 export const queryObject = {
     getCategory: 'category',
-    getAllCategories: 'categories',
     getDishe: 'dishe',
+    getAllCategories: 'categories',
+    getAllDishes: 'dishes',
 }
