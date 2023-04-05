@@ -7,10 +7,14 @@ import { PaginationCategroyDto } from '../category/dto/pagination-category';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import { ProductRegistration } from './entities/product-registration.entity';
+import { PhotoProductService } from '../photo-product/photo-product.service';
 
 @Injectable()
 export class ProductRegistrationService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly photoProductService: PhotoProductService,
+  ) {}
 
   public create = async (
     createDto: CreateProductRegistrationDto,
@@ -287,19 +291,18 @@ export class ProductRegistrationService {
   public delete = async (id: number): Promise<boolean> => {
     await this.findOne(id);
 
-    const photos = await this.prismaService.productPhoto.findMany({
-      where: {
-        product_id: id,
-      },
-    });
-
-    photos.forEach((photo) => {
-      removeFile(photo.filename);
-    });
+    const deleted = await this.photoProductService.delete(id);
+    console.log(deleted);
+    if (!deleted) {
+      throw new HttpException(
+        'Não foi possível exlucir o prato.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     await this.prismaService.product.delete({
       where: {
-        id,
+        id: Number(id),
       },
     });
 

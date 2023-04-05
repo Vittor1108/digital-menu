@@ -4,7 +4,7 @@ export interface IDishes {
   price: number;
   categoriesId: number[];
   description: string;
-  avargePrice?: number | null;
+  avargePrice?: number;
   ProductCategory?: ProductCategory[];
   ProductPhoto?: ProductPhoto[];
 }

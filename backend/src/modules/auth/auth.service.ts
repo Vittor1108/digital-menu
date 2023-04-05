@@ -52,7 +52,6 @@ export class AuthService {
   };
 
   public validateToken = async (req: IReq) => {
-    console.log(req);
     return 'OK';
   };
 }

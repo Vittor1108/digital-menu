@@ -1,26 +1,45 @@
-import { BaseLayout } from "@components/BaseLayout";
 import { Container } from "@chakra-ui/react";
+import { BaseLayout } from "@components/BaseLayout";
 import { DefaulTable } from "@components/DefaultTable";
-import { ICategorie } from "@interfaces/ICategorie";
 import { useGetllDishes } from "@hooks/useGetAllDishes";
 import { IDishes } from "@interfaces/IDishes";
+import { useDeleteDishe } from "./hooks/useDeleteDishe";
+
+const genAvaragePrice = (price: number | undefined): string => {
+  return price
+    ? new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(price)
+    : "NA";
+};
 
 const columns = [
   {
     key: "id",
     header: "Id",
-    render: (category: ICategorie) => <>{category.id}</>,
+    render: (dishe: IDishes) => <>{dishe.id}</>,
   },
   {
     key: "name",
     header: "Nome",
-    render: (category: ICategorie) => <>{category.name}</>,
+    render: (dishe: IDishes) => <>{dishe.name}</>,
+  },
+  {
+    key: "price",
+    header: "Preço",
+    render: (dishe: IDishes) => <>{genAvaragePrice(dishe.price)}</>,
+  },
+  {
+    key: "avargePrice",
+    header: "Preço Médio",
+    render: (dishe: IDishes) => <>{genAvaragePrice(dishe.avargePrice)}</>,
   },
 ];
 
 export const EditDishesComponent = (): JSX.Element => {
   const { dataFecthDishes, dishesIsLoading } = useGetllDishes();
-
+  const { deleteDishe } = useDeleteDishe();
   return (
     <BaseLayout isLoading={[dishesIsLoading]}>
       <Container maxW="100%" padding="0">
@@ -29,8 +48,10 @@ export const EditDishesComponent = (): JSX.Element => {
           columns={columns}
           title="Lista de Categorias"
           keyImage="ProductPhoto"
-          deleteAction={(id: number) => {}}
-          editAction="/product/"
+          deleteAction={(id: number) => {
+            deleteDishe.mutate(id);
+          }}
+          editAction="/dishes/"
         />
       </Container>
     </BaseLayout>

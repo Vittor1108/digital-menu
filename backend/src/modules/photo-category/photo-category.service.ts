@@ -8,7 +8,7 @@ import { removeFile } from 'src/utils/file-upload.utils';
 export class PhotoCategoryService {
   private baseURL = 'http://localhost:3000/assets/uploads/images';
   private dataPhoto: Array<PhotoCategory> = [];
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   public upload = async (
     files: Express.Multer.File,
@@ -28,7 +28,8 @@ export class PhotoCategoryService {
     }
 
     if (Array.isArray(files)) {
-      if (!files.length) throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
+      if (!files.length)
+        throw new HttpException('Imagem não enviada', HttpStatus.BAD_REQUEST);
 
       this.dataPhoto = files.map((file: PhotoCategory) => {
         return {
@@ -51,7 +52,7 @@ export class PhotoCategoryService {
     const files = await this.prismaService.photoCategory.findMany({
       where: {
         category_id: Number(id),
-      }
+      },
     });
 
     if (!files.length) {
@@ -61,9 +62,9 @@ export class PhotoCategoryService {
       );
     }
 
-    files.forEach(file => {
+    files.forEach((file) => {
       removeFile(file.filename);
-    })
+    });
 
     await this.prismaService.photoCategory.deleteMany({
       where: {

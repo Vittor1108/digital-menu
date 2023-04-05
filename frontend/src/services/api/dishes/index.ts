@@ -16,13 +16,12 @@ export const createProduct = async (
   });
 };
 
-export const createImageProduct = async (
-  data: IFiles
-): Promise<AxiosResponse<boolean>> => {
+export const createImageProduct = async (data: IFiles): Promise<any> => {
   const formData = new FormData();
   Array.from(data.files).forEach((file: File) => {
     formData.append("files", file as File);
   });
+
   return await Axios().post(`/photo-product/${data.id}`, formData);
 };
 
@@ -61,6 +60,10 @@ const getAll = async (
   );
 };
 
+const deleteDishe = async (id: number): Promise<AxiosResponse<boolean>> => {
+  return await Axios().delete<boolean>(`/product/${id}`);
+};
+
 export const DishesService = {
   createProduct,
   createImageProduct,
@@ -68,4 +71,5 @@ export const DishesService = {
   updatedDishe,
   deleteImageDishe,
   getAll,
+  deleteDishe,
 };

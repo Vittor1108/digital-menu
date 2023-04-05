@@ -27,7 +27,7 @@ export const DefaulTable = <T,>({
 }: TableProps<T>): JSX.Element => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [idCategory, setIdCategory] = React.useState<number | null>(null);
-  console.log(data);
+
   if (!data.length) {
     return (
       <Container
@@ -153,10 +153,10 @@ export const DefaulTable = <T,>({
                       if (data[0][keyImage as keyof typeof data[0]]) {
                         objectImage =
                           data[index][keyImage as keyof typeof data[0]];
-                          objectFiles = objectImage[
+                        objectFiles = objectImage[
                           0 as keyof typeof objectImage
                         ] as IPhoto;
-                        
+
                         url = objectFiles.url ? objectFiles.url : "";
                       }
 

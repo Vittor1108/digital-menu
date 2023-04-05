@@ -24,23 +24,26 @@ import { ProductCategory } from "@interfaces/IDishes";
 import { useUpdateDishe } from "./hooks/useUpdateDishe";
 import { useDeleteImageDishe } from "./hooks/useDeleteImageDishe";
 
-
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
   description: yup.string().required("Descrição do prato é obrigatória"),
   price: yup.string().required("Preço é obrigatório"),
 });
 
-
 export const DishesComponent = (): JSX.Element => {
-  const [placeHolderFiles, setPlaceholderFiles] = React.useState<string>("Nenhuma Foto");
+  const [placeHolderFiles, setPlaceholderFiles] =
+    React.useState<string>("Nenhuma Foto");
   const [thumbImages, setThumbImages] = React.useState<string[]>([]);
   const [files, setFiles] = React.useState<FileList | null | IPhoto[]>(null);
   const [categories, setCategories] = React.useState<IOptionType[]>([]);
   const [titlePage, setTitlePage] = React.useState<string>("Adicionar Prato");
   const refInput = React.useRef<HTMLInputElement | null>(null);
-  const [categoriesSelect, setCategoriesSelect] = React.useState<MultiValue<never> | { label: string; value: number; }[]>([]);
-  const [currencyInput, setCurrencyInput] = React.useState<string | undefined>();
+  const [categoriesSelect, setCategoriesSelect] = React.useState<
+    MultiValue<never> | { label: string; value: number }[]
+  >([]);
+  const [currencyInput, setCurrencyInput] = React.useState<
+    string | undefined
+  >();
   const { dataFetchCategories, categoriesIsLoading } = useGetAllCategories();
   const [urlImages, genFiles, genPlaceholder] = useThumbImages();
   const { fetchCreateDishe } = useCreateDishe();
@@ -68,42 +71,50 @@ export const DishesComponent = (): JSX.Element => {
       return;
     }
 
-    updateDishe(data)
-  }
+    updateDishe(data);
+  };
 
-  const createDishe = async ({ name, price, description }: IForm): Promise<void> => {
+  const createDishe = async ({
+    name,
+    price,
+    description,
+  }: IForm): Promise<void> => {
     const params = {
       name,
       price: Number(currencyFormat(price)),
-      categoriesId: categoriesSelect.map(category => category.value),
-      description
-    }
+      categoriesId: categoriesSelect.map((category) => category.value),
+      description,
+    };
 
     const { data } = await fetchCreateDishe.mutateAsync(params);
     createImage(data.id);
-  }
+  };
 
-  const updateDishe = async ({ name, price, description }: IForm): Promise<void> => {
+  const updateDishe = async ({
+    name,
+    price,
+    description,
+  }: IForm): Promise<void> => {
     const params = {
       id: Number(id!),
       name,
       price: Number(currencyFormat(price)),
-      categoriesId: categoriesSelect.map(category => category.value),
-      description
-    }
+      categoriesId: categoriesSelect.map((category) => category.value),
+      description,
+    };
 
     const { data } = await fetchUpdateDishe.mutateAsync(params);
     await fetchDeleteImage.mutateAsync(Number(data.id));
     createImage(data.id);
-  }
+  };
 
-  const createImage = (idParam: number) => {
+  const createImage = async (idParam: number): Promise<void> => {
     const params = {
       id: Number(idParam),
       files,
-    }
-    console.log(files);
-    createDisheImage.mutate(params, {
+    };
+    
+    await createDisheImage.mutateAsync(params, {
       onSuccess: () => {
         useSnack({
           title: "Prato criado!",
@@ -124,11 +135,11 @@ export const DishesComponent = (): JSX.Element => {
         });
       },
     });
-    
+
     if (!id) {
       resetForm();
     }
-  }
+  };
 
   const setDataForm = () => {
     setValue("name", dataDishe!.name);
@@ -137,16 +148,18 @@ export const DishesComponent = (): JSX.Element => {
     setCurrencyInput(Number(dataDishe!.price).toFixed(2).toString());
     setCategoriesSelect(formatCategoriesRequest(dataDishe!.ProductCategory!));
     eventImages(dataDishe!.ProductPhoto!);
-  }
+  };
 
-  const formatCategoriesRequest = (categories: ProductCategory[]): { label: string; value: number; }[] => {
+  const formatCategoriesRequest = (
+    categories: ProductCategory[]
+  ): { label: string; value: number }[] => {
     return categories.map(({ category }) => {
       return {
         label: category.name,
         value: Number(category.id),
-      }
+      };
     });
-  }
+  };
 
   const resetForm = (): void => {
     setThumbImages(urlImages(null));
@@ -155,28 +168,28 @@ export const DishesComponent = (): JSX.Element => {
     setCategoriesSelect([]);
     setCurrencyInput("");
     reset();
-  }
+  };
   const eventImages = (fileList: FileList | null | IPhoto[]): void => {
     setPlaceholderFiles(genPlaceholder(fileList));
     setThumbImages(urlImages(fileList));
     setFiles(genFiles(fileList));
-  }
+  };
 
   const onDelete = (): void => {
     eventImages(null);
-  }
+  };
 
   React.useEffect(() => {
     if (dataFetchCategories) {
-      const categories: IOptionType[] = dataFetchCategories.map(category => {
+      const categories: IOptionType[] = dataFetchCategories.map((category) => {
         return {
           value: category.id!,
           label: category.name,
-        }
+        };
       });
       setCategories(categories);
     }
-  }, [dataFetchCategories, categoriesIsLoading])
+  }, [dataFetchCategories, categoriesIsLoading]);
 
   React.useEffect(() => {
     if (id && dataDishe) {
@@ -190,8 +203,6 @@ export const DishesComponent = (): JSX.Element => {
       resetForm();
     }
   }, []);
-
-
 
   return (
     <BaseLayout isLoading={[categoriesIsLoading, dataDisheIsLoading]}>
@@ -248,8 +259,12 @@ export const DishesComponent = (): JSX.Element => {
                         isMulti={true}
                         onBlur={onBlur}
                         onChange={(selectedOption) => {
-                          onChange(selectedOption.map((item: any) => item.value));
-                          setCategoriesSelect(selectedOption as MultiValue<never>);
+                          onChange(
+                            selectedOption.map((item: any) => item.value)
+                          );
+                          setCategoriesSelect(
+                            selectedOption as MultiValue<never>
+                          );
                         }}
                         value={categoriesSelect}
                         name={name}
@@ -286,7 +301,7 @@ export const DishesComponent = (): JSX.Element => {
                     defaultValue=""
                     value={currencyInput ? currencyInput : ""}
                     onValueChange={(valueField) => {
-                      setCurrencyInput(valueField)
+                      setCurrencyInput(valueField);
                     }}
                     intlConfig={{ locale: "pt-br", currency: "BRL" }}
                     style={{
@@ -297,7 +312,6 @@ export const DishesComponent = (): JSX.Element => {
                       fontSize: "14px",
                     }}
                     {...register("price")}
-
                   />
                 </Container>
               </Container>
