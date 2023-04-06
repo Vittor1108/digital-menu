@@ -56,3 +56,29 @@ export const Link = styled(LinkRouter)`
     }
 
 `;
+
+export const Pagination = styled.nav`
+  ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    li{
+      border: 1px solid black;
+      padding: 4px 10px;
+      margin-right: 7px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .3s;
+      &:nth-child(1){
+        background-color: red;
+        color: white;
+      }
+
+      &:hover{
+        background-color: red;
+        color: white;
+      }
+    }
+  }
+`

@@ -2,7 +2,7 @@ import { IDishes } from "@interfaces/IDishes";
 import { IFiles } from "@interfaces/IFiles";
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
-import { IPaginationCategorie } from "../categories/interfaces/IPaginationCategorie";
+import { IPagination } from "@interfaces/IPagination";
 
 export const createProduct = async (
   data: IDishes
@@ -51,12 +51,10 @@ export const deleteImageDishe = async (
 };
 
 const getAll = async (
-  dataParams?: IPaginationCategorie
-): Promise<AxiosResponse<IDishes[]>> => {
-  return await Axios().get<IDishes[]>(
-    `product/take=${dataParams?.take ? dataParams?.take : ""}/skip=${
-      dataParams?.skip ? dataParams?.skip : ""
-    }/text=${dataParams?.text ? dataParams?.text : ""}`
+  dataParams?: IPagination
+): Promise<AxiosResponse<{ dishes: IDishes[]; quantity: number }>> => {
+  return await Axios().get<{ dishes: IDishes[]; quantity: number }>(
+    `product/take=${dataParams?.take}/skip=${dataParams?.skip}/text=${dataParams?.text}`
   );
 };
 

@@ -247,9 +247,15 @@ export class ProductRegistrationService {
   public findAll = async (
     pagination: PaginationCategroyDto,
     req: IReq,
-  ): Promise<ProductRegistration[]> => {
+  ): Promise<{ quantity: number; dishes: ProductRegistration[] }> => {
+    const countProducts = await this.prismaService.product.count({
+      where: {
+        establishmentId: req.user.establishmentId,
+      },
+    });
+
     if (pagination.text) {
-      return this.prismaService.product.findMany({
+      const products = await this.prismaService.product.findMany({
         where: {
           establishmentId: req.user.establishmentId,
           AND: {
@@ -259,10 +265,15 @@ export class ProductRegistrationService {
           },
         },
       });
+
+      return {
+        dishes: products,
+        quantity: countProducts,
+      };
     }
 
     if (pagination.skip && pagination.take) {
-      return this.prismaService.product.findMany({
+      const products = await this.prismaService.product.findMany({
         where: {
           establishmentId: req.user.establishmentId,
         },
@@ -270,9 +281,14 @@ export class ProductRegistrationService {
         skip: Number(pagination.skip),
         take: Number(pagination.take),
       });
+
+      return {
+        dishes: products,
+        quantity: countProducts,
+      };
     }
 
-    return this.prismaService.product.findMany({
+    const products = await this.prismaService.product.findMany({
       where: {
         establishmentId: req.user.establishmentId,
       },
@@ -286,13 +302,17 @@ export class ProductRegistrationService {
         },
       },
     });
+
+    return {
+      dishes: products,
+      quantity: countProducts,
+    };
   };
 
   public delete = async (id: number): Promise<boolean> => {
     await this.findOne(id);
 
     const deleted = await this.photoProductService.delete(id);
-    console.log(deleted);
     if (!deleted) {
       throw new HttpException(
         'Não foi possível exlucir o prato.',

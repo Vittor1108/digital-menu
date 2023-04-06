@@ -5,7 +5,8 @@ export interface TableProps<T> {
     keyImage: string;
     deleteAction: Function;
     editAction: string;
-    
+    changeDataGet: Function;
+    quantityData?: number;
 }
 
 interface TableColumn<T> {

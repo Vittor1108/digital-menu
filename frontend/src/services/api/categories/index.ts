@@ -1,12 +1,12 @@
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
 import { ICategorie } from "@interfaces/ICategorie";
-import { IPaginationCategorie } from "./interfaces/IPaginationCategorie";
+import { IPagination } from "@interfaces/IPagination";
 import { IFiles } from "@interfaces/IFiles";
 
 
 const getAllCategories = async (
-  dataParams?: IPaginationCategorie
+  dataParams?: IPagination
 ): Promise<AxiosResponse<ICategorie[]>> => {
   return await Axios().get<ICategorie[]>(
     `category/take=${dataParams?.take ? dataParams?.take : ""}/skip=${dataParams?.skip ? dataParams?.skip : ""

@@ -30,7 +30,6 @@ export const EditCategoryComponent = (): JSX.Element => {
           title="Lista de Categorias"
           keyImage="PhotoCategory"
           deleteAction={(id: number) => {
-            console.log(id);
             deleteCategory.mutate(id);
           }}
           editAction="/category/"

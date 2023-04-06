@@ -12,7 +12,7 @@ export const BaseLayout = ({
   isLoading: boolean[];
 }): JSX.Element => {
   const [openMenu, setOpenMenu] = React.useState<boolean>(false);
-
+  console.log(isLoading);
   return (
     <>
       <HeaderComponent
@@ -21,7 +21,11 @@ export const BaseLayout = ({
       />
 
       <Container isOpen={openMenu}>
-        {isLoading.includes(true) ? <Spinner color="red.500" size="xl" /> : children}
+        {isLoading.includes(true) ? (
+          <Spinner color="red.500" size="xl" />
+        ) : (
+          children
+        )}
       </Container>
       <Navigation isOpen={openMenu} />
     </>

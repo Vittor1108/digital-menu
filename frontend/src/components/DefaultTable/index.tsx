@@ -12,10 +12,16 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { GenericModal } from "@components/GenericModal";
+import { IPagination } from "@interfaces/IPagination";
 import { IPhoto } from "@interfaces/IPhoto";
 import React from "react";
 import { TableProps } from "./interfaces";
-import { Button, Header, Image, Link, Main } from "./styled";
+import { Button, Header, Image, Link, Main, Pagination } from "./styled";
+
+const calcQtdPagination = (qtdData: number, take: number) => {
+  console.log(qtdData);
+  return Math.ceil(qtdData / take);
+};
 
 export const DefaulTable = <T,>({
   title,
@@ -24,65 +30,23 @@ export const DefaulTable = <T,>({
   keyImage,
   deleteAction,
   editAction,
+  changeDataGet,
+  quantityData,
 }: TableProps<T>): JSX.Element => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [idCategory, setIdCategory] = React.useState<number | null>(null);
+  const [dataGet, setDataGet] = React.useState<IPagination>({
+    skip: 0,
+    take: 10,
+    text: "",
+  });
 
-  if (!data.length) {
-    return (
-      <Container
-        maxW="95%"
-        backgroundColor="white"
-        boxShadow="0 1px 6px 1px rgba(69,65,78,0.1)"
-        padding="0"
-      >
-        <Header>
-          <h1>{title}</h1>
-        </Header>
-        <Container
-          maxW="100%"
-          padding="1.5rem"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Container
-            w="auto"
-            margin="0"
-            display="flex"
-            alignItems="center"
-            padding="0"
-          >
-            <span>Mostar: </span>
-            <Select size="sm" marginLeft="10px">
-              <option value="">10</option>
-              <option value="">20</option>
-              <option value="">30</option>
-            </Select>
-          </Container>
-          <div>
-            <Input
-              type="text"
-              placeholder="Pesquisar..."
-              size="sm"
-              borderRadius="10px"
-            />
-          </div>
-        </Container>
-        <h1
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            textAlign: "center",
-            padding: "10px 0",
-            textTransform: "uppercase",
-          }}
-        >
-          Não há dados para a tabela
-        </h1>
-      </Container>
-    );
-  }
+  React.useEffect(() => {
+    if (quantityData) {
+      calcQtdPagination(quantityData, dataGet.take);
+    }
+    changeDataGet(dataGet);
+  }, [dataGet]);
 
   return (
     <Container
@@ -109,10 +73,20 @@ export const DefaulTable = <T,>({
           padding="0"
         >
           <span>Mostar: </span>
-          <Select size="sm" marginLeft="10px">
-            <option value="">10</option>
-            <option value="">20</option>
-            <option value="">30</option>
+          <Select
+            size="sm"
+            marginLeft="10px"
+            onChange={(e) => {
+              setDataGet({
+                skip: dataGet.skip,
+                take: Number(e.currentTarget.value),
+                text: dataGet.text,
+              });
+            }}
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
           </Select>
         </Container>
         <div>
@@ -121,10 +95,20 @@ export const DefaulTable = <T,>({
             placeholder="Pesquisar..."
             size="sm"
             borderRadius="10px"
+            onChange={(e) => {
+              setDataGet({
+                skip: dataGet.skip,
+                take: dataGet.take,
+                text: e.target.value,
+              });
+            }}
           />
         </div>
       </Container>
       <Main>
+        <Container maxW="100%" padding="0" fontSize="14px" marginBottom="10px">
+          <p>Exibindo 1 de 200</p>
+        </Container>
         <TableContainer>
           <Table verticalAlign="middle">
             <Thead backgroundColor="red">
@@ -198,6 +182,18 @@ export const DefaulTable = <T,>({
               })}
             </Tbody>
           </Table>
+          <Container maxW="100%" marginTop="20px">
+            <Pagination>
+              <ul>
+                {Array.from(
+                  Array(calcQtdPagination(quantityData!, dataGet.take)),
+                  (element, index: number) => {
+                    return <li key={index}>{index + 1}</li>;
+                  }
+                )}
+              </ul>
+            </Pagination>
+          </Container>
         </TableContainer>
       </Main>
       {modalOpen && (

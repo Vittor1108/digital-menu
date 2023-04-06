@@ -1,14 +1,15 @@
 import { useToast } from "@chakra-ui/react";
+import { IPagination } from "@interfaces/IPagination";
 import { DishesService } from "@services/api/dishes";
 import { queryObject } from "@utils/queryObject";
 import { useQuery } from "react-query";
 
-export const useGetllDishes = () => {
+export const useGetllDishes = (dataGet: IPagination) => {
   const useSnack = useToast();
   const fetechDishes = useQuery(
     [queryObject.getAllDishes],
     async () => {
-      const request = await DishesService.getAll();
+      const request = await DishesService.getAll(dataGet);
       return request.data;
     },
     {
