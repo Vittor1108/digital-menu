@@ -91,9 +91,15 @@ export class CategoryService {
   public findAll = async (
     pagination: PaginationCategroyDto,
     req: IReq,
-  ): Promise<Category[]> => {
+  ): Promise<{ quantity: number; categories: Category[] }> => {
+    const countCategories = await this.prismaService.category.count({
+      where: {
+        establishmentId: req.user.establishmentId,
+      },
+    });
+
     if (pagination.text) {
-      return await this.prismaService.category.findMany({
+      const categories = await this.prismaService.category.findMany({
         where: {
           name: {
             contains: pagination.text,
@@ -112,20 +118,38 @@ export class CategoryService {
           },
         },
       });
+
+      return {
+        categories,
+        quantity: countCategories,
+      };
     }
 
     if (pagination.take && pagination.skip) {
-      return await this.prismaService.category.findMany({
+      const categories = await this.prismaService.category.findMany({
         where: {
           establishmentId: req.user.establishmentId,
         },
 
         take: Number(pagination.take),
         skip: Number(pagination.skip),
+
+        include: {
+          PhotoCategory: {
+            select: {
+              url: true,
+            },
+          },
+        },
       });
+
+      return {
+        categories,
+        quantity: countCategories,
+      };
     }
 
-    return await this.prismaService.category.findMany({
+    const categories = await this.prismaService.category.findMany({
       where: {
         establishmentId: req.user.establishmentId,
       },
@@ -138,6 +162,11 @@ export class CategoryService {
         },
       },
     });
+
+    return {
+      categories,
+      quantity: countCategories,
+    };
   };
 
   public update = async (

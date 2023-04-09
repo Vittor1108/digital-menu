@@ -4,6 +4,8 @@ import { DefaulTable } from "@components/DefaultTable";
 import { useGetAllCategories } from "@hooks/useGetAllCategories";
 import { ICategorie } from "@interfaces/ICategorie";
 import { useDeleteCategory } from "./hooks/useDeleteCategory";
+import React from "react";
+import { IPagination } from "@interfaces/IPagination";
 
 const columns = [
   {
@@ -19,13 +21,21 @@ const columns = [
 ];
 
 export const EditCategoryComponent = (): JSX.Element => {
-  const { categoriesIsLoading, dataFetchCategories } = useGetAllCategories();
+  const [dataGet, setDataGet] = React.useState<IPagination>({
+    skip: 0,
+    take: 10,
+    text: "",
+  });
+
+  const { categoriesIsLoading, dataFetchCategories } =
+    useGetAllCategories(dataGet);
   const { deleteCategory } = useDeleteCategory();
+
   return (
     <BaseLayout isLoading={[categoriesIsLoading]}>
       <Container maxW="100%" padding="0">
         <DefaulTable<ICategorie>
-          data={dataFetchCategories!}
+          data={categoriesIsLoading ? [] : dataFetchCategories!.categories}
           columns={columns}
           title="Lista de Categorias"
           keyImage="PhotoCategory"
@@ -33,6 +43,8 @@ export const EditCategoryComponent = (): JSX.Element => {
             deleteCategory.mutate(id);
           }}
           editAction="/category/"
+          changeDataGet={setDataGet}
+          quantityData={dataFetchCategories?.quantity}
         />
       </Container>
     </BaseLayout>

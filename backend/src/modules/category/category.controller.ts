@@ -44,7 +44,7 @@ export class CategoryController {
   findAll(
     @Param() pagination: PaginationCategroyDto,
     @Request() req: IReq,
-  ): Promise<Category[]> {
+  ): Promise<{ quantity: number; categories: Category[] }> {
     return this.categoryService.findAll(pagination, req);
   }
 
