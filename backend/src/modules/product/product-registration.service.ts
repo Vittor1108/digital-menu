@@ -264,6 +264,15 @@ export class ProductRegistrationService {
             },
           },
         },
+
+        include: {
+          ProductPhoto: {
+            select: {
+              filename: true,
+              url: true,
+            },
+          },
+        },
       });
 
       return {
@@ -280,6 +289,15 @@ export class ProductRegistrationService {
 
         skip: Number(pagination.skip),
         take: Number(pagination.take),
+
+        include: {
+          ProductPhoto: {
+            select: {
+              filename: true,
+              url: true,
+            },
+          },
+        },
       });
 
       return {

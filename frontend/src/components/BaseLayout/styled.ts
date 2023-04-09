@@ -11,8 +11,7 @@ export const Container = styled.main<IProps>`
   align-items: center;
   justify-content: center;
   background-color: #eee;
-  height: 95vh;
-
+  padding: 15px 0;
   @media screen and (max-width: 1025px) {
     width: 100%;
     margin-left: 0px;

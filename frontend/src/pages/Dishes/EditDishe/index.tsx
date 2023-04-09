@@ -3,9 +3,9 @@ import { BaseLayout } from "@components/BaseLayout";
 import { DefaulTable } from "@components/DefaultTable";
 import { useGetllDishes } from "@hooks/useGetAllDishes";
 import { IDishes } from "@interfaces/IDishes";
-import { useDeleteDishe } from "./hooks/useDeleteDishe";
 import { IPagination } from "@interfaces/IPagination";
 import React from "react";
+import { useDeleteDishe } from "./hooks/useDeleteDishe";
 
 const genAvaragePrice = (price: number | undefined): string => {
   return price
@@ -45,14 +45,20 @@ export const EditDishesComponent = (): JSX.Element => {
     take: 10,
     text: "",
   });
-  const { dataFecthDishes, dishesIsLoading } = useGetllDishes(dataGet);
+
+  const { dataFecthDishes, dishesIsLoading, dishesRefetch } =
+    useGetllDishes(dataGet);
   const { deleteDishe } = useDeleteDishe();
+
+  React.useEffect(() => {
+    dishesRefetch();
+  }, [dataGet]);
 
   return (
     <BaseLayout isLoading={[dishesIsLoading]}>
-      <Container maxW="100%" padding="0">
+      <Container maxW="100%" padding="0"  maxH="100%">
         <DefaulTable<IDishes>
-          data={dataFecthDishes!.dishes}
+          data={dishesIsLoading ? [] : dataFecthDishes!.dishes}
           columns={columns}
           title="Lista de Categorias"
           keyImage="ProductPhoto"

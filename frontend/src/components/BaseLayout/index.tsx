@@ -3,7 +3,7 @@ import { HeaderComponent } from "@components/Header";
 import { Navigation } from "@components/Nav";
 import { Spinner } from "@chakra-ui/react";
 import React from "react";
-
+import { Container as ContainerChackra } from "@chakra-ui/react";
 export const BaseLayout = ({
   children,
   isLoading,
@@ -12,7 +12,6 @@ export const BaseLayout = ({
   isLoading: boolean[];
 }): JSX.Element => {
   const [openMenu, setOpenMenu] = React.useState<boolean>(false);
-  console.log(isLoading);
   return (
     <>
       <HeaderComponent

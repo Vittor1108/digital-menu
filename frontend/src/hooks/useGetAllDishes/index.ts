@@ -29,5 +29,6 @@ export const useGetllDishes = (dataGet: IPagination) => {
     ...fetechDishes,
     dataFecthDishes: fetechDishes.data,
     dishesIsLoading: fetechDishes.isLoading,
+    dishesRefetch: fetechDishes.refetch
   };
 };

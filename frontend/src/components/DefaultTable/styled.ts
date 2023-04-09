@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { Link as LinkRouter } from "react-router-dom";
 
 interface IProps {
-  backgroundColor: string;
+  backgroundColor?: string;
+  isActive?: boolean;
 }
 
 export const Header = styled.header`
@@ -35,26 +36,25 @@ export const Button = styled.button<IProps>`
 `;
 
 export const Image = styled.img`
-  width: 60px;
-  object-fit: contain;
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
   border-radius: 50%;
   border: 2px solid #eee;
-  padding: 2px;
   margin-right: 10px;
 `;
 
 export const Link = styled(LinkRouter)`
-    margin-right: 10px;
-    background-color: black;
-    padding: 6.5px 15px;
-    font-size: 14px;
-    color: white;
-    border-radius: 3px;
-    transition: opacity 0.3s;
-    &:hover{
-        opacity: .5;
-    }
-
+  margin-right: 10px;
+  background-color: black;
+  padding: 6.5px 15px;
+  font-size: 14px;
+  color: white;
+  border-radius: 3px;
+  transition: opacity 0.3s;
+  &:hover {
+    opacity: 0.5;
+  }
 `;
 
 export const Pagination = styled.nav`
@@ -62,23 +62,20 @@ export const Pagination = styled.nav`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-    li{
-      border: 1px solid black;
-      padding: 4px 10px;
-      margin-right: 7px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all .3s;
-      &:nth-child(1){
-        background-color: red;
-        color: white;
-      }
-
-      &:hover{
-        background-color: red;
-        color: white;
-      }
-    }
   }
-`
+`;
+export const ItemPagination = styled.li<IProps>`
+  border: 1px solid black;
+  padding: 4px 10px;
+  margin-right: 7px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: ${(props) => (props.isActive ? "red" : "white")};
+  color: ${(props) => (props.isActive ? "white" : "black")};
+
+  &:hover {
+    background-color: red;
+    color: white;
+  }
+`;

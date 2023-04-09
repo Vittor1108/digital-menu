@@ -16,10 +16,17 @@ import { IPagination } from "@interfaces/IPagination";
 import { IPhoto } from "@interfaces/IPhoto";
 import React from "react";
 import { TableProps } from "./interfaces";
-import { Button, Header, Image, Link, Main, Pagination } from "./styled";
+import {
+  Button,
+  Header,
+  Image,
+  Link,
+  Main,
+  Pagination,
+  ItemPagination,
+} from "./styled";
 
 const calcQtdPagination = (qtdData: number, take: number) => {
-  console.log(qtdData);
   return Math.ceil(qtdData / take);
 };
 
@@ -35,11 +42,33 @@ export const DefaulTable = <T,>({
 }: TableProps<T>): JSX.Element => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [idCategory, setIdCategory] = React.useState<number | null>(null);
+  const [page, setPage] = React.useState<number>(1);
   const [dataGet, setDataGet] = React.useState<IPagination>({
     skip: 0,
     take: 10,
     text: "",
   });
+
+  const handleClickPagination = (e: any) => {
+    const numberPagination = Number(e.target.innerHTML);
+    if (numberPagination > page) {
+      setPage(page + 1);
+      setDataGet({
+        skip: dataGet.take,
+        text: dataGet.text,
+        take: dataGet.take,
+      });
+    }
+
+    if (numberPagination < page) {
+      setPage(page - 1);
+      setDataGet({
+        skip: dataGet.take - dataGet.take,
+        text: dataGet.text,
+        take: dataGet.take,
+      });
+    }
+  };
 
   React.useEffect(() => {
     if (quantityData) {
@@ -107,7 +136,9 @@ export const DefaulTable = <T,>({
       </Container>
       <Main>
         <Container maxW="100%" padding="0" fontSize="14px" marginBottom="10px">
-          <p>Exibindo 1 de 200</p>
+          <p>
+            Exibindo {data.length} de {quantityData}
+          </p>
         </Container>
         <TableContainer>
           <Table verticalAlign="middle">
@@ -183,16 +214,26 @@ export const DefaulTable = <T,>({
             </Tbody>
           </Table>
           <Container maxW="100%" marginTop="20px">
-            <Pagination>
-              <ul>
-                {Array.from(
-                  Array(calcQtdPagination(quantityData!, dataGet.take)),
-                  (element, index: number) => {
-                    return <li key={index}>{index + 1}</li>;
-                  }
-                )}
-              </ul>
-            </Pagination>
+            {!dataGet.text && (
+              <Pagination>
+                <ul>
+                  {Array.from(
+                    Array(calcQtdPagination(quantityData!, dataGet.take)),
+                    (element, index: number) => {
+                      return (
+                        <ItemPagination
+                          key={index}
+                          isActive={page === index + 1}
+                          onClick={(e) => handleClickPagination(e)}
+                        >
+                          {index + 1}
+                        </ItemPagination>
+                      );
+                    }
+                  )}
+                </ul>
+              </Pagination>
+            )}
           </Container>
         </TableContainer>
       </Main>
