@@ -26,4 +26,8 @@ export default createGlobalStyle`
         text-decoration: none;
     }
 
+    .defaultBoxShadow {
+        box-shadow: 0 1px 6px 1px rgba(69,65,78,0.1);
+    }
+
 `;

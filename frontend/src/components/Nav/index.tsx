@@ -85,7 +85,9 @@ export const Navigation = (props: INavigation) => {
           <li>
             <div>
               <FaClipboardList />
-              <p>Pedidos</p>
+              <Link to="/requests">
+                <p>Pedidos</p>
+              </Link>
             </div>
           </li>
           <li className="treeMenu" onClick={() => showAccordion(2)}>

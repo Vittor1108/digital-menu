@@ -4,12 +4,11 @@ import { CategorieService } from "@services/api/categories"
 import { queryObject } from "@utils/queryObject"
 import { useQuery } from "react-query"
 
-export const useGetAllCategories = (dataGet: IPagination) => {
+export const useGetAllCategories = (dataGet?: IPagination) => {
     const useSnack = useToast();
 
     const fetchCategories = useQuery([queryObject.getAllCategories], async () => {
         const request = await CategorieService.getAllCategories(dataGet);
-        console.log(request.data);
         return request.data;
     },
         {
