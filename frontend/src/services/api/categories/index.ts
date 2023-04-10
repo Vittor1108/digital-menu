@@ -8,7 +8,9 @@ const getAllCategories = async (
   dataParams?: IPagination
 ): Promise<AxiosResponse<{ quantity: number; categories: ICategorie[] }>> => {
   return await Axios().get<{ quantity: number; categories: ICategorie[] }>(
-    `category/take=${dataParams?.take}/skip=${dataParams?.skip}/text=${dataParams?.text}`
+    `category/take=${dataParams?.take ? dataParams.take : ""}/skip=${
+      dataParams?.skip ? dataParams.skip : ""
+    }/text=${dataParams?.text ? dataParams.text : ""}`
   );
 };
 

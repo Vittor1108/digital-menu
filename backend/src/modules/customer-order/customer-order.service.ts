@@ -12,7 +12,7 @@ export class CustomerOrderService {
   public create = async (
     createDto: CreateCustomerOrderDto,
     req: IReq,
-  ): Promise<any> => {
+  ): Promise<CustomerOrder> => {
     const products = await this.prismaService.product.findMany({
       where: {
         id: {
@@ -31,8 +31,8 @@ export class CustomerOrderService {
       );
     }
 
-    const orderPrice = products.reduce((acc, item) => {
-      return acc + item.price;
+    const orderPrice = products.reduce((acc, item, index) => {
+      return acc + item.price * createDto.orders[index].qtd;
     }, 0);
 
     const order = await this.prismaService.customerOrder.create({
@@ -45,8 +45,8 @@ export class CustomerOrderService {
           createMany: {
             data: createDto.orders.map((element) => {
               return {
-                productId: element.idProduct,
-                quantity: element.qtd,
+                productId: Number(element.idProduct),
+                quantity: Number(element.qtd),
               };
             }),
           },

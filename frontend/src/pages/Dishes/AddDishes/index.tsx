@@ -180,13 +180,14 @@ export const DishesComponent = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    if (dataFetchCategories) {
+    if (dataFetchCategories) {      
       const categories: IOptionType[] = dataFetchCategories.categories.map((category) => {
         return {
           value: category.id!,
           label: category.name,
         };
       });
+
       setCategories(categories);
     }
   }, [dataFetchCategories, categoriesIsLoading]);
