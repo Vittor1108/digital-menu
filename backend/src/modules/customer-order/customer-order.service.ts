@@ -12,41 +12,41 @@ export class CustomerOrderService {
   public create = async (
     createDto: CreateCustomerOrderDto,
     req: IReq,
-  ): Promise<CustomerOrder> => {
+  ): Promise<any> => {
     const products = await this.prismaService.product.findMany({
       where: {
-        establishmentId: req.user.establishmentId,
+        id: {
+          in: createDto.orders.map((element) => Number(element.idProduct)),
+        },
         AND: {
-          id: {
-            in: createDto.orders,
-          },
+          establishmentId: req.user.id,
         },
       },
     });
 
     if (products.length < createDto.orders.length) {
       throw new HttpException(
-        'Produto(s) com o id(s) especificado não existe',
+        'Produto com o id(s) não econtrado',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const orderPrice = products.reduce(
-      (acc, product) => acc + product.price,
-      0,
-    );
+    const orderPrice = products.reduce((acc, item) => {
+      return acc + item.price;
+    }, 0);
 
     const order = await this.prismaService.customerOrder.create({
       data: {
         customerName: createDto.customerName,
         comments: createDto.comments,
+        establishmentId: req.user.id,
         orderPrice,
-        establishmentId: req.user.establishmentId,
         OrderedProduct: {
           createMany: {
-            data: createDto.orders.map((id) => {
+            data: createDto.orders.map((element) => {
               return {
-                productId: id,
+                productId: element.idProduct,
+                quantity: element.qtd,
               };
             }),
           },
@@ -66,176 +66,12 @@ export class CustomerOrderService {
                 name: true,
               },
             },
+            quantity: true,
           },
         },
       },
     });
 
     return order;
-  };
-
-  public findOne = async (id: number): Promise<CustomerOrder> => {
-    const order = await this.prismaService.customerOrder.findUnique({
-      where: {
-        id,
-      },
-
-      select: {
-        id: true,
-        customerName: true,
-        comments: true,
-        status: true,
-        orderPrice: true,
-        OrderedProduct: {
-          select: {
-            customerOrderId: true,
-            product: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!order) {
-      throw new HttpException(
-        `Pedido com o id ${id} não existe`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    return order;
-  };
-
-  public findAll = async (req: IReq): Promise<CustomerOrder[]> => {
-    const orders = await this.prismaService.customerOrder.findMany({
-      where: {
-        establishmentId: req.user.establishmentId,
-        AND: {
-          status: {
-            notIn: ['CONCLUDED', 'FINISHED'],
-          },
-        },
-      },
-
-      select: {
-        id: true,
-        customerName: true,
-        comments: true,
-        status: true,
-        orderPrice: true,
-        OrderedProduct: {
-          select: {
-            customerOrderId: true,
-            product: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return orders;
-  };
-
-  public delete = async (id: number): Promise<boolean> => {
-    await this.findOne(id);
-
-    await this.prismaService.customerOrder.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
-  };
-
-  public update = async (
-    id: number,
-    updateDto: UpdateCustomerOrderDto,
-    req: IReq,
-  ) => {
-    await this.findOne(id);
-
-    const products = await this.prismaService.product.findMany({
-      where: {
-        establishmentId: req.user.establishmentId,
-        AND: {
-          id: {
-            in: updateDto.orders,
-          },
-        },
-      },
-    });
-
-    if (products.length < updateDto.orders.length) {
-      throw new HttpException(
-        'Produto(s) com o id(s) especificado não existe',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const orderPrice = products.reduce(
-      (acc, product) => acc + product.price,
-      0,
-    );
-
-    await this.prismaService.customerOrder.update({
-      where: {
-        id,
-      },
-
-      data: {
-        OrderedProduct: {
-          deleteMany: {
-            customerOrderId: id,
-          },
-        },
-      },
-    });
-
-    return await this.prismaService.customerOrder.update({
-      where: {
-        id,
-      },
-
-      data: {
-        customerName: updateDto.customerName,
-        comments: updateDto.comments,
-        orderPrice,
-        establishmentId: req.user.establishmentId,
-        OrderedProduct: {
-          createMany: {
-            data: updateDto.orders.map((id) => {
-              return {
-                productId: id,
-              };
-            }),
-          },
-        },
-      },
-
-      select: {
-        id: true,
-        customerName: true,
-        comments: true,
-        status: true,
-        orderPrice: true,
-        OrderedProduct: {
-          select: {
-            customerOrderId: true,
-            product: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
   };
 }

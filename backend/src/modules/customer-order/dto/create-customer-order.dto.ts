@@ -9,7 +9,12 @@ export class CreateCustomerOrderDto {
   comments?: string;
 
   @IsArray()
-  orders: number[];
+  orders: IProduct[];
+}
+
+interface IProduct {
+  qtd: number;
+  idProduct: number;
 }
 
 // id              Int      @id @default(autoincrement())

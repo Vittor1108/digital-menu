@@ -3,4 +3,5 @@ export const queryObject = {
     getDishe: 'dishe',
     getAllCategories: 'categories',
     getAllDishes: 'dishes',
+    getRequestsStatus: 'requestsByStatus',
 }
