@@ -86,6 +86,27 @@ export class CustomerOrderService {
           status: textStatus,
         },
       },
+
+      select: {
+        id: true,
+        customerName: true,
+        comments: true,
+        status: true,
+        orderPrice: true,
+        dateOrder: true,
+        OrderedProduct: {
+          select: {
+            customerOrderId: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            quantity: true,
+          },
+        },
+      },
     });
   };
 

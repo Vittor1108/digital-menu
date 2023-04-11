@@ -20,6 +20,7 @@
     "@types/styled-components": "^5.1.26",
     "bootstrap": "^5.2.3",
     "framer-motion": "^9.1.6",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.6.10",
     "react-dom": "^18.2.0",

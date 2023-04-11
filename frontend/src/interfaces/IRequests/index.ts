@@ -4,7 +4,17 @@ export interface IRequests {
   comments?: string;
   status: Status;
   orderPrice: number;
-  dataOrder: Date;
+  dateOrder: Date;
+  OrderedProduct?: IOrderedProduct[];
+}
+
+export interface IOrderedProduct {
+  customerOrderId: number;
+  product: {
+    id: number;
+    name: string;
+  };
+  quantity: number;
 }
 
 enum Status {

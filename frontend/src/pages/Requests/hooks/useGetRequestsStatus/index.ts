@@ -2,20 +2,20 @@ import { useQuery } from "react-query";
 import { RequestsService } from "@services/api/requests/RequestsService";
 import { queryObject } from "@utils/queryObject";
 
-export const useGetRequestsStatus = () => {
+export const useGetRequestsStatus = (status: number) => {
   const fetchRequestsStatus = useQuery(
     [queryObject.getAllCategories],
     async () => {
-      const request = await RequestsService.getByStatus(1);
+      const request = await RequestsService.getByStatus(status);
       return request.data;
     },
     {
       onSuccess: (e) => {
-        console.log(e);
+        
       },
 
       onError: (e) => {
-        console.log(e);
+        
       },
     }
   );
