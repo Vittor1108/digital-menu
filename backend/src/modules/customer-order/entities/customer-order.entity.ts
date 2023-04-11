@@ -7,4 +7,14 @@ export class CustomerOrder {
   establishmentId?: number;
   orderPrice: number;
   dataOrder?: Date;
+  OrderedProduct?: OrderedProduct[];
+}
+
+export class OrderedProduct {
+  customerOrderId: number;
+  product: {
+    id: number;
+    name: string;
+  };
+  quantity: number;
 }

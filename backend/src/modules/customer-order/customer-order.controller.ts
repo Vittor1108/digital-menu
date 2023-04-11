@@ -1,9 +1,20 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IReq } from 'src/@types/req';
 import { CustomerOrderService } from './customer-order.service';
 import { CreateCustomerOrderDto } from './dto/create-customer-order.dto';
 import { CustomerOrder } from './entities/customer-order.entity';
+import { UpdateCustomerOrderDto } from './dto/update-customer-order.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('customer-order')
@@ -16,5 +27,36 @@ export class CustomerOrderController {
     @Request() req: IReq,
   ): Promise<CustomerOrder> {
     return this.customerOrderService.create(createCustomerOrderDto, req);
+  }
+
+  @Get('/status=:status')
+  getByStatus(
+    @Request() req: IReq,
+    @Param('status') status: number,
+  ): Promise<CustomerOrder[]> {
+    return this.customerOrderService.getByStatus(req, status);
+  }
+
+  @Get()
+  getAll(@Request() req: IReq): Promise<CustomerOrder[]> {
+    return this.customerOrderService.getAll(req);
+  }
+
+  @Get(':id')
+  getOne(@Param('id') id: number): Promise<CustomerOrder> {
+    return this.customerOrderService.getOne(id);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id') id: number,
+    @Body() updateDto: UpdateCustomerOrderDto,
+  ): Promise<CustomerOrder> {
+    return this.customerOrderService.update(id, updateDto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<boolean> {
+    return this.customerOrderService.delete(id);
   }
 }

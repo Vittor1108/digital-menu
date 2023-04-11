@@ -15,6 +15,7 @@ export class CreateCustomerOrderDto {
 interface IProduct {
   qtd: number;
   idProduct: number;
+  customerOrderId: number;
 }
 
 // id              Int      @id @default(autoincrement())
