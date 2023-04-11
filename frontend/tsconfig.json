@@ -24,6 +24,7 @@
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
       "@interfaces/*": ["interfaces/*"],
+      "@enums/*": ["enums/*"],
       "@/*": ["*"]
     }
   },

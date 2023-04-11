@@ -24,6 +24,7 @@ export const GenericModal = ({
       clickFunction(resultModal);
     }
   };
+
   return (
     <Overlay width={articleWidth} maxWidth={maxArticleWidth} isOpen={isOpen}>
       <article>

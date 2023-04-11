@@ -1,20 +1,17 @@
-import React from "react";
-import { Container, UseToastOptions } from "@chakra-ui/react";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { Form } from "./styled";
-import { EmailIcon } from "@chakra-ui/icons";
-import { Button } from "@components/Button";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
-import { LoginService } from "@services/api/login/LoginService";
-import { ApiException } from "@services/api/ApiException";
-import { useToast } from "@chakra-ui/react";
-import { GenericModal } from "@components/GenericModal";
 import secureShield from "@assets/images/modal/secure-shield.png";
-import { useNavigate } from "react-router-dom";
+import { EmailIcon } from "@chakra-ui/icons";
+import { Container, Input, InputGroup, InputRightElement, UseToastOptions } from "@chakra-ui/react";
+import { FieldErrorMessage } from "@components/BaseForm/FieldErrorMessage";
+import { Button } from "@components/Button";
+import { GenericModal } from "@components/GenericModal";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnackBar } from "@hooks/useSnackBar";
+import { LoginService } from "@services/api/login/LoginService";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { Form } from "./styled";
 
 export const ResetPassword = (): JSX.Element => {
   const [openModal, setOpenModal] = React.useState<boolean>(false);

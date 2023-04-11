@@ -1,22 +1,28 @@
 import { useQuery } from "react-query";
 import { RequestsService } from "@services/api/requests/RequestsService";
 import { queryObject } from "@utils/queryObject";
+import { useToast } from "@chakra-ui/react";
+import { TUseGetRequestsStatus } from "./types";
 
 export const useGetRequestsStatus = (status: number) => {
+  const useSnack = useToast();
   const fetchRequestsStatus = useQuery(
-    [queryObject.getAllCategories],
+    [queryObject.getRequestsStatus],
     async () => {
       const request = await RequestsService.getByStatus(status);
       return request.data;
     },
     {
-      onSuccess: (e) => {
-        
+      onError: (e: any) => {
+        useSnack({
+          title: "Erro ao buscar pedidos.",
+          description: `${e.response.data.message}. Tente novamente`,
+          status: "warning",
+          duration: 10000,
+          isClosable: true,
+        });
       },
-
-      onError: (e) => {
-        
-      },
+      refetchOnWindowFocus: false,
     }
   );
 

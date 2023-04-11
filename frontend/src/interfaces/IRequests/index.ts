@@ -1,8 +1,10 @@
+import { EStatusRequest } from "@enums/EStatusRequest";
+
 export interface IRequests {
   id?: number;
   customerName: string;
   comments?: string;
-  status: Status;
+  status: EStatusRequest;
   orderPrice: number;
   dateOrder: Date;
   OrderedProduct?: IOrderedProduct[];
@@ -17,9 +19,3 @@ export interface IOrderedProduct {
   quantity: number;
 }
 
-enum Status {
-  RECEIVED,
-  PREPARATION,
-  FINISHED,
-  CONCLUDED,
-}

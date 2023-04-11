@@ -14,6 +14,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),
+      "@enums": path.resolve(__dirname, "./src/enums"),
     },
   },
 });

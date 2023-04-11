@@ -6,9 +6,17 @@ import { AxiosResponse } from "axios";
 const getByStatus = async (
   status: number
 ): Promise<AxiosResponse<IRequests[]>> => {
-  return await Axios().get(`/customer-order/status=${status}`);
+  return await Axios().get<IRequests[]>(`/customer-order/status=${status}`);
+};
+
+const update = async (
+  data: IRequests,
+  id: number
+): Promise<AxiosResponse<IRequests>> => {
+  return await Axios().put<IRequests>(`/customer-order/${id}`, data);
 };
 
 export const RequestsService = {
   getByStatus,
+  update,
 };

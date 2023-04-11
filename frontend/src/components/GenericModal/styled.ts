@@ -12,6 +12,7 @@ const rotateAnimation = keyframes`
 export const Overlay = styled.div<IStyledProps>`
   width: 100vw;
   height: 100vh;
+  z-index: 999;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.4);
   top: 0;
@@ -28,7 +29,8 @@ export const Overlay = styled.div<IStyledProps>`
     animation: ${(props) => (props.isOpen ? rotateAnimation : false)} 0.3s
       linear forwards;
     div {
-      margin-bottom: 15px;
+      margin-bottom: 15px !important;
+      border-bottom: none !important;
       text-align: center;
 
       &:nth-child(3) {
