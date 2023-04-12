@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { RequestsService } from "@services/api/requests/RequestsService";
 import { queryObject } from "@utils/queryObject";
 import { useToast } from "@chakra-ui/react";
-import { TUseGetRequestsStatus } from "./types";
+
 
 export const useGetRequestsStatus = (status: number) => {
   const useSnack = useToast();
@@ -23,7 +23,7 @@ export const useGetRequestsStatus = (status: number) => {
         });
       },
       refetchOnWindowFocus: false,
-    }
+    },    
   );
 
   return {

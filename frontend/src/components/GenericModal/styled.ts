@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { IStyledProps } from "./interface/IStyledProps";
 
 const rotateAnimation = keyframes`

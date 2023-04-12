@@ -70,15 +70,15 @@ export class CustomerOrderService {
         textStatus = 'PREPARATION';
         break;
       case 2:
-        textStatus = 'CONCLUDED';
+        textStatus = 'FINISHED';
         break;
       case 3:
-        textStatus = 'FINISHED';
+        textStatus = 'CONCLUDED';
         break;
       default:
         textStatus = 'RECEIVED';
     }
-
+    console.log(textStatus);
     return await this.prismaService.customerOrder.findMany({
       where: {
         establishmentId: req.user.id,

@@ -99,3 +99,12 @@ export const CardRequest = styled.article`
     }
   }
 `;
+
+
+export const CountRequests = styled.p` 
+  text-align: left;
+  font-size: 14px;
+  span{
+    font-weight: bold;
+  }
+`
