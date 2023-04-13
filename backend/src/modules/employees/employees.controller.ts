@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -11,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IReq } from 'src/@types/req';
-import { PaginationCategroyDto } from '../category/dto/pagination-category';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeesService } from './employees.service';
@@ -23,24 +23,8 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @Post()
-  create(
-    @Body() createEmployeeDto: CreateEmployeeDto,
-    @Request() req: IReq,
-  ): Promise<Employee> {
+  create(@Body() createEmployeeDto: CreateEmployeeDto, @Request() req: IReq) {
     return this.employeesService.create(createEmployeeDto, req);
-  }
-
-  @Patch(':id')
-  deactivate(@Param('id') id: number): Promise<boolean> {
-    return this.employeesService.deactivate(id);
-  }
-
-  @Put(':id')
-  update(
-    @Param('id') id: number,
-    @Body() updateEmployeeDto: UpdateEmployeeDto,
-  ): Promise<Employee> {
-    return this.employeesService.update(id, updateEmployeeDto);
   }
 
   @Get(':id')
@@ -48,11 +32,26 @@ export class EmployeesController {
     return this.employeesService.findOne(id);
   }
 
-  @Get('/take=:take?/skip=:skip?/text=:text?')
-  findAll(
-    @Param() pagination: PaginationCategroyDto,
-    @Request() req: IReq,
-  ): Promise<Employee[]> {
-    return this.employeesService.findAll(req, pagination);
+  @Put(':id')
+  update(
+    @Param('id') id: number,
+    @Body() updateDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
+    return this.employeesService.update(id, updateDto);
+  }
+
+  @Get()
+  findAll(@Request() req: IReq): Promise<Employee[]> {
+    return this.employeesService.findAll(req);
+  }
+
+  @Patch(':id')
+  deactivate(@Param('id') id: number): Promise<boolean> {
+    return this.employeesService.deactivate(id);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<boolean> {
+    return this.employeesService.delete(id);
   }
 }

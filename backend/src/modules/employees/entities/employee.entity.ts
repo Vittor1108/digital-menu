@@ -7,4 +7,5 @@ export class Employee {
   establishmentId: number;
   admissionDate: Date;
   resignationDate: Date;
+  screeens?: Array<{ id: number; name: string; surname: string }>;
 }

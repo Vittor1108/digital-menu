@@ -13,62 +13,97 @@ export class EmployeesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public create = async (
-    data: CreateEmployeeDto,
+    { acessScreens, cpf, name, password }: CreateEmployeeDto,
     req: IReq,
-  ): Promise<Employee> => {
-    const establishment = await this.prismaService.establishment.findUnique({
-      where: {
-        id: Number(req.user.establishmentId),
-      },
-    });
+  ) => {
+    const employeeLogin = await this.findByLogin(cpf, req);
 
-    const employeeExists = await this.prismaService.employee.findFirst({
-      where: {
-        login: data.login,
-      },
-    });
+    if (employeeLogin) {
+      throw new HttpException('CPF já cadastrado', HttpStatus.BAD_REQUEST);
+    }
 
-    const acessScreens = await this.prismaService.screens.findMany({
+    const screensById = await this.prismaService.screens.findMany({
       where: {
         id: {
-          in: data.acessScreens,
+          in: acessScreens.map((e) => e),
         },
       },
     });
 
-    if (acessScreens.length !== data.acessScreens.length) {
+    if (
+      screensById.length < acessScreens.length ||
+      screensById.length > acessScreens.length
+    ) {
       throw new HttpException(
-        'Tela(s) de acesso inválida(s)',
+        'Tela (s) com o id inválido.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    if (!establishment) {
-      throw new HttpException(
-        HelpMessager.establishmentNotExists,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const hashPassword = await bcrypt.hashPassword(password);
 
-    if (employeeExists) {
-      throw new HttpException(
-        HelpMessager.employees_exists,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const hashPassword = await bcrypt.hashPassword(data.password);
-
-    const employee = await this.prismaService.employee.create({
+    return await this.prismaService.employee.create({
       data: {
-        name: data.name,
-        login: data.login,
+        establishmentId: req.user.id,
+        login: cpf,
+        name,
         password: hashPassword,
-        establishmentId: req.user.establishmentId,
         screeens: {
-          connect: data.acessScreens.map((e) => {
+          connect: acessScreens.map((e) => {
             return {
               id: e,
+            };
+          }),
+        },
+      },
+    });
+  };
+
+  public update = async (
+    id: number,
+    { acessScreens, name, password }: UpdateEmployeeDto,
+  ): Promise<Employee> => {
+    const employee = await this.findOne(id);
+
+    const screensById = await this.prismaService.screens.findMany({
+      where: {
+        id: {
+          in: acessScreens.map((e) => e),
+        },
+      },
+    });
+
+    const allScreens = await this.prismaService.screens.findMany();
+
+    if (
+      screensById.length < acessScreens.length ||
+      screensById.length > acessScreens.length
+    ) {
+      throw new HttpException(
+        'Tela (s) com o id inválido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const hashPassword = await bcrypt.hashPassword(password);
+
+    return await this.prismaService.employee.update({
+      where: {
+        id: Number(id),
+      },
+
+      data: {
+        name,
+        password: hashPassword,
+        screeens: {
+          disconnect: allScreens.map((e) => {
+            return {
+              id: e.id,
+            };
+          }),
+          connect: screensById.map((e) => {
+            return {
+              id: e.id,
             };
           }),
         },
@@ -78,30 +113,12 @@ export class EmployeesService {
         screeens: true,
       },
     });
-
-    return employee;
-  };
-
-  public deactivate = async (id: number): Promise<boolean> => {
-    await this.findOne(id);
-
-    await this.prismaService.employee.update({
-      data: {
-        activeAccount: false,
-      },
-
-      where: {
-        id,
-      },
-    });
-
-    return true;
   };
 
   public findOne = async (id: number): Promise<Employee> => {
     const employee = await this.prismaService.employee.findUnique({
       where: {
-        id,
+        id: Number(id),
       },
 
       include: {
@@ -119,113 +136,53 @@ export class EmployeesService {
     return employee;
   };
 
-  public update = async (
-    id: number,
-    updateDto: UpdateEmployeeDto,
-  ): Promise<Employee> => {
-    await this.findOne(id);
-
-    const employee = await this.findOne(id);
-
-    const loginExists = await this.prismaService.employee.findUnique({
+  public findByLogin = async (login: string, req: IReq): Promise<Employee> => {
+    const employee = await this.prismaService.employee.findFirst({
       where: {
-        login: updateDto.login,
+        login,
+        AND: {
+          establishmentId: req.user.id,
+        },
       },
     });
 
-    if (employee.login !== updateDto.login && loginExists) {
-      throw new HttpException(
-        `Funcionário com o login ${loginExists.login} já existe.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    return employee;
+  };
 
-    const hashPassword =
-      updateDto.password === employee.password
-        ? updateDto.password
-        : await bcrypt.hashPassword(updateDto.password);
+  public findAll = async (req: IReq): Promise<Employee[]> => {
+    return this.prismaService.employee.findMany({
+      where: {
+        establishmentId: req.user.id,
+      },
+    });
+  };
+
+  public deactivate = async (id: number): Promise<boolean> => {
+    await this.findOne(id);
 
     await this.prismaService.employee.update({
       where: {
-        id,
+        id: Number(id),
       },
 
       data: {
-        screeens: {
-          set: [],
-        },
+        activeAccount: false,
+        resignationDate: new Date(),
       },
     });
 
-    const newEmployee = await this.prismaService.employee.update({
-      where: {
-        id,
-      },
-
-      data: {
-        login: updateDto.login,
-        password: hashPassword,
-        name: updateDto.name,
-        screeens: {
-          connect: updateDto.acessScreens.map((e) => {
-            return {
-              id: e,
-            };
-          }),
-        },
-      },
-
-      include: {
-        screeens: true,
-      },
-    });
-
-    return newEmployee;
+    return true;
   };
 
-  public findAll = async (
-    req: IReq,
-    pagination: PaginationCategroyDto,
-  ): Promise<Employee[]> => {
-    //Filtrar por nome ou login
-    if (pagination.text) {
-      return await this.prismaService.employee.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: pagination.text,
-              },
-            },
-            {
-              login: {
-                contains: pagination.text,
-              },
-            },
-          ],
+  public delete = async (id: number): Promise<boolean> => {
+    await this.findOne(id);
 
-          AND: {
-            establishmentId: req.user.establishmentId,
-          },
-        },
-      });
-    }
-    //Paginação
-    if (pagination.skip && pagination.take) {
-      return await this.prismaService.employee.findMany({
-        where: {
-          establishmentId: req.user.establishmentId,
-        },
-
-        skip: Number(pagination.skip),
-        take: Number(pagination.take),
-      });
-    }
-    //Todos
-    return await this.prismaService.employee.findMany({
+    await this.prismaService.employee.delete({
       where: {
-        establishmentId: req.user.establishmentId,
+        id: Number(id),
       },
     });
+
+    return true;
   };
 }

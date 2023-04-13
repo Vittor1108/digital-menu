@@ -1,12 +1,4 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateEmployeeDto {
   @IsString()
@@ -15,7 +7,7 @@ export class CreateEmployeeDto {
 
   @IsString()
   @IsNotEmpty()
-  login: string;
+  cpf: string;
 
   @IsString()
   @MinLength(6)
