@@ -78,7 +78,7 @@ export class CustomerOrderService {
       default:
         textStatus = 'RECEIVED';
     }
-    console.log(textStatus);
+
     return await this.prismaService.customerOrder.findMany({
       where: {
         establishmentId: req.user.id,
@@ -189,6 +189,10 @@ export class CustomerOrderService {
         comments: updateDto.comments,
         status: updateDto.status,
         orderPrice: await this.calcOrderprice(order.establishmentId, updateDto),
+        finalTime: updateDto.finalTime,
+        timeFinished: updateDto.timeFinished,
+        timePreparation: updateDto.timePreparation,
+        timeReceived: updateDto.timeReceived,
         OrderedProduct: {
           createMany: {
             data: updateDto.orders.map((element) => {

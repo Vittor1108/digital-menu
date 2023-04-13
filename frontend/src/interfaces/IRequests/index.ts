@@ -8,6 +8,10 @@ export interface IRequests {
   orderPrice: number;
   dateOrder: Date;
   OrderedProduct?: IOrderedProduct[];
+  timeReceived?: Date;
+  timePreparation?: Date;
+  timeFinished?: Date;
+  finalTime?: Date;
 }
 
 export interface IOrderedProduct {
@@ -19,3 +23,14 @@ export interface IOrderedProduct {
   quantity: number;
 }
 
+export interface IUpdatedRequest {
+  id: number;
+  customerName: string;
+  comments: string;
+  orders: Array<{ idProduct: number; qtd: number }>;
+  status: EStatusRequest;
+  timePreparation?: Date;
+  timeFinished?: Date;
+  timeReceived?: Date;
+  finalTime?: Date;
+}

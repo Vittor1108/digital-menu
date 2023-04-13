@@ -76,6 +76,10 @@ model CustomerOrder {
   establishmentId Int
   orderPrice      Float
   dateOrder       DateTime         @default(now())
+  timeReceived    DateTime?
+  timePreparation DateTime?
+  timeFinished    DateTime?
+  finalTime       DateTime?
   OrderedProduct  OrderedProduct[]
 
   @@map("customer_order")

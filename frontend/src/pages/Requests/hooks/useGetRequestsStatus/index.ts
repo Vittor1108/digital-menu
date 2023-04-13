@@ -23,6 +23,8 @@ export const useGetRequestsStatus = (status: number) => {
         });
       },
       refetchOnWindowFocus: false,
+      refetchInterval: 120000,
+      
     },    
   );
 
