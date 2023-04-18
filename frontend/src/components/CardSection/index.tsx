@@ -1,4 +1,5 @@
 import { Section } from "./styled";
+
 export const CardSection = ({
   children,
 }: {

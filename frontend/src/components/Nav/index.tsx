@@ -98,16 +98,10 @@ export const Navigation = (props: INavigation) => {
             <RiArrowDownSLine />
             <ul>
               <li>
-                <a href="">Adicionar Prdouto</a>
+                <Link to="/employee">Cadastar Funcionário</Link>
               </li>
               <li>
-                <a href="">Editar Prdouto</a>
-              </li>
-              <li>
-                <a href="">Adicionar Categoria</a>
-              </li>
-              <li>
-                <a href="">Editar Categoria</a>
+                <Link to="/edit-employee">Editar Funcionário</Link>
               </li>
             </ul>
           </li>

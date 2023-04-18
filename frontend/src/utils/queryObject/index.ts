@@ -4,4 +4,5 @@ export const queryObject = {
     getAllCategories: 'categories',
     getAllDishes: 'dishes',
     getRequestsStatus: 'requestsByStatus',
+    getAllScreens: 'screens',
 }
