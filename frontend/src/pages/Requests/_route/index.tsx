@@ -1,8 +1,12 @@
 import { RequestComponent } from "..";
-
+import { LoginGuard } from "@/router/guards/LoginGuard";
 export const RequestsRoutes = [
   {
-    element: <RequestComponent />,
+    element: (
+      <LoginGuard>
+        <RequestComponent />
+      </LoginGuard>
+    ),
     path: "/requests",
   },
 ];

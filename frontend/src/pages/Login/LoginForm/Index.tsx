@@ -1,26 +1,23 @@
-import { Container } from "./styled";
-import { Form } from "./styled";
+import { Container, Input } from "@chakra-ui/react";
 import { Button } from "@components/Button";
-import { Input } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { FieldErrorMessage } from "../../../components/BaseForm/FieldErrorMessage";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { LoginService } from "@services/api/login/LoginService";
-import { ApiException } from "@services/api/ApiException";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-export const LoginForm = (): JSX.Element => {
-  const navigate = useNavigate();
-  const snackBar = useToast();
+import { FieldErrorMessage } from "../../../components/BaseForm/FieldErrorMessage";
+import { Form, Title } from "./styled";
+import { useLogin } from "@hooks/useLogin";
 
-  const schemaForm = yup
-    .object({
-      login: yup.string().required("Login é obrigatório"),
-      password: yup.string().required("Senha é obrigatório"),
-    })
-    .required();
+const schemaForm = yup
+  .object({
+    login: yup.string().required("Login é obrigatório"),
+    password: yup.string().required("Senha é obrigatório"),
+  })
+  .required();
+
+export const LoginForm = (): JSX.Element => {
+  const { loginRequest } = useLogin();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -39,29 +36,22 @@ export const LoginForm = (): JSX.Element => {
     password: string;
     keepPassword: boolean;
   }) => {
-    LoginService.validateUser(login, password).then((response) => {
-      if (response instanceof ApiException) {
-        snackBar({
-          title: "Credenciais inválidas",
-          description: "Login ou senha inválidos. Tente novamente.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
+    loginRequest.mutate(
+      { login, password },
+      {
+        onSuccess: (res) => {
+          keepPassword
+            ? localStorage.setItem("token", res.data.token)
+            : sessionStorage.setItem("token", res.data.token);
+          navigate("/");
+        },
       }
-
-      !keepPassword
-        ? sessionStorage.setItem("token", response.token)
-        : localStorage.setItem("token", response.token);
-
-      navigate("/");
-    });
+    );
   };
 
   return (
     <Container>
-      <h1>Acesse sua conta</h1>
+      <Title>Acesse sua conta</Title>
       <p>Digite seu email e senha para continuar</p>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div>
@@ -86,14 +76,24 @@ export const LoginForm = (): JSX.Element => {
           />
           <FieldErrorMessage>{errors.password?.message}</FieldErrorMessage>
         </div>
-        <div>
+        <Container
+          display="flex"
+          alignItems="center"
+          margin="10px auto"
+          padding="0"
+        >
           <input
             type="checkbox"
             id="keepPassowrd"
             {...register("keepPassword")}
           />
-          <label htmlFor="keepPassowrd">Manter-se logado?</label>
-        </div>
+          <label
+            htmlFor="keepPassowrd"
+            style={{ marginBottom: "0", marginLeft: "8px" }}
+          >
+            Manter-se logado?
+          </label>
+        </Container>
         <div>
           <Link to="/login/reset-password">Esqueceu a senha?</Link>
         </div>

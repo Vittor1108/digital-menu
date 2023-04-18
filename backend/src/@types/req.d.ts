@@ -3,5 +3,7 @@ export interface IReq {
     id: number;
     email: string;
     establishmentId: number;
+    identify: string;
+    login: string;
   };
 }

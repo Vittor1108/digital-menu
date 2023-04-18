@@ -13,8 +13,9 @@ export class AuthController {
     return this.authService.login(req);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   validateToken(@Req() req: IReq) {
-    return this.authService.validateToken(req);
+    return this.authService.indetifyUser(req);
   }
 }

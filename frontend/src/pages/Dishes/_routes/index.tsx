@@ -1,3 +1,4 @@
+import { LoginGuard } from "@/router/guards/LoginGuard";
 import { CategoryComponent } from "../AddCategory";
 import { DishesComponent } from "../AddDishes";
 import { EditCategoryComponent } from "../EditCategory";
@@ -5,27 +6,51 @@ import { EditDishesComponent } from "../EditDishe";
 
 export const DishesRoutes = [
   {
-    element: <DishesComponent />,
+    element: (
+      <LoginGuard>
+        <DishesComponent />
+      </LoginGuard>
+    ),
     path: "/dishes",
   },
   {
-    element: <DishesComponent />,
+    element: (
+      <LoginGuard>
+        <DishesComponent />
+      </LoginGuard>
+    ),
     path: "/dishes/:id",
   },
   {
-    element: <CategoryComponent />,
+    element: (
+      <LoginGuard>
+        <CategoryComponent />
+      </LoginGuard>
+    ),
     path: "/category",
   },
   {
-    element: <CategoryComponent />,
+    element: (
+      <LoginGuard>
+        <CategoryComponent />
+      </LoginGuard>
+    ),
     path: "/category/:id",
   },
   {
-    element: <EditCategoryComponent />,
+    element: (
+      <LoginGuard>
+        <EditCategoryComponent />
+      </LoginGuard>
+    ),
     path: "/categories-edit",
   },
   {
-    element: <EditDishesComponent />,
+    element: (
+      <LoginGuard>
+        <EditDishesComponent />
+      </LoginGuard>
+    ),
     path: "/dishes-edit",
   },
 ];

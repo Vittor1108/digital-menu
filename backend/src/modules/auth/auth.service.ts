@@ -4,6 +4,7 @@ import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import bcrypt from 'src/utils/bcrypt';
 import { User } from '../reset-password/entity/user.entity';
+import { Employee, Screens } from '@prisma/client';
 @Injectable()
 export class AuthService {
   constructor(
@@ -14,7 +15,7 @@ export class AuthService {
   public validateUser = async (
     login: string,
     password: string,
-  ): Promise<User> => {
+  ): Promise<User | Employee> => {
     const user = await this.prismaService.establishment.findUnique({
       where: {
         email: login,
@@ -35,23 +36,40 @@ export class AuthService {
       return null;
     }
 
-    return user;
+    return user ? user : employee;
   };
 
   public login = async (req: IReq) => {
     const payload = {
       sub: req.user.id,
-      email: req.user.email,
+      identify: req.user.email ? req.user.email : req.user.login,
       establishmentId: req.user.establishmentId
         ? req.user.establishmentId
         : req.user.id,
     };
+
     return {
       token: this.jwtService.sign(payload),
     };
   };
 
-  public validateToken = async (req: IReq) => {
-    return 'OK';
+  public indetifyUser = async (req: IReq): Promise<string | Screens[]> => {
+    const isEstablishment = await this.prismaService.establishment.findUnique({
+      where: {
+        email: req.user.identify.toString(),
+      },
+    });
+
+    const isEmployee = await this.prismaService.employee.findUnique({
+      where: {
+        login: req.user.identify.toString(),
+      },
+
+      include: {
+        screeens: true,
+      },
+    });
+
+    return isEstablishment ? 'AllAcess' : isEmployee.screeens;
   };
 }

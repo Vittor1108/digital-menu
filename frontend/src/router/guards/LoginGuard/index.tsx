@@ -1,14 +1,22 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useValidationToken } from "@hooks/useValidateToken";
+
 export const LoginGuard = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
-
+  const { validateToken } = useValidationToken();
   const token =
     sessionStorage.getItem("token") || localStorage.getItem("token");
+
   if (!token) {
-    useEffect(() => {
+    React.useEffect(() => {
       navigate("/login");
     }, []);
   }
+
+  React.useEffect(() => {
+    validateToken.mutate();
+  }, []);
+
   return children;
 };

@@ -5,21 +5,14 @@ import { colors } from "../../../config/colors";
 export const Container = styled.div`
   width: 100%;
   max-width: 450px;
+  border: 1px solid red;
 `;
 
 export const Form = styled(FormComponet)`
   margin-top: 16px;
-
-  div {
-    margin-bottom: 12px;
-    &:nth-child(3) {
-      display: flex;
-      align-items: center;
-      label {
-        margin-bottom: 0;
-        margin-left: 10px;
-      }
-    }
+  display: block;
+  h1{
+    font-size: 48px;
   }
 
   span {
@@ -29,4 +22,11 @@ export const Form = styled(FormComponet)`
     font-size: 14px;
     color: ${colors.fontColor};
   }
+`;
+
+
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: normal;
+  margin-bottom: 14px;
 `;

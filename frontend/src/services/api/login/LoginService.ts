@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { ApiException } from "../ApiException";
 import { Axios } from "../axiosConfig";
 import { ICreateAccount } from "./interfaces/ICreateAccount";
@@ -5,18 +6,11 @@ import { ICreateAccount } from "./interfaces/ICreateAccount";
 const validateUser = async (
   login: string,
   password: string
-): Promise<{ token: string } | ApiException> => {
-  try {
-    const { data } = await Axios().post<{ token: string }>("/auth", {
-      email: login,
-      password,
-    });
-    return data;
-  } catch (e: any) {
-    return new ApiException(
-      e.response.data.message || "Erro ao Logar. Tente Novamente"
-    );
-  }
+): Promise<AxiosResponse<{ token: string }>> => {
+  return Axios().post<{ token: string }>("/auth", {
+    email: login,
+    password,
+  });
 };
 
 const validateToken = async (
