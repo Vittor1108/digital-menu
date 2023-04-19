@@ -1,14 +1,18 @@
 import { LoginGuard } from "@/router/guards/LoginGuard";
+import { ScreensGuard } from "@/router/guards/ScreensGuard";
 import { CategoryComponent } from "../AddCategory";
 import { DishesComponent } from "../AddDishes";
 import { EditCategoryComponent } from "../EditCategory";
 import { EditDishesComponent } from "../EditDishe";
+import { EScreens } from "@enums/EScreens";
 
 export const DishesRoutes = [
   {
     element: (
       <LoginGuard>
-        <DishesComponent />
+        <ScreensGuard screen={EScreens.PRODUCTS}>
+          <DishesComponent />
+        </ScreensGuard>
       </LoginGuard>
     ),
     path: "/dishes",
@@ -16,7 +20,9 @@ export const DishesRoutes = [
   {
     element: (
       <LoginGuard>
-        <DishesComponent />
+        <ScreensGuard screen={EScreens.PRODUCTS}>
+          <DishesComponent />
+        </ScreensGuard>
       </LoginGuard>
     ),
     path: "/dishes/:id",
@@ -32,7 +38,9 @@ export const DishesRoutes = [
   {
     element: (
       <LoginGuard>
-        <CategoryComponent />
+        <ScreensGuard screen={EScreens.PRODUCTS}>
+          <CategoryComponent />
+        </ScreensGuard>
       </LoginGuard>
     ),
     path: "/category/:id",
@@ -40,7 +48,9 @@ export const DishesRoutes = [
   {
     element: (
       <LoginGuard>
-        <EditCategoryComponent />
+        <ScreensGuard screen={EScreens.PRODUCTS}>
+          <EditCategoryComponent />
+        </ScreensGuard>
       </LoginGuard>
     ),
     path: "/categories-edit",
@@ -48,7 +58,9 @@ export const DishesRoutes = [
   {
     element: (
       <LoginGuard>
-        <EditDishesComponent />
+        <ScreensGuard screen={EScreens.PRODUCTS}>
+          <EditDishesComponent />
+        </ScreensGuard>
       </LoginGuard>
     ),
     path: "/dishes-edit",

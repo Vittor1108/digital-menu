@@ -10,8 +10,14 @@ import { Link } from "react-router-dom";
 import imgSystem from "../../assets/images/imgSystem.png";
 import { INavigation } from "./interfaces/INavigation";
 import { NavigationMenu } from "./styles";
+import { AppContext } from "@/Contexts/AppContext";
+import React from "react";
+import { EScreens } from "@enums/EScreens";
+import { useAcessScreen } from "@hooks/useAcessScreen";
 
 export const Navigation = (props: INavigation) => {
+  const { state } = React.useContext(AppContext);
+  const { acessScreen } = useAcessScreen();
   const showAccordion = (numberAccordion: number): void => {
     const treeMenu = document.querySelectorAll(".treeMenu > ul");
 
@@ -37,80 +43,92 @@ export const Navigation = (props: INavigation) => {
           <li>
             <div>
               <RiDashboardFill />
-              <p>Dashboard</p>
-            </div>
-          </li>
-          <li className="treeMenu" onClick={() => showAccordion(0)}>
-            <div>
-              <FaArchive />
-              <p>Produtos</p>
-            </div>
-            <RiArrowDownSLine />
-            <ul>
-              <li>
-                <Link to="/dishes">Adicionar Prato</Link>
-              </li>
-              <li>
-                <Link to="/dishes-edit">Editar Pratos</Link>
-              </li>
-              <li>
-                <Link to="/category">Adicionar Categoria</Link>
-              </li>
-              <li>
-                <Link to="/categories-edit">Editar Categorias</Link>
-              </li>
-            </ul>
-          </li>
-          <li className="treeMenu" onClick={() => showAccordion(1)}>
-            <div>
-              <BsFillBasket2Fill />
-              <p>Ingredientes</p>
-            </div>
-            <RiArrowDownSLine />
-            <ul>
-              <li>
-                <a href="">Adicionar Prdouto</a>
-              </li>
-              <li>
-                <a href="">Editar Prdouto</a>
-              </li>
-              <li>
-                <a href="">Adicionar Categoria</a>
-              </li>
-              <li>
-                <a href="">Editar Categoria</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <div>
-              <FaClipboardList />
-              <Link to="/requests">
-                <p>Pedidos</p>
+              <Link to="/">
+                <p>Dashboard</p>
               </Link>
             </div>
           </li>
-          <li className="treeMenu" onClick={() => showAccordion(2)}>
-            <div>
-              <FaUserFriends />
-              <p>Funcionários</p>
-            </div>
-            <RiArrowDownSLine />
-            <ul>
-              <li>
-                <Link to="/employee">Cadastar Funcionário</Link>
-              </li>
-              <li>
-                <Link to="/edit-employee">Editar Funcionário</Link>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <div>
-              <FaBriefcase />
-              <p>Vendas</p>
-            </div>
-          </li>
+          {acessScreen(EScreens.PRODUCTS.toLocaleLowerCase()) && (
+            <li className="treeMenu" onClick={() => showAccordion(0)}>
+              <div>
+                <FaArchive />
+                <p>Produtos</p>
+              </div>
+              <RiArrowDownSLine />
+              <ul>
+                <li>
+                  <Link to="/dishes">Adicionar Prato</Link>
+                </li>
+                <li>
+                  <Link to="/dishes-edit">Editar Pratos</Link>
+                </li>
+                <li>
+                  <Link to="/category">Adicionar Categoria</Link>
+                </li>
+                <li>
+                  <Link to="/categories-edit">Editar Categorias</Link>
+                </li>
+              </ul>
+            </li>
+          )}
+          {acessScreen(EScreens.INGREDIENTS.toLocaleLowerCase()) && (
+            <li className="treeMenu" onClick={() => showAccordion(1)}>
+              <div>
+                <BsFillBasket2Fill />
+                <p>Ingredientes</p>
+              </div>
+              <RiArrowDownSLine />
+              <ul>
+                <li>
+                  <a href="">Adicionar Prdouto</a>
+                </li>
+                <li>
+                  <a href="">Editar Prdouto</a>
+                </li>
+                <li>
+                  <a href="">Adicionar Categoria</a>
+                </li>
+                <li>
+                  <a href="">Editar Categoria</a>
+                </li>
+              </ul>
+            </li>
+          )}
+          {acessScreen(EScreens.REQUESTS.toLocaleLowerCase()) && (
+            <li>
+              <div>
+                <FaClipboardList />
+                <Link to="/requests">
+                  <p>Pedidos</p>
+                </Link>
+              </div>
+            </li>
+          )}
+          {acessScreen(EScreens.EMPLOYEES.toLocaleLowerCase()) && (
+            <li className="treeMenu" onClick={() => showAccordion(2)}>
+              <div>
+                <FaUserFriends />
+                <p>Funcionários</p>
+              </div>
+              <RiArrowDownSLine />
+              <ul>
+                <li>
+                  <Link to="/employee">Cadastar Funcionário</Link>
+                </li>
+                <li>
+                  <Link to="/edit-employee">Editar Funcionário</Link>
+                </li>
+              </ul>
+            </li>
+          )}
+          {acessScreen(EScreens.SEELS.toLocaleLowerCase()) && (
+            <li>
+              <div>
+                <FaBriefcase />
+                <p>Vendas</p>
+              </div>
+            </li>
+          )}
         </ul>
       </NavigationMenu>
     </>

@@ -14,9 +14,11 @@ export const LoginGuard = ({ children }: { children: JSX.Element }) => {
     }, []);
   }
 
-  React.useEffect(() => {
-    validateToken.mutate();
-  }, []);
+  if (token) {
+    React.useEffect(() => {
+      validateToken.mutate();
+    }, []);
+  }
 
   return children;
 };

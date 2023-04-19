@@ -12,10 +12,12 @@ import { EStatusRequest } from "@enums/EStatusRequest";
 import React from "react";
 import { CardRequestComponent } from "./components/CardRequest";
 import { useGetRequestsStatus } from "./hooks/useGetRequestsStatus";
+import { AppContext } from "@/Contexts/AppContext";
 
 export const RequestComponent = (): JSX.Element => {
   const [numberStatus, setNumberStatus] = React.useState<number>(0);
   const requestsRecevid = useGetRequestsStatus(numberStatus);
+
 
   React.useEffect(() => {
     requestsRecevid.refetch();

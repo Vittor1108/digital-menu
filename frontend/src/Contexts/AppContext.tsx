@@ -1,10 +1,9 @@
-import { useValidationToken } from "@hooks/useValidateToken";
 import React from "react";
 import { IContext, InfoType } from "./interfaces/IAppContext";
 
 const DEFAULT_VALUE = {
   state: {
-    screens: "",
+    screens: [],
   },
   setState: () => {},
 };

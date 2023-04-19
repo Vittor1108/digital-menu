@@ -70,6 +70,8 @@ export class AuthService {
       },
     });
 
-    return isEstablishment ? 'AllAcess' : isEmployee.screeens;
+    const allScreens = await this.prismaService.screens.findMany();
+
+    return isEstablishment ? allScreens : isEmployee.screeens;
   };
 }

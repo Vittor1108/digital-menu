@@ -2,7 +2,7 @@ import { IScreens } from "@interfaces/IScreens";
 
 //USERTYPE
 export type InfoType =  {
-  screens: IScreens[] | string;
+  screens: IScreens[],
 }
 
 //PROPSUSERCONTEXT

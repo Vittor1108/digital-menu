@@ -13,56 +13,6 @@ const validateUser = async (
   });
 };
 
-const validateToken = async (
-  token: string
-): Promise<boolean | ApiException> => {
-  try {
-    const { data } = await Axios().get("/auth");
-    return data;
-  } catch (e: any) {
-    return new ApiException(
-      e.response.data.message || "Usuário não está logado."
-    );
-  }
-};
-
-const createAccount = async ({
-  cpfCnpj,
-  email,
-  name,
-  password,
-}: ICreateAccount) => {
-  try {
-    const data = await Axios().post("/user", {
-      cpfCnpj: cpfCnpj.replace(/\D+/g, ""),
-      email,
-      name,
-      password,
-    });
-    return data;
-  } catch (e: any) {
-    return new ApiException(
-      e.response.data.message || "Não foi possível criar sua conta."
-    );
-  }
-};
-
-const forgotPassword = async (
-  email: string
-): Promise<boolean | ApiException> => {
-  try {
-    const { data } = await Axios().patch("/reset-password", { email });
-    return data;
-  } catch (e: any) {
-    return new ApiException(
-      e.response.data.message || "Não foi possível criar sua conta."
-    );
-  }
-};
-
 export const LoginService = {
   validateUser,
-  validateToken,
-  createAccount,
-  forgotPassword,
 };

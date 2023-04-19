@@ -6,10 +6,12 @@ import { GlobalContext } from "./Contexts";
 const App = (): JSX.Element => {
   return (
     <>
-      <ChakraProvider>
-        <GlobalStyle />
+      <GlobalContext>
+        <ChakraProvider>
+          <GlobalStyle />
           <RouterProvider router={Routes} />
-      </ChakraProvider>
+        </ChakraProvider>
+      </GlobalContext>
     </>
   );
 };
