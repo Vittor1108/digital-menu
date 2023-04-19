@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useValidationToken } from "@hooks/useValidateToken";
+import { useInfoUser } from "@hooks/useinfoUser";
 
 export const LoginGuard = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
-  const { validateToken } = useValidationToken();
+  const { infoUser } = useInfoUser();
   const token =
     sessionStorage.getItem("token") || localStorage.getItem("token");
 
@@ -16,7 +16,7 @@ export const LoginGuard = ({ children }: { children: JSX.Element }) => {
 
   if (token) {
     React.useEffect(() => {
-      validateToken.mutate();
+      infoUser.mutate();
     }, []);
   }
 

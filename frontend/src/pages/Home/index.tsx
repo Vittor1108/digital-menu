@@ -1,22 +1,24 @@
 import { AppContext } from "@/Contexts/AppContext";
 import { BaseLayout } from "@components/BaseLayout";
-import { useValidationToken } from "@hooks/useValidateToken";
+import { useInfoUser } from "@hooks/useinfoUser";
 import React from "react";
+import { Container } from "@chakra-ui/react";
 
 export const HomeComponent = () => {
   const token = sessionStorage.getItem("token")
     ? sessionStorage.getItem("token")
     : localStorage.getItem("token");
   const { state, setState } = React.useContext(AppContext);
-  const { validateToken } = useValidationToken();
+  const { infoUser } = useInfoUser();
 
   if (token) {
     React.useEffect(() => {
-      validateToken.mutate((function () {})(), {
+      infoUser.mutate((function () {})(), {
         onSuccess: (res) => {
           setState({
             ...state,
-            screens: res.data,
+            screens: res.data.screens,
+            nameUser: res.data.nameUser,
           });
         },
       });
@@ -26,7 +28,21 @@ export const HomeComponent = () => {
   return (
     <>
       <BaseLayout isLoading={[false]}>
-        <h1>Home</h1>
+        <Container
+          maxW="100%"
+          padding="0 15px"
+          minH="85vh"
+        >
+          <h1
+            style={{
+              fontSize: "32px",
+              marginBottom: "2rem",
+              fontWeight: "500",
+            }}
+          >
+            Bem vindo {state.nameUser}
+          </h1>
+        </Container>
       </BaseLayout>
     </>
   );

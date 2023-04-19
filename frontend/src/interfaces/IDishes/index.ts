@@ -24,3 +24,8 @@ export interface ProductPhoto {
   url: string;
   originalname: string;
 }
+
+export interface ISalesAccount {
+  valueSales: number;
+  orders: IDishes[];
+}

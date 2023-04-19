@@ -3,10 +3,10 @@ import { AuthService } from "@services/api/auth";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
-export const useValidationToken = () => {
+export const useInfoUser = () => {
   const navigate = useNavigate();
   const useSnack = useToast();
-  const validateToken = useMutation((_) => AuthService.validateToken(), {
+  const infoUser = useMutation((_) => AuthService.infoUser(), {
     onError: (err: any) => {
       useSnack({
         title: "Error.Tente novamente",
@@ -20,6 +20,6 @@ export const useValidationToken = () => {
   });
 
   return {
-    validateToken,
+    infoUser,
   };
 };

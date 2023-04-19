@@ -4,7 +4,8 @@ import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import bcrypt from 'src/utils/bcrypt';
 import { User } from '../reset-password/entity/user.entity';
-import { Employee, Screens } from '@prisma/client';
+import { Employee, Establishment, Screens } from '@prisma/client';
+import { IInfoUser } from './interfaces/IAuth';
 @Injectable()
 export class AuthService {
   constructor(
@@ -53,7 +54,7 @@ export class AuthService {
     };
   };
 
-  public indetifyUser = async (req: IReq): Promise<string | Screens[]> => {
+  public infoUser = async (req: IReq): Promise<IInfoUser> => {
     const isEstablishment = await this.prismaService.establishment.findUnique({
       where: {
         email: req.user.identify.toString(),
@@ -72,6 +73,9 @@ export class AuthService {
 
     const allScreens = await this.prismaService.screens.findMany();
 
-    return isEstablishment ? allScreens : isEmployee.screeens;
+    return {
+      screens: isEstablishment ? allScreens : isEmployee.screeens,
+      nameUser: isEstablishment ? isEstablishment.name : isEmployee.name,
+    };
   };
 }

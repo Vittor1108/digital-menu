@@ -4,6 +4,7 @@ import { IContext, InfoType } from "./interfaces/IAppContext";
 const DEFAULT_VALUE = {
   state: {
     screens: [],
+    nameUser: ""
   },
   setState: () => {},
 };

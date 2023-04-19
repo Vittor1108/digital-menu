@@ -1,4 +1,4 @@
-import { IDishes } from "@interfaces/IDishes";
+import { IDishes, ISalesAccount } from "@interfaces/IDishes";
 import { IFiles } from "@interfaces/IFiles";
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
@@ -62,6 +62,15 @@ const deleteDishe = async (id: number): Promise<AxiosResponse<boolean>> => {
   return await Axios().delete<boolean>(`/product/${id}`);
 };
 
+const sellsAccount = async (date: {
+  finalDate: Date;
+  initialDate: Date;
+}): Promise<AxiosResponse<ISalesAccount>> => {
+  return await Axios().get(
+    `/product/salesAccount/initialDate=${date.initialDate}/finalDate=${date.finalDate}`
+  );
+};
+
 export const DishesService = {
   createProduct,
   createImageProduct,
@@ -70,4 +79,5 @@ export const DishesService = {
   deleteImageDishe,
   getAll,
   deleteDishe,
+  sellsAccount,
 };

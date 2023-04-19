@@ -1,7 +1,8 @@
-import { Controller, Post, Req, UseGuards, Get } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IReq } from 'src/@types/req';
 import { AuthService } from './auth.service';
+import { IInfoUser } from './interfaces/IAuth';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  validateToken(@Req() req: IReq) {
-    return this.authService.indetifyUser(req);
+  infoUser(@Req() req: IReq): Promise<IInfoUser> {
+    return this.authService.infoUser(req);
   }
 }

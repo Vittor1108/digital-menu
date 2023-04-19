@@ -1,11 +1,10 @@
+import { InfoType } from "@/Contexts/interfaces/IAppContext";
 import { AxiosResponse } from "axios";
 import { Axios } from "../axiosConfig";
-import { IScreens } from "@interfaces/IScreens";
-
-const validateToken = (): Promise<AxiosResponse<IScreens[]>> => {
-  return Axios().get<IScreens[]>("/auth");
+const infoUser = (): Promise<AxiosResponse<InfoType>> => {
+  return Axios().get<InfoType>("/auth");
 };
 
 export const AuthService = {
-  validateToken,
+  infoUser,
 };
