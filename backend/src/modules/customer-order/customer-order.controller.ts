@@ -15,6 +15,7 @@ import { CustomerOrderService } from './customer-order.service';
 import { CreateCustomerOrderDto } from './dto/create-customer-order.dto';
 import { CustomerOrder } from './entities/customer-order.entity';
 import { UpdateCustomerOrderDto } from './dto/update-customer-order.dto';
+import { IOrder } from './interfaces/IOrders';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('customer-order')
@@ -35,6 +36,19 @@ export class CustomerOrderController {
     @Param('status') status: number,
   ): Promise<CustomerOrder[]> {
     return this.customerOrderService.getByStatus(req, status);
+  }
+
+  @Get('/recent/qtd=:qtd')
+  getByRecent(
+    @Request() req: IReq,
+    @Param('qtd') qtd: number,
+  ): Promise<CustomerOrder[]> {
+    return this.customerOrderService.getRecentOrderes(req, qtd);
+  }
+
+  @Get('/moreOrders')
+  getMoreOrders(@Request() req: IReq): Promise<IOrder[]> {
+    return this.customerOrderService.moreOrders(req);
   }
 
   @Get()

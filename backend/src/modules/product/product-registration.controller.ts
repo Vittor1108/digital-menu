@@ -16,6 +16,8 @@ import { UpdateProductRegistrationDto } from './dto/update-product-registration.
 import { ProductRegistration } from './entities/product-registration.entity';
 import { ProductRegistrationService } from './product-registration.service';
 import { PaginationCategroyDto } from '../category/dto/pagination-category';
+import { IInitialFinalDate } from 'src/interfaces/IDates';
+import { ISalesAccount } from './interfaces/ISalesAccount';
 
 @Controller('product')
 @UseGuards(AuthGuard('jwt'))
@@ -30,6 +32,19 @@ export class ProductRegistrationController {
     @Body() createDto: CreateProductRegistrationDto,
   ): Promise<ProductRegistration> {
     return this.productRegistrationService.create(createDto, req);
+  }
+
+  @Get('salesAccount/initialDate=:initialDate/finalDate=:finalDate')
+  salesAccount(
+    @Request() req: IReq,
+    @Param() date: IInitialFinalDate,
+  ): Promise<ISalesAccount> {
+    return this.productRegistrationService.salesAccount(req, date);
+  }
+
+  @Get('/take=:take?/skip=:skip?/text=:text?')
+  findAll(@Param() pagination: PaginationCategroyDto, @Request() req: IReq) {
+    return this.productRegistrationService.findAll(pagination, req);
   }
 
   @Put(':id')
@@ -49,20 +64,5 @@ export class ProductRegistrationController {
   @Delete(':id')
   delete(@Param('id') id: number): Promise<boolean> {
     return this.productRegistrationService.delete(id);
-  }
-
-  @Get('salesAccount/count')
-  salesAccount(@Request() req: IReq): Promise<
-    {
-      products: ProductRegistration;
-      countSales: number;
-    }[]
-  > {
-    return this.productRegistrationService.salesAccount(req);
-  }
-
-  @Get('/take=:take?/skip=:skip?/text=:text?')
-  findAll(@Param() pagination: PaginationCategroyDto, @Request() req: IReq) {
-    return this.productRegistrationService.findAll(pagination, req);
   }
 }

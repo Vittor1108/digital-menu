@@ -1,22 +1,20 @@
+import { EScreens } from "@enums/EScreens";
+import { useAcessScreen } from "@hooks/useAcessScreen";
 import { BsFillBasket2Fill } from "react-icons/bs";
 import {
   FaArchive,
   FaBriefcase,
   FaClipboardList,
+  FaHome,
   FaUserFriends,
 } from "react-icons/fa";
-import { RiArrowDownSLine, RiDashboardFill } from "react-icons/ri";
+import { RiArrowDownSLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import imgSystem from "../../assets/images/imgSystem.png";
 import { INavigation } from "./interfaces/INavigation";
 import { NavigationMenu } from "./styles";
-import { AppContext } from "@/Contexts/AppContext";
-import React from "react";
-import { EScreens } from "@enums/EScreens";
-import { useAcessScreen } from "@hooks/useAcessScreen";
 
 export const Navigation = (props: INavigation) => {
-  const { state } = React.useContext(AppContext);
   const { acessScreen } = useAcessScreen();
   const showAccordion = (numberAccordion: number): void => {
     const treeMenu = document.querySelectorAll(".treeMenu > ul");
@@ -42,9 +40,9 @@ export const Navigation = (props: INavigation) => {
           </li>
           <li>
             <div>
-              <RiDashboardFill />
+              <FaHome />
               <Link to="/">
-                <p>Dashboard</p>
+                <p>Home</p>
               </Link>
             </div>
           </li>

@@ -2,12 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IReq } from 'src/@types/req';
 import { PrismaService } from 'src/database/PrismaService';
 import { HelpMessager } from 'src/helper/messageHelper';
-import { removeFile } from 'src/utils/file-upload.utils';
 import { PaginationCategroyDto } from '../category/dto/pagination-category';
+import { PhotoProductService } from '../photo-product/photo-product.service';
 import { CreateProductRegistrationDto } from './dto/create-product-registration.dto';
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import { ProductRegistration } from './entities/product-registration.entity';
-import { PhotoProductService } from '../photo-product/photo-product.service';
+import { IInitialFinalDate } from 'src/interfaces/IDates';
+import { ISalesAccount } from './interfaces/ISalesAccount';
 
 @Injectable()
 export class ProductRegistrationService {
@@ -349,50 +350,22 @@ export class ProductRegistrationService {
 
   public salesAccount = async (
     req: IReq,
-  ): Promise<Array<{ products: ProductRegistration; countSales: number }>> => {
-    const products = await this.prismaService.product.findMany({
+    date: IInitialFinalDate,
+  ): Promise<ISalesAccount> => {
+    const sales = await this.prismaService.customerOrder.findMany({
       where: {
         establishmentId: req.user.establishmentId,
+        dateOrder: {
+          lte: date.finalDate,
+          gte: date.initialDate,
+        },
       },
     });
 
-    let productSales = await Promise.all(
-      products.map(async (product) => {
-        const productId = await this.prismaService.product.findUnique({
-          where: {
-            id: product.id,
-          },
+    const valueSales = sales.reduce((acc: number, value) => {
+      return acc + value.orderPrice;
+    }, 0);
 
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            avargePrice: true,
-            ProductPhoto: {
-              select: {
-                url: true,
-              },
-            },
-          },
-        });
-
-        const countSales = await this.prismaService.orderedProduct.count({
-          where: {
-            productId: product.id,
-          },
-        });
-
-        return {
-          products: productId,
-          countSales,
-        };
-      }),
-    );
-
-    productSales = productSales.sort(function (a, b) {
-      return a.countSales < b.countSales ? 1 : -1;
-    });
-
-    return productSales;
+    return { valueSales, orders: sales };
   };
 }
