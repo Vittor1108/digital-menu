@@ -352,15 +352,27 @@ export class ProductRegistrationService {
     req: IReq,
     date: IInitialFinalDate,
   ): Promise<ISalesAccount> => {
-    const sales = await this.prismaService.customerOrder.findMany({
-      where: {
-        establishmentId: req.user.establishmentId,
-        dateOrder: {
-          lte: date.finalDate,
-          gte: date.initialDate,
+    let sales;
+    if (
+      (!date.finalDate && !date.initialDate) ||
+      (date.finalDate === 'undefined' && date.initialDate === 'undefined')
+    ) {
+      sales = await this.prismaService.customerOrder.findMany({
+        where: {
+          establishmentId: req.user.establishmentId,
         },
-      },
-    });
+      });
+    } else {
+      sales = await this.prismaService.customerOrder.findMany({
+        where: {
+          establishmentId: req.user.establishmentId,
+          dateOrder: {
+            lte: date.finalDate,
+            gte: date.initialDate,
+          },
+        },
+      });
+    }
 
     const valueSales = sales.reduce((acc: number, value) => {
       return acc + value.orderPrice;

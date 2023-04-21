@@ -62,12 +62,12 @@ const deleteDishe = async (id: number): Promise<AxiosResponse<boolean>> => {
   return await Axios().delete<boolean>(`/product/${id}`);
 };
 
-const sellsAccount = async (date: {
+const sellsAccount = async (date?: {
   finalDate: Date;
   initialDate: Date;
 }): Promise<AxiosResponse<ISalesAccount>> => {
   return await Axios().get(
-    `/product/salesAccount/initialDate=${date.initialDate}/finalDate=${date.finalDate}`
+    `/product/salesAccount/initialDate=${date?.initialDate}/finalDate=${date?.finalDate}`
   );
 };
 

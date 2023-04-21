@@ -142,7 +142,6 @@ export class CategoryService {
           },
         },
       });
-      console.log('pagination');
       return {
         categories,
         quantity: countCategories,

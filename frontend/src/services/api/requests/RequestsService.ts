@@ -16,7 +16,12 @@ const update = async (
   return await Axios().put<IRequests>(`/customer-order/${id}`, data);
 };
 
+const getAll = async (): Promise<AxiosResponse<IRequests[]>> => {
+  return await Axios().get<IRequests[]>("/customer-order");
+};
+
 export const RequestsService = {
   getByStatus,
   update,
+  getAll,
 };
