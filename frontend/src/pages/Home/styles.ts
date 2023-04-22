@@ -40,15 +40,24 @@ export const CardInfo = styled.article<IProps>`
     }
 
     &:nth-child(2) {
-      h3{
+      h3 {
         font-size: 24px;
         font-weight: 500;
         margin-bottom: 8px;
       }
 
-      p{
+      p {
         padding-bottom: 16px;
       }
     }
   }
+`;
+
+export const ImageTable = styled.img`
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #eee;
+  margin-right: 10px;
 `;

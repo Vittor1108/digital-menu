@@ -1,13 +1,24 @@
 import { AppContext } from "@/Contexts/AppContext";
-import { Container } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { BaseLayout } from "@components/BaseLayout";
-import { useInfoUser } from "@hooks/useinfoUser";
-import React from "react";
-import { CardInfo } from "./styles";
-import { BsArrowUpShort } from "react-icons/bs";
-import { useGetSellsInfo } from "@hooks/useGetSellsInfo";
 import { ESellsInfo } from "@enums/ESellsInfo";
 import { useGetAllRequests } from "@hooks/useGetAllRequests";
+import { useGetSellsInfo } from "@hooks/useGetSellsInfo";
+import { useInfoUser } from "@hooks/useinfoUser";
+import React from "react";
+import { BsArrowUpShort } from "react-icons/bs";
+import { useGetRecentsRequests } from "./hooks/useGetRecentsRequests";
+import { CardInfo } from "./styles";
+import { ImageTable } from "./styles";
 
 export const HomeComponent = () => {
   const token = sessionStorage.getItem("token")
@@ -17,6 +28,7 @@ export const HomeComponent = () => {
   const { infoUser } = useInfoUser();
   const { fetchSellsInfo } = useGetSellsInfo(ESellsInfo.ALL);
   const { fetchAllRequest } = useGetAllRequests();
+  const { fetchRecentsRequests } = useGetRecentsRequests(5);
 
   if (token) {
     React.useEffect(() => {
@@ -35,7 +47,11 @@ export const HomeComponent = () => {
   return (
     <>
       <BaseLayout
-        isLoading={[fetchSellsInfo.isLoading, fetchAllRequest.isLoading]}
+        isLoading={[
+          fetchSellsInfo.isLoading,
+          fetchAllRequest.isLoading,
+          fetchRecentsRequests.isLoading,
+        ]}
       >
         <Container maxW="100%" padding="0 15px" minH="85vh">
           <h1
@@ -51,7 +67,7 @@ export const HomeComponent = () => {
             maxW="100%"
             display="flex"
             alignItems="center"
-            justifyContent="space"
+            justifyContent="space-between"
           >
             <CardInfo color="black">
               <div>
@@ -84,6 +100,101 @@ export const HomeComponent = () => {
                 <p>Gráfico aqui</p>
               </div>
             </CardInfo>
+          </Container>
+          <Container
+            marginTop="32px"
+            maxW="calc(100% - 32px)"
+            backgroundColor="white"
+            className="defaultBoxShadow"
+          >
+            <Container
+              display="flex"
+              borderBottom="1px solid rgba(0,0,0,0.1);"
+              maxW="100%"
+              alignItems="center"
+              justifyContent="space-between"
+              padding="24px"
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                Pedidos Recentes
+              </p>
+              <Button
+                backgroundColor="red"
+                color="white"
+                fontWeight="normal"
+                borderRadius="3px"
+                fontSize="12px"
+              >
+                Ver Todos
+              </Button>
+            </Container>
+            <Table verticalAlign="middle">
+              <Thead>
+                <Tr>
+                  <Th textAlign="center" color="black">
+                    Prato
+                  </Th>
+                  <Th textAlign="center" color="black">
+                    Preço
+                  </Th>
+                  <Th textAlign="center" color="black">
+                    ID do prato
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {fetchRecentsRequests.data?.map((element) => {
+                  return (
+                    <Tr key={element.id}>
+                      <Td
+                        textAlign="center"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <ImageTable src={element.ProductPhoto![0].url} />
+                        {element.name}
+                      </Td>
+                      <Td textAlign="center">
+                        {element.price.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </Td>
+                      <Td textAlign="center">{element.id}</Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Container>
+          <Container
+            maxW="calc(100% - 32px)"
+            marginTop="32px"
+            backgroundColor="white"
+            className="defaultBoxShadow"
+          >
+            <Container
+              borderBottom="1px solid rgba(0,0,0,0.1);"
+              maxW="100%"
+              padding="24px"
+            >
+              <p
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                Mais Pedidos
+              </p>
+            </Container>
           </Container>
         </Container>
       </BaseLayout>

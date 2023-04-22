@@ -8,7 +8,8 @@ import { CreateProductRegistrationDto } from './dto/create-product-registration.
 import { UpdateProductRegistrationDto } from './dto/update-product-registration.dto';
 import { ProductRegistration } from './entities/product-registration.entity';
 import { IInitialFinalDate } from 'src/interfaces/IDates';
-import { ISalesAccount } from './interfaces/ISalesAccount';
+import { IGetSalesAccount, ISalesAccount } from './interfaces/ISalesAccount';
+import { CustomerOrder } from '@prisma/client';
 
 @Injectable()
 export class ProductRegistrationService {
@@ -352,27 +353,24 @@ export class ProductRegistrationService {
     req: IReq,
     date: IInitialFinalDate,
   ): Promise<ISalesAccount> => {
-    let sales;
+    const dinamycWhere: IGetSalesAccount = {
+      establishmentId: req.user.establishmentId,
+    };
+
     if (
-      (!date.finalDate && !date.initialDate) ||
-      (date.finalDate === 'undefined' && date.initialDate === 'undefined')
+      date.finalDate &&
+      date.initialDate &&
+      date.finalDate !== 'undefined' &&
+      date.initialDate !== 'undefined'
     ) {
-      sales = await this.prismaService.customerOrder.findMany({
-        where: {
-          establishmentId: req.user.establishmentId,
-        },
-      });
-    } else {
-      sales = await this.prismaService.customerOrder.findMany({
-        where: {
-          establishmentId: req.user.establishmentId,
-          dateOrder: {
-            lte: date.finalDate,
-            gte: date.initialDate,
-          },
-        },
-      });
+      console.log(date);
+      dinamycWhere.lte = date.finalDate;
+      dinamycWhere.gte = date.initialDate;
     }
+
+    const sales = await this.prismaService.customerOrder.findMany({
+      where: dinamycWhere,
+    });
 
     const valueSales = sales.reduce((acc: number, value) => {
       return acc + value.orderPrice;

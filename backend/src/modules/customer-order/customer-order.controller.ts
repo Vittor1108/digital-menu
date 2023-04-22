@@ -16,6 +16,7 @@ import { CreateCustomerOrderDto } from './dto/create-customer-order.dto';
 import { CustomerOrder } from './entities/customer-order.entity';
 import { UpdateCustomerOrderDto } from './dto/update-customer-order.dto';
 import { IOrder } from './interfaces/IOrders';
+import { Product } from '@prisma/client';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('customer-order')
@@ -42,7 +43,7 @@ export class CustomerOrderController {
   getByRecent(
     @Request() req: IReq,
     @Param('qtd') qtd: number,
-  ): Promise<CustomerOrder[]> {
+  ): Promise<Product[]> {
     return this.customerOrderService.getRecentOrderes(req, qtd);
   }
 
@@ -50,7 +51,7 @@ export class CustomerOrderController {
   getMoreOrders(@Request() req: IReq): Promise<IOrder[]> {
     return this.customerOrderService.moreOrders(req);
   }
-
+  getRecentOrderes;
   @Get()
   getAll(@Request() req: IReq): Promise<CustomerOrder[]> {
     return this.customerOrderService.getAll(req);

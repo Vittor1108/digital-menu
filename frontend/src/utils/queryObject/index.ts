@@ -7,4 +7,5 @@ export const queryObject = {
   getAllScreens: "screens",
   getSellsInfo: "sellsInfo",
   getAllRequests: "requests",
+  getRecentsRequests: "recentRequests",
 };

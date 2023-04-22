@@ -6,6 +6,7 @@ import { CreateCustomerOrderDto } from './dto/create-customer-order.dto';
 import { UpdateCustomerOrderDto } from './dto/update-customer-order.dto';
 import { CustomerOrder } from './entities/customer-order.entity';
 import { IOrder } from './interfaces/IOrders';
+import { Product } from '@prisma/client';
 
 @Injectable()
 export class CustomerOrderService {
@@ -243,20 +244,47 @@ export class CustomerOrderService {
   public getRecentOrderes = async (
     req: IReq,
     qtd: number,
-  ): Promise<CustomerOrder[]> => {
+  ): Promise<Product[]> => {
     const recentOrders = await this.prismaService.customerOrder.findMany({
       where: {
         establishmentId: req.user.establishmentId,
       },
-      orderBy: [
-        {
-          id: 'desc',
-        },
-      ],
+
+      include: {
+        OrderedProduct: true,
+      },
+
       take: Number(qtd),
     });
 
-    return recentOrders;
+    const idProducts = recentOrders
+      .map((e, i) => e.OrderedProduct[0].productId)
+      .filter((e, index) => {
+        if (index === 0) {
+          return true;
+        }
+
+        if (e !== e && index !== 0) {
+          return true;
+        }
+      });
+    const productsRecents = await this.prismaService.product.findMany({
+      where: {
+        id: {
+          in: idProducts,
+        },
+      },
+
+      include: {
+        ProductPhoto: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+
+    return productsRecents;
   };
 
   public moreOrders = async (req: IReq): Promise<IOrder[]> => {
