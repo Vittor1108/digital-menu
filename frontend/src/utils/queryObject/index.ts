@@ -9,4 +9,5 @@ export const queryObject = {
   getAllRequests: "requests",
   getRecentsRequests: "recentRequests",
   getMoreRequests: "moreRequests",
+  getAllEmployees: "employees",
 };

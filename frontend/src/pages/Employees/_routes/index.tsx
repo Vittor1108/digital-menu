@@ -2,6 +2,7 @@ import { AddEmployeeComponent } from "../AddEmployee";
 import { LoginGuard } from "@/router/guards/LoginGuard";
 import { ScreensGuard } from "@/router/guards/ScreensGuard";
 import { EScreens } from "@enums/EScreens";
+import { EditEmployeeComponent } from "../EditEmployee";
 export const EmployeesRoutes = [
   {
     element: (
@@ -13,4 +14,14 @@ export const EmployeesRoutes = [
     ),
     path: "/employee",
   },
+  {
+    element: (
+      <LoginGuard>
+        <ScreensGuard screen={EScreens.EMPLOYEES}>
+          <EditEmployeeComponent />
+        </ScreensGuard>
+      </LoginGuard>
+    ),
+    path: "/edit-employee",
+  }
 ];
