@@ -1,16 +1,15 @@
 import { useToast } from "@chakra-ui/react";
-import { IPagination } from "@interfaces/IPagination";
-import { CategorieService } from "@services/api/categories";
+import { RequestsService } from "@services/api/requests/RequestsService";
 import { queryObject } from "@utils/queryObject";
 import { useQuery } from "react-query";
 
-export const useGetAllCategories = (dataGet?: IPagination) => {
+export const useGetMoreOrders = () => {
   const useSnack = useToast();
 
-  const fetchCategories = useQuery(
-    [queryObject.getAllCategories],
+  const fetchGetMoreOrders = useQuery(
+    [queryObject.getMoreRequests],
     async () => {
-      const request = await CategorieService.getAllCategories(dataGet);
+      const request = await RequestsService.getMoreOrdes();
       return request.data;
     },
     {
@@ -27,8 +26,6 @@ export const useGetAllCategories = (dataGet?: IPagination) => {
   );
 
   return {
-    ...fetchCategories,
-    dataFetchCategories: fetchCategories.data,
-    categoriesIsLoading: fetchCategories.isLoading,
+    fetchGetMoreOrders,
   };
 };

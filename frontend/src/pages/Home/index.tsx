@@ -1,4 +1,5 @@
 import { AppContext } from "@/Contexts/AppContext";
+import Teste from "@assets/images/uploads/prato1.jpg";
 import {
   Button,
   Container,
@@ -17,8 +18,8 @@ import { useInfoUser } from "@hooks/useinfoUser";
 import React from "react";
 import { BsArrowUpShort } from "react-icons/bs";
 import { useGetRecentsRequests } from "./hooks/useGetRecentsRequests";
-import { CardInfo } from "./styles";
-import { ImageTable } from "./styles";
+import { CardInfo, ImageTable, TrendingOrders } from "./styles";
+import { useGetMoreOrders } from "@hooks/useGetMoreOrders";
 
 export const HomeComponent = () => {
   const token = sessionStorage.getItem("token")
@@ -29,6 +30,7 @@ export const HomeComponent = () => {
   const { fetchSellsInfo } = useGetSellsInfo(ESellsInfo.ALL);
   const { fetchAllRequest } = useGetAllRequests();
   const { fetchRecentsRequests } = useGetRecentsRequests(5);
+  const { fetchGetMoreOrders } = useGetMoreOrders();
 
   if (token) {
     React.useEffect(() => {
@@ -51,6 +53,8 @@ export const HomeComponent = () => {
           fetchSellsInfo.isLoading,
           fetchAllRequest.isLoading,
           fetchRecentsRequests.isLoading,
+          fetchAllRequest.isLoading,
+          fetchGetMoreOrders.isLoading,
         ]}
       >
         <Container maxW="100%" padding="0 15px" minH="85vh">
@@ -194,6 +198,46 @@ export const HomeComponent = () => {
               >
                 Mais Pedidos
               </p>
+            </Container>
+            <Container
+              maxW="100%"
+              display="flex"
+              alignItems="center"
+              padding="24px 0"
+              justifyContent="center"
+            >
+              {fetchGetMoreOrders.data?.slice(0, 5).map((e, index) => {
+                return (
+                  <TrendingOrders key={index}>
+                    <div>
+                      <img src={e.product.ProductPhoto[0].url} />
+                    </div>
+                    <div>
+                      <h6>{e.product.name}</h6>
+                      <span>
+                        {e.product.price.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </span>
+                      <div>
+                        <p>
+                          Pedidos: <span>{e.sellsQuantity}</span>
+                        </p>
+                        <p>
+                          Lucro:{" "}
+                          <span>
+                            {e.sellsQuantity.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </TrendingOrders>
+                );
+              })}
             </Container>
           </Container>
         </Container>

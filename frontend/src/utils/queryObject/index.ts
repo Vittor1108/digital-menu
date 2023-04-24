@@ -8,4 +8,5 @@ export const queryObject = {
   getSellsInfo: "sellsInfo",
   getAllRequests: "requests",
   getRecentsRequests: "recentRequests",
+  getMoreRequests: "moreRequests",
 };

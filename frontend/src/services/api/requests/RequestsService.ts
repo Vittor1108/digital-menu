@@ -3,6 +3,7 @@ import { ApiException } from "../ApiException";
 import { IRequests } from "@interfaces/IRequests";
 import { AxiosResponse } from "axios";
 import { IDishes } from "@interfaces/IDishes";
+import { IMoreOrdes } from "./interfaces";
 
 const getByStatus = async (
   status: number
@@ -25,9 +26,14 @@ const getRecents = async (qtd: number): Promise<AxiosResponse<IDishes[]>> => {
   return await Axios().get<IDishes[]>(`customer-order/recent/qtd=${qtd}`);
 };
 
+const getMoreOrdes = async (): Promise<AxiosResponse<IMoreOrdes[]>> => {
+  return await Axios().get<IMoreOrdes[]>(`customer-order/moreOrders`);
+};
+
 export const RequestsService = {
   getByStatus,
   update,
   getAll,
   getRecents,
+  getMoreOrdes,
 };
