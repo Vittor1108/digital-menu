@@ -6,6 +6,10 @@ interface IProps {
   openMenu: boolean;
 }
 
+interface ILi {
+  route: boolean;
+}
+
 export const NavigationMenu = styled.nav<IProps>`
   width: 250px;
   height: 100vh;
@@ -21,47 +25,6 @@ export const NavigationMenu = styled.nav<IProps>`
   `}
 
   > ul {
-    > li {
-      padding: 15px 0;
-      font-size: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: color 0.3s;
-      &:nth-child(1) {
-        text-align: center;
-        background-color: ${colors.graySecondary};
-        display: block;
-        border: none;
-        padding: 0;
-        img {
-          max-width: 150px;
-          padding: 9px 0;
-          margin: 0 auto;
-        }
-      }
-
-      > div {
-        display: flex;
-        align-items: center;
-        padding-left: 15px;
-        margin-bottom: 10px;
-
-        p {
-          margin-left: 15px;
-        }
-      }
-
-      > svg {
-        margin-right: 10px;
-      }
-
-      &:hover {
-        color: ${colors.redPrimaryColor};
-        cursor: pointer;
-      }
-    }
-
     .treeMenu {
       flex-wrap: wrap;
       ul {
@@ -98,5 +61,47 @@ export const NavigationMenu = styled.nav<IProps>`
   .show {
     transform: rotateX(0) !important;
     max-height: 300px !important;
+  }
+`;
+
+export const ItemList = styled.li<ILi>`
+  padding: 15px 0;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s;
+  color: ${(props) => (props.route ? "red" : "black")};
+  &:nth-child(1) {
+    text-align: center;
+    background-color: ${colors.graySecondary};
+    display: block;
+    border: none;
+    padding: 0;
+    img {
+      max-width: 150px;
+      padding: 9px 0;
+      margin: 0 auto;
+    }
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    margin-bottom: 10px;
+
+    p {
+      margin-left: 15px;
+    }
+  }
+
+  > svg {
+    margin-right: 10px;
+  }
+
+  &:hover {
+    color: ${colors.redPrimaryColor};
+    cursor: pointer;
   }
 `;

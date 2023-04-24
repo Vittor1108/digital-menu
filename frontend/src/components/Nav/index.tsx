@@ -9,13 +9,15 @@ import {
   FaUserFriends,
 } from "react-icons/fa";
 import { RiArrowDownSLine } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import imgSystem from "../../assets/images/imgSystem.png";
 import { INavigation } from "./interfaces/INavigation";
-import { NavigationMenu } from "./styles";
+import { NavigationMenu, ItemList } from "./styles";
+import React from "react";
 
 export const Navigation = (props: INavigation) => {
   const { acessScreen } = useAcessScreen();
+  const location = useLocation();
   const showAccordion = (numberAccordion: number): void => {
     const treeMenu = document.querySelectorAll(".treeMenu > ul");
 
@@ -31,27 +33,40 @@ export const Navigation = (props: INavigation) => {
     treeMenu[numberAccordion].classList.add("show");
   };
 
+  const verifyRoute = (routeName: string): boolean => {
+    const path = location.pathname.replace("/", "");
+    return path.includes(routeName) ? true : false;
+  };
+
+  React.useEffect(() => {
+    verifyRoute("");
+  }, []);
+
   return (
     <>
       <NavigationMenu openMenu={props.isOpen}>
         <ul>
-          <li>
+          <ItemList route={verifyRoute("/")}>
             <img src={imgSystem} alt="Costic Food" />
-          </li>
-          <li>
+          </ItemList>
+          <ItemList route={location.pathname === "/"}>
             <div>
               <FaHome />
               <Link to="/">
                 <p>Home</p>
               </Link>
             </div>
-          </li>
+          </ItemList>
           {acessScreen(EScreens.PRODUCTS.toLocaleLowerCase()) && (
-            <li className="treeMenu" onClick={() => showAccordion(0)}>
+            <ItemList
+              className="treeMenu"
+              onClick={() => showAccordion(0)}
+              route={verifyRoute("dishes")}
+            >
               <div>
                 <FaArchive />
                 <p>Produtos</p>
-              </div>
+              </div>{" "}
               <RiArrowDownSLine />
               <ul>
                 <li>
@@ -67,10 +82,14 @@ export const Navigation = (props: INavigation) => {
                   <Link to="/categories-edit">Editar Categorias</Link>
                 </li>
               </ul>
-            </li>
+            </ItemList>
           )}
           {acessScreen(EScreens.INGREDIENTS.toLocaleLowerCase()) && (
-            <li className="treeMenu" onClick={() => showAccordion(1)}>
+            <ItemList
+              className="treeMenu"
+              onClick={() => showAccordion(1)}
+              route={verifyRoute("/z")}
+            >
               <div>
                 <BsFillBasket2Fill />
                 <p>Ingredientes</p>
@@ -90,20 +109,24 @@ export const Navigation = (props: INavigation) => {
                   <a href="">Editar Categoria</a>
                 </li>
               </ul>
-            </li>
+            </ItemList>
           )}
           {acessScreen(EScreens.REQUESTS.toLocaleLowerCase()) && (
-            <li>
+            <ItemList route={verifyRoute("requests")}>
               <div>
                 <FaClipboardList />
                 <Link to="/requests">
                   <p>Pedidos</p>
                 </Link>
               </div>
-            </li>
+            </ItemList>
           )}
           {acessScreen(EScreens.EMPLOYEES.toLocaleLowerCase()) && (
-            <li className="treeMenu" onClick={() => showAccordion(2)}>
+            <ItemList
+              className="treeMenu"
+              onClick={() => showAccordion(2)}
+              route={verifyRoute("employee")}
+            >
               <div>
                 <FaUserFriends />
                 <p>Funcionários</p>
@@ -117,15 +140,15 @@ export const Navigation = (props: INavigation) => {
                   <Link to="/edit-employee">Editar Funcionário</Link>
                 </li>
               </ul>
-            </li>
+            </ItemList>
           )}
           {acessScreen(EScreens.SEELS.toLocaleLowerCase()) && (
-            <li>
+            <ItemList route={verifyRoute("/a")}>
               <div>
                 <FaBriefcase />
                 <p>Vendas</p>
               </div>
-            </li>
+            </ItemList>
           )}
         </ul>
       </NavigationMenu>
