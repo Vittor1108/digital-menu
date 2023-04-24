@@ -227,7 +227,7 @@ export const HomeComponent = () => {
                         <p>
                           Lucro:{" "}
                           <span>
-                            {e.sellsQuantity.toLocaleString("pt-BR", {
+                            {e.income.toLocaleString("pt-BR", {
                               style: "currency",
                               currency: "BRL",
                             })}
