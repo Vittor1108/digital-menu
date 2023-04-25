@@ -30,6 +30,14 @@ export class CategoryController {
     return this.categoryService.create(createDto, req);
   }
 
+  @Get('/take=:take?/skip=:skip?/text=:text?')
+  findAll(
+    @Param() pagination: PaginationCategroyDto,
+    @Request() req: IReq,
+  ): Promise<{ quantity: number; categories: Category[] }> {
+    return this.categoryService.findAll(pagination, req);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number): Promise<Category> {
     return this.categoryService.findOne(id);
@@ -38,14 +46,6 @@ export class CategoryController {
   @Delete(':id')
   delete(@Param('id') id: number): Promise<boolean> {
     return this.categoryService.delete(id);
-  }
-
-  @Get('/take=:take?/skip=:skip?/text=:text?')
-  findAll(
-    @Param() pagination: PaginationCategroyDto,
-    @Request() req: IReq,
-  ): Promise<{ quantity: number; categories: Category[] }> {
-    return this.categoryService.findAll(pagination, req);
   }
 
   @Put(':id')

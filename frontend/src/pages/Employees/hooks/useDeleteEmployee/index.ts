@@ -1,18 +1,17 @@
 import { useToast } from "@chakra-ui/react";
-import { IPagination } from "@interfaces/IPagination";
 import { EmployeeService } from "@services/api/employees";
 import { queryObject } from "@utils/queryObject";
-import { useQuery } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
-export const useGetAllEmployees = (dataGet: IPagination) => {
+export const useDeleteEmployee = () => {
   const useSnack = useToast();
-  const fetchGetAllEmployees = useQuery(
-    [queryObject.getAllEmployees],
-    async () => {
-      const request = await EmployeeService.getAll(dataGet);
-      return request.data;
-    },
+  const queryClient = useQueryClient();
+  const fetchDeleteEmployee = useMutation(
+    (id: number) => EmployeeService.deleted(id),
     {
+      onSuccess: (res) => {
+        queryClient.invalidateQueries([queryObject.getAllEmployees]);
+      },
       onError: (e: any) => {
         useSnack({
           title: "Error.Tente novamente",
@@ -26,6 +25,6 @@ export const useGetAllEmployees = (dataGet: IPagination) => {
   );
 
   return {
-    fetchGetAllEmployees,
+    fetchDeleteEmployee,
   };
 };

@@ -16,6 +16,9 @@ import * as yup from "yup";
 import { IForm } from "./interfaces/IForm";
 import { Form } from "./styled";
 import { useCreateEmployee } from "../hooks/useCreateEmployee";
+import { AppContext } from "@/Contexts/AppContext";
+import { useParams } from "react-router-dom";
+import { useGetEmployee } from "../hooks/useGetEmployee";
 
 const schemaForm = yup.object({
   name: yup.string().required("Nome do prato é obrigatório"),
@@ -28,22 +31,42 @@ const schemaForm = yup.object({
 
 export const AddEmployeeComponent = (): JSX.Element => {
   const [title, setTitle] = React.useState<string>("Cadastar Funcionário");
+  const [screens, setScreens] = React.useState<number[]>([]);
   const { fetchAllScreens } = useGetAllScreens();
+  const { fetchGetEmployee } = useGetEmployee();
   const { requestCreateEmployee } = useCreateEmployee();
+  const { id } = useParams();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     setValue,
+    getValues,
     control,
   } = useForm<IForm>({
     resolver: yupResolver(schemaForm),
   });
 
   const onSubmit = (data: IForm): void => {
-    requestCreateEmployee.mutate(data);
+    // requestCreateEmployee.mutate(data);
   };
+
+  const setDataForm = async (): Promise<void> => {
+    const { data } = await fetchGetEmployee.mutateAsync(Number(id));
+    const numberScreensAcess = data.screeens!.map((e) => e.id);
+    setScreens(numberScreensAcess);
+    console.log(data.screeens);
+    setValue("name", data.name);
+    setValue("cpf", data.login!);
+    setValue("password", data.password);
+  };
+
+  React.useEffect(() => {
+    if (id) {
+      setDataForm();
+    }
+  }, []);
 
   return (
     <BaseLayout isLoading={[false]}>
@@ -102,7 +125,7 @@ export const AddEmployeeComponent = (): JSX.Element => {
                           colorScheme="red"
                           key={screen.id}
                           value={screen.id}
-                          {...register("acessScreens")}
+                          isChecked={screens.includes(screen.id)}
                         >
                           {screen.surname.charAt(0).toUpperCase() +
                             screen.surname.substring(1)}

@@ -7,6 +7,7 @@ import { PaginationCategroyDto } from '../category/dto/pagination-category';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
+import { IGetAllEmployees } from './interfaces';
 
 @Injectable()
 export class EmployeesService {
@@ -149,12 +150,40 @@ export class EmployeesService {
     return employee;
   };
 
-  public findAll = async (req: IReq): Promise<Employee[]> => {
-    return this.prismaService.employee.findMany({
+  public findAll = async (
+    req: IReq,
+    pagination: { take: number; skip: number; text: string },
+  ): Promise<{ quantity: number; employees: Employee[] }> => {
+    const paramsQuery: IGetAllEmployees = {
       where: {
-        establishmentId: req.user.id,
+        establishmentId: req.user.establishmentId,
+      },
+    };
+
+    if (pagination.skip && pagination.take) {
+      delete paramsQuery.where.name;
+      paramsQuery.skip = Number(pagination.skip);
+      paramsQuery.take = Number(pagination.take);
+    }
+
+    if (pagination.text) {
+      delete paramsQuery.skip;
+      delete paramsQuery.take;
+      paramsQuery.where.name.contains = pagination.text;
+    }
+
+    const quantity = await this.prismaService.employee.count({
+      where: {
+        establishmentId: req.user.establishmentId,
       },
     });
+
+    const employees = await this.prismaService.employee.findMany(paramsQuery);
+
+    return {
+      employees,
+      quantity,
+    };
   };
 
   public deactivate = async (id: number): Promise<boolean> => {

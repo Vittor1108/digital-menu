@@ -23,5 +23,15 @@ export const EmployeesRoutes = [
       </LoginGuard>
     ),
     path: "/edit-employee",
+  },
+  {
+    element: (
+      <LoginGuard>
+        <ScreensGuard screen={EScreens.EMPLOYEES}>
+          <AddEmployeeComponent />
+        </ScreensGuard>
+      </LoginGuard>
+    ),
+    path: "/employee/:id",
   }
 ];

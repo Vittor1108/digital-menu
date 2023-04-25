@@ -48,7 +48,7 @@ export const DefaulTable = <T,>({
     take: 10,
     text: "",
   });
-  
+
   const handleClickPagination = (e: any) => {
     const numberPagination = Number(e.target.innerHTML);
     if (numberPagination > page) {

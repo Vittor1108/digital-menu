@@ -27,6 +27,14 @@ export class EmployeesController {
     return this.employeesService.create(createEmployeeDto, req);
   }
 
+  @Get('/take=:take?/skip=:skip?/text=:text?')
+  findAll(
+    @Request() req: IReq,
+    @Param() pagination: { take: number; skip: number; text: string },
+  ): Promise<{ quantity: number; employees: Employee[] }> {
+    return this.employeesService.findAll(req, pagination);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number): Promise<Employee> {
     return this.employeesService.findOne(id);
@@ -38,11 +46,6 @@ export class EmployeesController {
     @Body() updateDto: UpdateEmployeeDto,
   ): Promise<Employee> {
     return this.employeesService.update(id, updateDto);
-  }
-
-  @Get()
-  findAll(@Request() req: IReq): Promise<Employee[]> {
-    return this.employeesService.findAll(req);
   }
 
   @Patch(':id')
