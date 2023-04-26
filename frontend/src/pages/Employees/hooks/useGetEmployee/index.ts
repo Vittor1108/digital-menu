@@ -16,10 +16,11 @@ export const useGetEmployee = () => {
           isClosable: true,
         });
       },
+      
     }
   );
 
   return {
-    fetchGetEmployee
-  }
+    fetchGetEmployee,
+  };
 };

@@ -24,9 +24,22 @@ const get = async (id: number): Promise<AxiosResponse<IEmployee>> => {
   return await Axios().get<IEmployee>(`employees/${id}`);
 };
 
+const update = async (
+  id: number,
+  data: IEmployee
+): Promise<AxiosResponse<IEmployee>> => {
+  return await Axios().put<IEmployee>(`employees/${id}`, {
+    name: data.name,
+    cpf: data.cpf,
+    password: data.password,
+    acessScreens: data.acessScreens,
+  });
+};
+
 export const EmployeeService = {
   create,
   getAll,
   deleted,
-  get
+  get,
+  update,
 };

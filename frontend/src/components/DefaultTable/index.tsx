@@ -241,7 +241,7 @@ export const DefaulTable = <T,>({
         <GenericModal
           imagePath={AlertImage}
           subTitle="Por favor confirme se deseja excluir"
-          title="Deseja excluir a categoria?"
+          title="Deseja excluir?"
           articleWidth="400px"
           isOpen={modalOpen}
           textConfirmButton="Excluir"

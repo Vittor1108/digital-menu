@@ -86,7 +86,10 @@ export class EmployeesService {
       );
     }
 
-    const hashPassword = await bcrypt.hashPassword(password);
+    const hashPassword =
+      employee.password === password
+        ? employee.password
+        : await bcrypt.hashPassword(password);
 
     return await this.prismaService.employee.update({
       where: {
